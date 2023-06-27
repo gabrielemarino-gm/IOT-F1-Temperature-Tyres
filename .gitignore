@@ -10,3 +10,5 @@
 
 /coap-actuator-engage-tyrewarmer/build/
 /coap-actuator-engage-tyrewarmer/Makefile
+
+/run/
