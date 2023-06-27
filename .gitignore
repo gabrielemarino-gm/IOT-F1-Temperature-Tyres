@@ -1,5 +1,3 @@
-/*
-
 !/border-router/border-router.c
 !/border-router/deploy
 !/border-router/project-conf.h
@@ -16,3 +14,5 @@
 !/coap-actuator-engage-tyrewarmer/tyre-actuator-coap.c
 !/coap-actuator-engage-tyrewarmer/project-conf.h
 !/coap-actuator-engage-tyrewarmer/resources/
+
+*
