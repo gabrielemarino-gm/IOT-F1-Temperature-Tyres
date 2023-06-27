@@ -5,4 +5,8 @@
 /F1_Application_Controller/.gitignore
 /F1_Application_Controller/build/
 
+/mqtt-sensor-temp-tyrewarmer/build/
+/mqtt-sensor-temp-tyrewarmer/Makefile
 
+/coap-actuator-engage-tyrewarmer/build/
+/coap-actuator-engage-tyrewarmer/Makefile
