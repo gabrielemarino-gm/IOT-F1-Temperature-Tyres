@@ -4,6 +4,7 @@
 /F1_Application_Controller/.idea/
 /F1_Application_Controller/.gitignore
 /F1_Application_Controller/build/
+/F1_Application_Controller/src/test/
 
 /mqtt-sensor-temp-tyrewarmer/build/
 /mqtt-sensor-temp-tyrewarmer/Makefile
