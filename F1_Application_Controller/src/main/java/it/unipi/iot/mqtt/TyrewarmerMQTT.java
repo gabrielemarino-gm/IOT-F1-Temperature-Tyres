@@ -32,7 +32,7 @@ public class TyrewarmerMQTT
 
     public static class Publisher
     {
-        public void Publish(String BROKER, String CLIENTID, String TOPIC, String MESSAGE)
+        public static void Publish(String BROKER, String CLIENTID, String TOPIC, String MESSAGE)
         throws MqttException, InterruptedException
         {
             MqttClient client = new MqttClient(BROKER, CLIENTID+"Pub");
