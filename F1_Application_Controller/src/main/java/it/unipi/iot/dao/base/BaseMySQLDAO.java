@@ -10,9 +10,9 @@ public class BaseMySQLDAO
     private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
     private static final String MYSQL_HOST = "localhost";
     private static final Integer MYSQL_PORT = 3306;
-    private static final String MYSQL_DATABASE = "";
+    private static final String MYSQL_DATABASE = "F1-Temperature-Tyres";
     private static final String MYSQL_USERNAME = "root";
-    private static final String MYSQL_PASSWORD = "";
+    private static final String MYSQL_PASSWORD = "rootroot";
     // format: mysql://<username>:<password>@<host>:<port>/<db_name>
     private static final String JDBC_URL = "jdbc:mysql://%s:%d/%s";
 
