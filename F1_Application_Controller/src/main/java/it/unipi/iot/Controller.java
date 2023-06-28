@@ -1,5 +1,7 @@
 package it.unipi.iot;
 
+import it.unipi.iot.coap.TyrewarmerCoAPClient;
+import it.unipi.iot.coap.TyrewarmerCoAPServer;
 import it.unipi.iot.mqtt.TyrewarmerMQTT;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -12,6 +14,7 @@ public class Controller
     private static String SUBTOPIC = "TyrewarmerTemp";
     private static String PUBCLIENTID = "Controller_Tyrewarmer_Pub";
     private static String PUBTOPIC = "TyrewarmerConf";
+    private static String RESOURCE = "Registrator";
     public static void main( String[] args )
     {
         Boolean exit = false;
@@ -28,19 +31,20 @@ public class Controller
         }
 
 //        Start CoAP service
-
+        TyrewarmerCoAPServer.startServer();
 
 //        Start DB service
 
 //        Input loop
         while(!exit){
             c = input.nextLine();
-            if(c.equals("q"))
+            if(c.equals("q"))   //QUIT
             {
                 System.out.println("Quitting");
+                TyrewarmerCoAPServer.kill();
                 System.exit(0);
             }
-            if(c.equals("p"))
+            if(c.equals("p"))   //PUBLISH
             {
                 try
                 {
@@ -53,6 +57,10 @@ public class Controller
                 {
                     me.printStackTrace();
                 }
+            }
+            if(c.equals("c"))   //COAP REQUEST
+            {
+                TyrewarmerCoAPClient.simpleRequest("coap://[fd00::202:2:2:2]/test");
             }
         }
     }
