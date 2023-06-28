@@ -36,7 +36,8 @@ public class Controller
 //        Start DB service
 
 //        Input loop
-        while(!exit){
+        while(!exit)
+        {
             c = input.nextLine();
             if(c.equals("q"))   //QUIT
             {
@@ -50,7 +51,8 @@ public class Controller
                 {
                     TyrewarmerMQTT.Publisher.Publish(BROKER, PUBCLIENTID, PUBTOPIC, "PubMessageTest");
                 }
-                catch (InterruptedException ie){
+                catch (InterruptedException ie)
+                {
                     ie.printStackTrace();
                 }
                 catch (MqttException me)
