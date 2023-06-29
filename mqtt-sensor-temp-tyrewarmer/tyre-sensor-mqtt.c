@@ -341,7 +341,7 @@ static void mqtt_state_machine()
 
             simulate_temperature();
 
-            snprintf(app_buffer, "%f", temperature);
+            snprintf(app_buffer, sizeof(app_buffer), "%d", temperature);
 
             mqtt_publish (&conn, NULL, pub_topic, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
