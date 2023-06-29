@@ -1,7 +1,6 @@
 package it.unipi.iot;
 
-import it.unipi.iot.coap.TyrewarmerCoAPClient;
-import it.unipi.iot.coap.TyrewarmerCoAPServer;
+import it.unipi.iot.coap.TyrewarmerCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
 import it.unipi.iot.model.Temperature;
@@ -42,9 +41,7 @@ public class Controller
         }
 
 //        Start CoAP service
-        TyrewarmerCoAPServer.startServer();
-
-//        Start DB service
+        TyrewarmerCoAP.startServer();
 
 //        Input loop
         System.out.println(COMMANDS);
@@ -61,7 +58,7 @@ public class Controller
             if(tokens[0].equals("quit"))   //QUIT
             {
                 System.out.println("Quitting");
-                TyrewarmerCoAPServer.kill();
+                TyrewarmerCoAP.kill();
                 System.exit(0);
             }
             else if(tokens[0].equals("publish"))   //PUBLISH SOMETHING
@@ -110,7 +107,7 @@ public class Controller
             {
                 for(int i = 1; i <= 4; i++){
 
-                    String ret = TyrewarmerCoAPClient.getStatRequest("coap://[fd00::20"+(i+1)+":"+(i+1)+":"+(i+1)+":"+(i+1)+"]/stat");
+                    String ret = TyrewarmerCoAP.getStatRequest("coap://[fd00::20"+(i+1)+":"+(i+1)+":"+(i+1)+":"+(i+1)+"]/stat");
                     System.out.println("STATUS TYREWARMER[" + i + "] -> " + ret);
                 }
             }

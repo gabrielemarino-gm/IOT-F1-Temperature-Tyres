@@ -14,9 +14,11 @@ public class TyrewarmerMQTT
         MqttClient client = null;
         public Subscriber(String BROKER, String CLIENTID, String TOPIC) throws MqttException
         {
-            client = new MqttClient(BROKER, CLIENTID);
-            client.setCallback(this);
-            client.connect();
+            if(client == null) {
+                client = new MqttClient(BROKER, CLIENTID);
+                client.setCallback(this);
+                client.connect();
+            }
             client.subscribe(TOPIC);
         }
 
