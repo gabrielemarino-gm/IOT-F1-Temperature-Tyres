@@ -71,7 +71,7 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int STATE_MACHINE_TIMER (CLOCK_SECOND >> 1)
+int state_machine_timer =  (CLOCK_SECOND >> 1)
 static struct etimer periodic_state_timer;
 
 // States
@@ -141,11 +141,11 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 
     // Cambiare l'intervallo di cambionamento
     int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
-    STATE_MACHINE_TIMER = timer_value;
+    state_machine_timer = timer_value;
 
 
 // ( ATTENZIONE, VA BENE FARLO QUI ??????
-        etimer_set(&periodic_state_timer, STATE_MACHINE_TIMER);
+        etimer_set(&periodic_state_timer, state_machine_timer);
 // )
 }
 /*------------------------------------*/
@@ -249,7 +249,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
 /*------------------------------------*/
 static void client_init(void)
 {
-    etimer_set(&periodic_state_timer, STATE_MACHINE_TIMER);
+    etimer_set(&periodic_state_timer, state_machine_timer);
     int len = snprintf(client_id, BUFFER_SIZE, "%02x%02x%02x%02x%02x%02x",
             linkaddr_node_addr.u8[0], linkaddr_node_addr.u8[1],
             linkaddr_node_addr.u8[2], linkaddr_node_addr.u8[5],
