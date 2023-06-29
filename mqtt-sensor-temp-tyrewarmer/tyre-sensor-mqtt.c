@@ -11,7 +11,7 @@
 #include "dev/button-hal.h"
 #include "dev/leds.h"
 #include "os/sys/log.h"
-#include "personal-mqtt.h"
+#include "tyre-sensor-mqtt.h"
 
 #include <string.h>
 #include <strings.h>
@@ -45,10 +45,8 @@ static struct mqtt_message *msg_ptr = 0;
 
 
 // starus mqtt
-mqtt_status_t startus;
+mqtt_status_t status;
 
-// #define CONF_ORG_ID "patisso"
-// #define CONF_TYPE_ID "personal-mqtt"
 
 static struct mqtt_connection conn;
 char broker_addr[CONFIG_IP_ADDR_STR_LEN];
@@ -143,7 +141,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
 
     // Cambiare l'intervallo di cambionamento
-    STATE_MACHINE_TIMER = (CLOCK_SECOND * (int) msg_ptr)
+    STATE_MACHINE_TIMER = (CLOCK_SECOND * (int) msg_ptr);
 
 // ( ATTENZIONE, VA BENE FARLO QUI ??????
         etimer_set(&periodic_state_timer, STATE_MACHINE_TIMER);
@@ -199,7 +197,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             LOG_INFO("MQTT PUBLISH EVENT\n");
             /* Qualcuno ha publicato dove sono subscribed */
             msg_ptr = data;
-            handler_incoming_msg(msg_ptr->topic, strlen(msg_ptr->topic), msg_ptr->payload_chunk, msg_ptr->payload_length);
+            handler_incoming_msg(msg_ptr->topic, msg_ptr->payload_chunk);
             /*-------------------------*/
             break;
 
@@ -252,7 +250,6 @@ static void client_init(void)
 {
     etimer_set(&periodic_state_timer, STATE_MACHINE_TIMER);
     int len = snprintf(client_id, BUFFER_SIZE, "d:%s:%s:%02x%02x%02x%02x%02x%02x",
-            CONF_ORG_ID, CONF_TYPE_ID,
             linkaddr_node_addr.u8[0], linkaddr_node_addr.u8[1],
             linkaddr_node_addr.u8[2], linkaddr_node_addr.u8[5],
             linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
