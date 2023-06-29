@@ -3,6 +3,7 @@ package it.unipi.iot;
 import it.unipi.iot.coap.TyrewarmerCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
+import it.unipi.iot.model.Actuator;
 import it.unipi.iot.model.Temperature;
 import it.unipi.iot.mqtt.TyrewarmerMQTT;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -59,6 +60,7 @@ public class Controller
             {
                 System.out.println("Quitting");
                 TyrewarmerCoAP.kill();
+                TemperatureDAO.closePool();
                 System.exit(0);
             }
             else if(tokens[0].equals("publish"))   //PUBLISH SOMETHING
@@ -105,10 +107,9 @@ public class Controller
             }
             else if(tokens[0].equals("getStatus"))       //GET TYREWARMER STATUS
             {
-                for(int i = 1; i <= 4; i++){
-
-                    String ret = TyrewarmerCoAP.getStatRequest("coap://[fd00::20"+(i+1)+":"+(i+1)+":"+(i+1)+":"+(i+1)+"]/stat");
-                    System.out.println("STATUS TYREWARMER[" + i + "] -> " + ret);
+                for(Actuator a : TyrewarmerCoAP.getActuators()){
+                    String ret = TyrewarmerCoAP.getStatRequest(a.getAddr());
+                    System.out.println("STATUS TYREWARMER[" + a.getTyre_position() + "] -> " + ret);
                 }
             }
             else        //UNKNOWN COMMAND

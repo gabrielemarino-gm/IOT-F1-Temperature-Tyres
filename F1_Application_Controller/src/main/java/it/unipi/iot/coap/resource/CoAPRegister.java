@@ -2,7 +2,9 @@ package it.unipi.iot.coap.resource;
 
 //  Risorsa del Server CoAP per registrare gli ATTUATORI
 
+import it.unipi.iot.coap.TyrewarmerCoAP;
 import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
 public class CoAPRegister extends CoapResource
@@ -20,11 +22,22 @@ public class CoAPRegister extends CoapResource
         String payload = exchange.getRequestText();
         String[] fields = payload.split("&");
 
-        for(String s : fields){
-            String[] parts = s.split("=");
-            System.out.println(parts[0] + " -> "+ parts[1]);
-        }
+        String command = fields[0].split("=")[1];
+        String val1 = fields[1].split("=")[1];
+        String val2 = fields[2].split("=")[1];
 
+//        Un ATTUATORE CoAP si sta registrando
+        if(command.equals("REG")){
+            if(TyrewarmerCoAP.registerActuator(Integer.parseInt(val1), val2))
+            {
+                exchange.respond(CoAP.ResponseCode.CREATED);
+            }
+            else
+            {
+
+                exchange.respond(CoAP.ResponseCode.NOT_IMPLEMENTED);
+            }
+        }
 
     }
 

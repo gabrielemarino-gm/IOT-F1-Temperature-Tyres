@@ -38,6 +38,9 @@ public abstract class BaseMySQLDAO
         ds.setPassword(MYSQL_PASSWORD);
         ds.addConnectionProperty("zeroDateTimeBehavior", "CONVERT_TO_NULL");
         ds.addConnectionProperty("serverTimeZone", "CET");
+        ds.setMaxIdle(10);  // Maximum number of idle connections in the pool
+        ds.setMinEvictableIdleTimeMillis(30000);
+        ds.setTimeBetweenEvictionRunsMillis(6000);
     }
 
     public static void closePool()

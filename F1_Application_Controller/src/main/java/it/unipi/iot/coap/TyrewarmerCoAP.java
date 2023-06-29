@@ -38,7 +38,7 @@ public class TyrewarmerCoAP extends CoapServer
 //    Farne piu di una se la natura della richiesta e' diversa (Get, Put, Post...)
 
     public static String getStatRequest(String TARGET){
-        CoapClient client = new CoapClient(TARGET);
+        CoapClient client = new CoapClient(TARGET + "/stat");
         String toRet;
 
         try
@@ -50,6 +50,12 @@ public class TyrewarmerCoAP extends CoapServer
         catch(NullPointerException ne)
         {
             toRet = "OFFLINE";
+            for(Actuator a : actuators){
+                if(a.getAddr().equals(TARGET))
+                {
+                    a.inactive();
+                }
+            }
         }
         finally {
             client.delete();
@@ -62,14 +68,34 @@ public class TyrewarmerCoAP extends CoapServer
 
     public static boolean registerActuator(int pos, String addr){
          Actuator toReg = new Actuator(pos,addr);
-         if(actuators.contains(toReg)){
-             return false;
+
+//         Controllo se e' presente un attuatore con la stessa ruota e attivo
+         for(Actuator a : actuators)
+         {
+//             Se esiste ed e' attivo ritorno falso altrimenti lo elimino e torno true
+            if((a.getTyre_position() == pos))
+            {
+                if(a.isActive())
+                {
+                    return false;
+                }
+                else
+                {
+                    actuators.remove(a);
+                    break;
+                }
+            }
          }
 
          actuators.add(toReg);
+
          return true;
 
     }
 
-    
+    public static ArrayList<Actuator> getActuators()
+    {
+        return actuators;
+    }
+
 }
