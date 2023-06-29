@@ -1,18 +1,32 @@
 package it.unipi.iot.coap;
 
-import it.unipi.iot.coap.resource.CoAPRegister;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 
 public class TyrewarmerCoAPClient
 {
-    public static void simpleRequest(String TARGET){
+//    TODO
+//    Funzione statica per connettersi a un CoAP Server e inviare una semplice richiesta CoAP
+//    Farne piu di una se la natura della richiesta e' diversa (Get, Put, Post...)
+
+    public static String getStatRequest(String TARGET){
         CoapClient client = new CoapClient(TARGET);
+        String toRet;
 
-        CoapResponse response = client.get();
+        try
+        {
+            client.setTimeout(2000);
+            CoapResponse response = client.get();
+            toRet = response.getResponseText();
+        }
+        catch(NullPointerException ne)
+        {
+            toRet = "OFFLINE";
+        }
+        finally {
+            client.delete();
 
-        System.out.println(response.getResponseText());
-
-        client.delete();
+        }
+        return toRet;
     }
 }

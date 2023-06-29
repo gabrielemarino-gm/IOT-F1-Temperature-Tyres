@@ -4,28 +4,23 @@ import  it.unipi.iot.model.Temperature;
 import  it.unipi.iot.dao.base.BaseMySQLDAO;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 
 public class TemperatureDAO extends BaseMySQLDAO
 {
-    void writeTemperature(Temperature temperature, String nameTab, Object... params ) throws DAOException
+    public static void writeTemperature(Temperature temperature, String nameTab) throws DAOException
     {
         StringBuilder insertTemperature = new StringBuilder();
         insertTemperature.append("insert into " + nameTab + " (temperature, timestamp, tyre_position) values");
         insertTemperature.append("(?,?,?)");
 
-        Connection connectionParam = null;
-        if (params != null && params.length > 0 && params[0] instanceof Connection)
-        {
-            connectionParam = (Connection)params[0];
-        }
-        
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try
         {
-            connection = connectionParam != null ? connectionParam : getConnection();
+            connection = getConnection();
             preparedStatement = connection.prepareStatement(insertTemperature.toString(), Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setDouble(1, temperature.getTemperatureValue());
@@ -39,5 +34,43 @@ public class TemperatureDAO extends BaseMySQLDAO
         {
             throw new DAOException(ex);
         }
+    }
+
+    public static ArrayList<Temperature> getLastTemperature(String nameTab) throws DAOException
+    {
+        ArrayList<Temperature> toRet = new ArrayList<>();
+
+        StringBuilder getTemperatures  = new StringBuilder();
+        getTemperatures.append("select t1.tyre_position, t1.temperature " +
+                "from " + nameTab + " as t1 inner join " +
+                "( select tyre_position, max(timestamp) as max_timestamp " +
+                "from " + nameTab + " " +
+                "where timestamp >= now() - interval 5 minute " +
+                "group by tyre_position) as t2 " +
+                "on t1.tyre_position = t2.tyre_position and t1.timestamp = t2.max_timestamp;\n");
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(getTemperatures.toString(), Statement.RETURN_GENERATED_KEYS);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while(rs.next()){
+                Temperature newT = new Temperature();
+                newT.setTemperatureValue(rs.getDouble("temperature"));
+                newT.setTyrePosition(rs.getInt("tyre_position"));
+                toRet.add(newT);
+            }
+        }
+        catch(Exception ex)
+        {
+            throw new DAOException(ex);
+        }
+
+        return toRet;
     }
 }

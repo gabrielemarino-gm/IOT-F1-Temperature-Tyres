@@ -14,6 +14,9 @@ public class CoAPRegister extends CoapResource
 
     public void handlePOST(CoapExchange exchange)
     {
+//        TODO
+//        Quando arriva una richiesta di registrazione di un ATTUATORE CoAP
+
         String payload = exchange.getRequestText();
         String[] fields = payload.split("&");
 

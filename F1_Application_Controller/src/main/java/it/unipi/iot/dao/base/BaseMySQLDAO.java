@@ -5,7 +5,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class BaseMySQLDAO
+public abstract class BaseMySQLDAO
 {
     private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
     private static final String MYSQL_HOST = "localhost";
@@ -16,16 +16,22 @@ public class BaseMySQLDAO
     // format: mysql://<username>:<password>@<host>:<port>/<db_name>
     private static final String JDBC_URL = "jdbc:mysql://%s:%d/%s";
 
-    private static BasicDataSource ds = new BasicDataSource();
+    private static BasicDataSource ds = null;
 
     public static Connection getConnection() throws SQLException
     {
+        if(ds == null || ds.isClosed()){
+            initPool();
+        }
+
         return ds.getConnection();
     }
 
-    public static void initPool()
+    private static void initPool()
     {
+        ds = new BasicDataSource();
         String jdbcUrl = String.format(JDBC_URL, MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE);
+
         ds.setUrl(jdbcUrl);
         ds.setDriverClassName(DRIVER_CLASS);
         ds.setUsername(MYSQL_USERNAME);
