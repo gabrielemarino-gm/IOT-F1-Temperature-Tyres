@@ -4,15 +4,20 @@ package it.unipi.iot.coap;
 //  Serve per fare in modo che gli ATTUATORI si registrino
 
 import it.unipi.iot.coap.resource.CoAPRegister;
+import it.unipi.iot.model.Actuator;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.CoapServer;
+
+import java.util.ArrayList;
 
 public class TyrewarmerCoAP extends CoapServer
 {
 //    Semplicemente avvia un server CoAP con la risorsa registrator
 //    Per far registrare gli ATTUATORI
     private static TyrewarmerCoAP server = null;
+    private static ArrayList<Actuator> actuators = new ArrayList<>();
+
      public static void startServer()
      {
          if(server == null)
@@ -54,4 +59,17 @@ public class TyrewarmerCoAP extends CoapServer
     }
 //      Altre funzioni statiche utili alla gestione degli attuatori CoAP
 //      quali registrazione e cancellazione
+
+    public static boolean registerActuator(int pos, String addr){
+         Actuator toReg = new Actuator(pos,addr);
+         if(actuators.contains(toReg)){
+             return false;
+         }
+
+         actuators.add(toReg);
+         return true;
+
+    }
+
+    
 }
