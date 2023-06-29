@@ -71,7 +71,7 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int state_machine_timer =  (CLOCK_SECOND >> 1)
+int state_machine_timer = (CLOCK_SECOND >> 1);
 static struct etimer periodic_state_timer;
 
 // States
