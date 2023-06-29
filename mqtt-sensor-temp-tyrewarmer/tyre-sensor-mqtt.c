@@ -102,7 +102,7 @@ enum trend
     SLOW
 };
 
-static int driver_mode = rand() % 3;
+static int driver_mode = 0;
 static int time_driver_mod_change = 0;
 
 static void simulate_temperature ()
@@ -249,7 +249,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
 static void client_init(void)
 {
     etimer_set(&periodic_state_timer, STATE_MACHINE_TIMER);
-    int len = snprintf(client_id, BUFFER_SIZE, "d:%s:%s:%02x%02x%02x%02x%02x%02x",
+    int len = snprintf(client_id, BUFFER_SIZE, "%02x%02x%02x%02x%02x%02x",
             linkaddr_node_addr.u8[0], linkaddr_node_addr.u8[1],
             linkaddr_node_addr.u8[2], linkaddr_node_addr.u8[5],
             linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
