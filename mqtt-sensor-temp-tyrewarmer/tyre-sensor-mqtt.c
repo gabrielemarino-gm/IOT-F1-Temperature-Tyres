@@ -41,7 +41,6 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define sub_topic "set_threshold"
 #define pub_topic "tyre_temp"
 static char app_buffer[APP_BUFFER_SIZE];
-static struct mqtt_message *msg_ptr = 0;
 
 
 // starus mqtt
@@ -52,7 +51,7 @@ static struct mqtt_connection conn;
 char broker_addr[CONFIG_IP_ADDR_STR_LEN];
 
 // mqtt_message data structure
-// static struct mqtt_message *msg_pointer = 0;
+static struct mqtt_message *msg_ptr = 0;
 /* msg_pointer->topic - Contains the topic
  * msg_pointer->payload_chunk - Contains the payload
  * msg_pointer->payload_lenght - Contains the payload lenghts
@@ -72,7 +71,7 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-static int STATE_MACHINE_TIMER (CLOCK_SECOND >> 1)
+int STATE_MACHINE_TIMER (CLOCK_SECOND >> 1)
 static struct etimer periodic_state_timer;
 
 // States
