@@ -304,7 +304,7 @@ static void mqtt_state_machine()
             /* Connesso all'MQTT Broker */
             LOG_DBG("Connected\n");
 
-            status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
+            status = mqtt_subscribe(&conn, NULL, sub_topic_warmer, MQTT_QOS_LEVEL_0);
 
             // Errore coda piena
             if (status == MQTT_STATUS_OUT_QUEUE_FULL)
