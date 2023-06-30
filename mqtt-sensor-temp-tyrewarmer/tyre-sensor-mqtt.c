@@ -96,7 +96,7 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 /*        GESTIONE TEMPERATURA        */
 /*------------------------------------*/
 
-static int temperature = 0;
+static int temperature = 20;
 static int warmer_on = 1;
 
 
@@ -119,8 +119,13 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     if (strcmp(topic, sub_topic_warmer) == 0)
     {
         if (strcmp((const char*)chunk, "0") == 0)
+        {
             warmer_on = 0;
+            LOG_INFO("Warmer OFF");
+        }    
+        
         warmer_on = 1;
+        LOG_INFO("Warmer ON");
     }
 
     // Cambiare l'intervallo di cambionamento
@@ -182,8 +187,6 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             /* Qualcuno ha publicato dove sono subscribed */
             msg_ptr = data;
             handler_incoming_msg(msg_ptr->topic, msg_ptr->payload_chunk);
-            LOG_DBG("state = %d\n", state);
-            state = STATE_SUBSCRIBED;
             /*-------------------------*/
             break;
 
