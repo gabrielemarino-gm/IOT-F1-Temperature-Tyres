@@ -22,21 +22,13 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
-static void res_put_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset);
+static void res_put_post_handler(
+    coap_message_t *request, 
+    coap_message_t *response, 
+    uint8_t *buffer, 
+    uint16_t preferred_size, 
+    int32_t *offset);
 
-static void res_get_handler(
-    coap_message_t *request,
-    coap_message_t *response,
-    uint8_t *buffer,
-    uint16_t preferred_size, int32_t *offset
-);
-
-static void res_put_handler(
-    coap_message_t *request,
-    coap_message_t *response,
-    uint8_t *buffer,
-    uint16_t preferred_size, int32_t *offset
-);
 
 static void res_trigger(void);
 
@@ -66,6 +58,7 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
         LOG_DBG("Temp Tyres %.*s\n", (int)len, temp_tyres);
 
         int temp_tyres_int = atoi(temp_tyres);
+        LOG_DBG("Temp Tyres INT %.*d\n", (int)len, temp_tyres_int);
         // Gomma fredda
         if(temp_tyres_int < 90)
         {
