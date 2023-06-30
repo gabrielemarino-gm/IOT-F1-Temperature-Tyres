@@ -180,7 +180,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             /* Qualcuno ha publicato dove sono subscribed */
             msg_ptr = data;
             handler_incoming_msg(msg_ptr->topic, msg_ptr->payload_chunk);
-            LOG_DBG("state = %s\n", state);
+            LOG_DBG("state = %d\n", state);
             state = STATE_SUBSCRIBED;
             /*-------------------------*/
             break;
