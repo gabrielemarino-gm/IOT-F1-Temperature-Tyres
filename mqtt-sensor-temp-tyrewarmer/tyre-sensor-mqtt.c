@@ -73,7 +73,7 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int state_machine_timer = (CLOCK_SECOND >> 1);
+int state_machine_timer = (CLOCK_SECOND * 5);
 static struct etimer periodic_state_timer;
 
 // States
@@ -95,7 +95,7 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 /*        GESTIONE TEMPERATURA        */
 /*------------------------------------*/
 
-static int temperature = 0;
+static int temperature = 90;
 enum trend
 {
     PUSH,
@@ -123,14 +123,19 @@ static void simulate_temperature ()
     if (driver_mode == PUSH)
     {
         temperature += 5;
+        time_driver_mod_change++;
     }
     else if (driver_mode == NORMAL)
     {
         temperature += 1;
+        time_driver_mod_change++;
+
     }
     else if (driver_mode == SLOW)
     {
         temperature -= 5;
+        time_driver_mod_change++;
+
     }
 }
 
@@ -200,6 +205,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             LOG_INFO("MQTT PUBLISH EVENT\n");
             /* Qualcuno ha publicato dove sono subscribed */
             msg_ptr = data;
+            print("DBG:     DATA %s\n", (char*)data);
             handler_incoming_msg(msg_ptr->topic, msg_ptr->payload_chunk);
             /*-------------------------*/
             break;
