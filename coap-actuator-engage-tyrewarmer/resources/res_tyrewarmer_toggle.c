@@ -49,21 +49,21 @@ res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buff
 
   switch (status)
   {
-  case -1:
-    length = 8;
-    message = "DISABLED";
-    break;
-  case 0:
-    length = 13;
-    message = "ENABLED - OFF";
-    break;
-  case 1:
-    length = 12;
-    message = "ENABLED - ON";
-    break;
+    case -1:
+      length = 8;
+      message = "DISABLED";
+      break;
+    case 0:
+      length = 13;
+      message = "ENABLED - OFF";
+      break;
+    case 1:
+      length = 12;
+      message = "ENABLED - ON";
+      break;
 
-  default:
-    break;
+    default:
+      break;
   }
 
   if(length < 0) {
