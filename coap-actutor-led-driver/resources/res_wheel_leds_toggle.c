@@ -61,7 +61,7 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
     uint8_t led = 0;
     int success = 1;
 
-    if((len = coap_get_query_variable(request, "temp_tyres", &temp_tyres)))
+    if((len = coap_get_query_variable(request, "temp_tyres", &(char*s)temp_tyres)))
     {
         LOG_DBG("Temp Tyres %.*d\n", (int)len, temp_tyres);
 
