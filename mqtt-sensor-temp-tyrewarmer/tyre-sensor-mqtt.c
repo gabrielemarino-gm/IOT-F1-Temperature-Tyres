@@ -118,6 +118,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     // Accendere o spegnere la termocoperta
     if (strcmp(topic, sub_topic_warmer) == 0)
     {
+        LOG_DBG("%d\n", (int)*msg_ptr->payload_chunk);
         warmer_on = (int)*msg_ptr->payload_chunk;
     }
 
@@ -296,7 +297,6 @@ static void mqtt_state_machine()
             /* Connettendo all'MQTT Broker */
             LOG_DBG("Connecting\n");
         
-
             /*-------------------*/
             break;
 
