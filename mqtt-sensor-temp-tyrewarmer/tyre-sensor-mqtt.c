@@ -150,7 +150,6 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
     state_machine_timer = timer_value;
 
-
 // ( ATTENZIONE, VA BENE FARLO QUI ??????
         etimer_set(&periodic_state_timer, state_machine_timer);
 // )
@@ -207,6 +206,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             msg_ptr = data;
             // print("DBG:     DATA %s\n", (char*)data);
             handler_incoming_msg(msg_ptr->topic, msg_ptr->payload_chunk);
+            state = STATE_SUBSCRIBED;
             /*-------------------------*/
             break;
 
