@@ -144,11 +144,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     // Cambiare l'intervallo di cambionamento
     int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
     state_machine_timer = timer_value;
-
-
-// ( ATTENZIONE, VA BENE FARLO QUI ??????
-        etimer_set(&periodic_state_timer, state_machine_timer);
-// )
+    etimer_set(&periodic_state_timer, state_machine_timer);
 }
 /*------------------------------------*/
 /*         CHECK CONNECTIVITY         */

@@ -40,8 +40,9 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 
 // Buffer for topic publication
-#define sub_topic "set_threshold"
-#define pub_topic "tyre_temp"
+#define sub_topic_warmer        "warmer_on"
+#define sub_topic_threshold     "set_threshold"
+#define pub_topic               "tyre_temp"
 static char app_buffer[APP_BUFFER_SIZE];
 
 
@@ -73,7 +74,7 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int state_machine_timer = (CLOCK_SECOND * 5);
+int state_machine_timer = (CLOCK_SECOND >> 1);
 static struct etimer periodic_state_timer;
 
 // States
@@ -95,48 +96,16 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 /*        GESTIONE TEMPERATURA        */
 /*------------------------------------*/
 
-static int temperature = 90;
-enum trend
-{
-    PUSH,
-    NORMAL,
-    SLOW
-};
+static int temperature = 0;
+static int warmer_on = 1;
 
-static int driver_mode = 0;
-static int time_driver_mod_change = 0;
 
 static void simulate_temperature ()
 {
-    if (time_driver_mod_change == 10 && driver_mode == PUSH)
-    {
-        driver_mode = SLOW;
-        time_driver_mod_change = 0;
-    }
-
-    if (time_driver_mod_change == 10 && driver_mode == SLOW)
-    {
-        driver_mode = PUSH;
-        time_driver_mod_change = 0;
-    }
-    
-    if (driver_mode == PUSH)
-    {
-        temperature += 5;
-        time_driver_mod_change++;
-    }
-    else if (driver_mode == NORMAL)
-    {
-        temperature += 1;
-        time_driver_mod_change++;
-
-    }
-    else if (driver_mode == SLOW)
-    {
-        temperature -= 5;
-        time_driver_mod_change++;
-
-    }
+    if (warmer_on)
+        temperature++;
+    else
+        temperature--;   
 }
 
 /*-------------------------------------------------*/
@@ -146,14 +115,19 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 {
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
 
-    int val = 0;
-    for (int i = 0; i < msg_ptr->payload_length; i++) {
-        val = val * 10 + (chunk[i] - '0');
+    // Accendere o spegnere la termocoperta
+    if (strcmp(topic, sub_topic_warmer) == 0)
+    {
+        warmer_on = (int)*msg_ptr->payload_chunk;
     }
-    // Cambiare l'intervallo di cambionamento
-    state_machine_timer = (CLOCK_SECOND * val);
 
-    etimer_set(&periodic_state_timer, state_machine_timer);
+    // Cambiare l'intervallo di cambionamento
+    else if (strcmp(topic, sub_topic_threshold) == 0)
+    {   
+        int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
+        state_machine_timer = timer_value;
+        etimer_set(&periodic_state_timer, state_machine_timer);
+    }
 }
 /*------------------------------------*/
 /*         CHECK CONNECTIVITY         */
@@ -205,9 +179,8 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             LOG_INFO("MQTT PUBLISH EVENT\n");
             /* Qualcuno ha publicato dove sono subscribed */
             msg_ptr = data;
-            // print("DBG:     DATA %s\n", (char*)data);
             handler_incoming_msg(msg_ptr->topic, msg_ptr->payload_chunk);
-            
+            LOG_DBG("state = %s\n", state);
             state = STATE_SUBSCRIBED;
             /*-------------------------*/
             break;
