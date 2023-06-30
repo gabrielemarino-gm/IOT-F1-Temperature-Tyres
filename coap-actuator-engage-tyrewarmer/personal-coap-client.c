@@ -33,6 +33,7 @@ static struct etimer et;
 PROCESS_THREAD(personal_coap_client, ev, data)
 {
     PROCESS_BEGIN();
+    
     static coap_message_t request[1];
     static coap_endpoint_t server_ep;
 
@@ -43,6 +44,7 @@ PROCESS_THREAD(personal_coap_client, ev, data)
     while(1)
     {
         PROCESS_YIELD();
+
         if(etimer_expired(&et)){
             coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);
             coap_set_header_uri_path(request, "res1");

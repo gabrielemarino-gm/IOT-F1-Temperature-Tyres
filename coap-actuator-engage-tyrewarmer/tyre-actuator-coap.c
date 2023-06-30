@@ -5,37 +5,36 @@
 #include "sys/ctimer.h"
 #include "coap-engine.h"
 
+#include "dev/leds.h"
+#include "dev/button-hal.h"
 
 /* Log configuration */
 #include "sys/log.h"
-#define LOG_MODULE "App"
-#define LOG_LEVEL LOG_LEVEL_APP
-
-static struct ctimer clocker;
+#define LOG_MODULE "Tyre Actuator"
+#define LOG_LEVEL LOG_LEVEL_DBG
 
 extern coap_resource_t 
-    res_test,
-    res_event;
+    res_tyrewarmer_toggle;
 
-static void callback(){
-    res_event.trigger();
-    ctimer_reset(&clocker);
-}
+PROCESS(coap_server, "Tyrewarmer actuator");
+AUTOSTART_PROCESSES(&coap_server);
 
-PROCESS(personal_coap, "Personal CoAP Server");
-AUTOSTART_PROCESSES(&personal_coap);
-
-PROCESS_THREAD(personal_coap, ev, data)
+PROCESS_THREAD(coap_server, ev, data)
 {
     PROCESS_BEGIN();
 
-    coap_activate_resource(&res_test, "test");
-    coap_activate_resource(&res_event, "event");
-
-    ctimer_set(&clocker, 2 * CLOCK_SECOND, callback, NULL);
+    coap_activate_resource(&res_tyrewarmer_toggle, "tyrewarmer");
+    leds_on(LEDS_RED);
 
     while(1){
-        PROCESS_WAIT_EVENT();
+        PROCESS_YIELD();
+        if(ev == button_hal_release_event)
+        {
+            LOG_DBG("*******BUTTON*******\n");
+            
+            // Evento bottone
+            res_tyrewarmer_toggle.trigger();
+        }
     }
 
     PROCESS_END();
