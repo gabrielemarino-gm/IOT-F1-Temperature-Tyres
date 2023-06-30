@@ -1,8 +1,20 @@
-#include <stdlib.h>
-#include <string.h>
+#include "contiki.h"
 
-#include "dev/leds.h"
+#include "net/ipv6/uip-ds6.h"
+#include "net/ipv6/uiplib.h"
+
+
+#include "sys/ctimer.h"
 #include "coap-engine.h"
+#include "coap-blocking-api.h"
+
+#include "sys/etimer.h"
+#include "dev/leds.h"
+#include "dev/button-hal.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 
 /* Log configuration */
