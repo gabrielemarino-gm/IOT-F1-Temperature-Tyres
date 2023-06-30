@@ -63,9 +63,9 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
 
     if((len = coap_get_query_variable(request, "temp_tyres", &temp_tyres)))
     {
-        LOG_DBG("Temp Tyres %.*d\n", (int)len, temp_tyres);
+        LOG_DBG("Temp Tyres %.*s\n", (int)len, temp_tyres);
 
-        int temp_tyres_int = (int)temp_tyres;
+        int temp_tyres_int = atoi(temp_tyres);
         // Gomma fredda
         if(temp_tyres_int < 90)
         {
