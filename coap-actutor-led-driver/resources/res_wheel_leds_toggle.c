@@ -57,30 +57,31 @@ EVENT_RESOURCE(res_wheel_led_toggle,
 static void res_put_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
     size_t len = 0;
-    const int *temp_tyres = NULL;
+    const char *temp_tyres = NULL;
     uint8_t led = 0;
     int success = 1;
 
-    if((len = coap_get_query_variable(request, "temp_tyres", &(char*)temp_tyres)))
+    if((len = coap_get_query_variable(request, "temp_tyres", &temp_tyres)))
     {
         LOG_DBG("Temp Tyres %.*d\n", (int)len, temp_tyres);
 
+        int temp_tyres_int = (int)temp_tyres;
         // Gomma fredda
-        if(temp_tyres < 90)
+        if(temp_tyres_int < 90)
         {
             // led = LEDS_BLUE;
             led = LEDS_YELLOW;
         }
 
         // Gomma Buona
-        else if(temp_tyres > 90 && temp_tyres < 100)
+        else if(temp_tyres_int > 90 && temp_tyres_int < 100)
         {
             // led = LEDS_BLUE;
             led = LEDS_GREEN;
         }
 
         // Gomma Buona
-        else if(temp_tyres > 100)
+        else if(temp_tyres_int > 100)
         {
             // led = LEDS_BLUE;
             led = LEDS_RED;
