@@ -115,7 +115,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 {
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
 
-    LOG_DBG("strcmp() = %d", strcmp(topic, sub_topic_warmer));
+    LOG_INFO("strcmp() = %d", strcmp(topic, sub_topic_warmer));
     // Accendere o spegnere la termocoperta
     if (strcmp(topic, sub_topic_warmer) == 0)
     {
