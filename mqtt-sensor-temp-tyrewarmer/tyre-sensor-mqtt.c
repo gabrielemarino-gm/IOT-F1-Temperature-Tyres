@@ -5,12 +5,12 @@
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/ipv6/sicslowpan.h"
-#include "sys/etimer.h"
 #include "sys/ctimer.h"
 #include "lib/sensors.h"
 #include "dev/button-hal.h"
 #include "dev/leds.h"
 #include "os/sys/log.h"
+#include "sys/etimer.h"
 #include "tyre-sensor-mqtt.h"
 #include "sys/process.h"
 
