@@ -119,16 +119,16 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     // Accendere o spegnere la termocoperta
     if (strcmp(topic, sub_topic_warmer) == 0)
     {
-        LOG_INFO("Warmer action...");
+        LOG_INFO("Warmer action...\n");
 
         if (strcmp((char*)chunk, "0") == 0)
         {
             warmer_on = false;
-            LOG_INFO("Warmer OFF");
+            LOG_INFO("Warmer OFF\n");
         }    
 
         warmer_on = true;
-        LOG_INFO("Warmer ON");
+        LOG_INFO("Warmer ON\n");
     }
 
     // Cambiare l'intervallo di cambionamento
