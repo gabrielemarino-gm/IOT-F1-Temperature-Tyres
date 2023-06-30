@@ -1,6 +1,8 @@
 #include "contiki.h"
 
 #include "net/ipv6/uip-ds6.h"
+#include "net/ipv6/uiplib.h"
+
 
 #include "sys/ctimer.h"
 #include "coap-engine.h"
@@ -26,11 +28,11 @@ static struct etimer periodic_state_timer;
 #define STATE_TIMER (CLOCK_SECOND * 5)
 
 #define SERVER_IP "coap://[fd00::1]"
-static coap_endpoint_t server_ep;
-// static coap_message_t request[1];
+#define TYRE 1
 
 static int isRegistered = 0;
-static char client_id[64];
+static char client_id[40];
+static char toSend[100];
 
 static bool have_conn(void)
 {
@@ -48,10 +50,11 @@ handler(coap_message_t *response){
 
     if(response != NULL){
         int len = coap_get_payload(response, &chunk);
-        printf("%.*s ", len, (char*)chunk);
+        printf("%.*s\n", len, (char*)chunk);
+        isRegistered = 1;
     }
     else{
-        printf("Error");
+        printf("Error\n");
     }
 }
 
@@ -61,6 +64,9 @@ AUTOSTART_PROCESSES(&coap_server);
 PROCESS_THREAD(coap_server, ev, data)
 {
     PROCESS_BEGIN();
+
+    static coap_endpoint_t server_ep;
+    static coap_message_t request[1];
 
     coap_activate_resource(&res_tyrewarmer_toggle, "tyrewarmer");
     leds_on(LEDS_RED);
@@ -83,12 +89,26 @@ PROCESS_THREAD(coap_server, ev, data)
             if(have_conn()){
                 if(isRegistered == 0)
                 {
-                    snprintf(client_id, 64, "%02x%02x:%02x%02x:%02x%02x",
-                        linkaddr_node_addr.u8[0], linkaddr_node_addr.u8[1],
-                        linkaddr_node_addr.u8[2], linkaddr_node_addr.u8[5],
-                        linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
-    
-                    LOG_DBG("%s\n", client_id);
+                    uip_ds6_addr_t *global_addr = uip_ds6_get_global(ADDR_PREFERRED);
+
+                    sprintf(client_id, "%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x",
+                        global_addr->ipaddr.u8[0], global_addr->ipaddr.u8[1],
+                        global_addr->ipaddr.u8[2], global_addr->ipaddr.u8[3],
+                        global_addr->ipaddr.u8[4], global_addr->ipaddr.u8[5],
+                        global_addr->ipaddr.u8[6], global_addr->ipaddr.u8[7],
+                        global_addr->ipaddr.u8[8], global_addr->ipaddr.u8[9],
+                        global_addr->ipaddr.u8[10], global_addr->ipaddr.u8[11],
+                        global_addr->ipaddr.u8[12], global_addr->ipaddr.u8[13],
+                        global_addr->ipaddr.u8[14], global_addr->ipaddr.u8[15]);
+                    
+                    int leng = sprintf(toSend,"type=REG&tyre_position=%d&addr=%s", TYRE, client_id);
+
+                    coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
+                    coap_set_header_uri_path(request, "registrator");
+                    coap_set_payload(request, toSend, leng);
+
+                    printf("Sending registration request...\n");
+                    COAP_BLOCKING_REQUEST(&server_ep, request, handler);
     
                 }
                 // Check if still registered

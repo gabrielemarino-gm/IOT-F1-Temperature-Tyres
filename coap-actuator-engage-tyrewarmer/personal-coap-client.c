@@ -46,8 +46,8 @@ PROCESS_THREAD(personal_coap_client, ev, data)
         PROCESS_YIELD();
 
         if(etimer_expired(&et)){
-            coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);
-            coap_set_header_uri_path(request, "res1");
+            coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
+            coap_set_header_uri_path(request, "registrator");
             printf("Sending request...\n");
             COAP_BLOCKING_REQUEST(&server_ep, request, handler);
 

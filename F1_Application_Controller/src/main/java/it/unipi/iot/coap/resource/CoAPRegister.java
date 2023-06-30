@@ -19,7 +19,10 @@ public class CoAPRegister extends CoapResource
 //        TODO
 //        Quando arriva una richiesta di registrazione di un ATTUATORE CoAP
 
+
         String payload = exchange.getRequestText();
+        System.out.println(payload);
+        
         String[] fields = payload.split("&");
 
         String command = fields[0].split("=")[1];
