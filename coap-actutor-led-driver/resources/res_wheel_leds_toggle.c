@@ -30,8 +30,6 @@ static void res_put_post_handler(
     int32_t *offset);
 
 
-static void res_trigger(void);
-
 EVENT_RESOURCE(res_wheel_led_toggle,
         "title=\"Wheel Led Manager\"",
         NULL,
