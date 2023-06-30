@@ -97,7 +97,7 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 /*------------------------------------*/
 
 static int temperature = 20;
-static int warmer_on = 1;
+static bool warmer_on = true;
 
 
 static void simulate_temperature ()
@@ -115,16 +115,19 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 {
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
 
+    LOG_DBG("strcmp() = %d", strcmp(topic, sub_topic_warmer));
     // Accendere o spegnere la termocoperta
     if (strcmp(topic, sub_topic_warmer) == 0)
     {
-        if (strcmp((const char*)chunk, "0") == 0)
+        LOG_INFO("Warmer action...");
+
+        if (strcmp((char*)chunk, "0") == 0)
         {
-            warmer_on = 0;
+            warmer_on = false;
             LOG_INFO("Warmer OFF");
         }    
-        
-        warmer_on = 1;
+
+        warmer_on = true;
         LOG_INFO("Warmer ON");
     }
 
