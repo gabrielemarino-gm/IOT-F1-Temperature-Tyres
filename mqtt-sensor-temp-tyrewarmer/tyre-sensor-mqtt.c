@@ -145,7 +145,7 @@ static void simulate_temperature ()
 static void handler_incoming_msg(const char *topic, const uint8_t *chunk) 
 {
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
-
+    LOG_INFO("DBG: %d\n", msg_ptr->payload_chunk);
     // Cambiare l'intervallo di cambionamento
     int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
     state_machine_timer = timer_value;
@@ -205,7 +205,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             LOG_INFO("MQTT PUBLISH EVENT\n");
             /* Qualcuno ha publicato dove sono subscribed */
             msg_ptr = data;
-            print("DBG:     DATA %s\n", (char*)data);
+            // print("DBG:     DATA %s\n", (char*)data);
             handler_incoming_msg(msg_ptr->topic, msg_ptr->payload_chunk);
             /*-------------------------*/
             break;
