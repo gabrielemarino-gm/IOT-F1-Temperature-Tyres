@@ -329,7 +329,7 @@ static void mqtt_state_machine()
             if (status == MQTT_STATUS_OUT_QUEUE_FULL)
             {
                 LOG_ERR("Comand queue was full!\n");
-                PROCESS_EXIT();
+                // PROCESS_EXIT();
             }
 
             state = STATE_SUBSCRIBED;
