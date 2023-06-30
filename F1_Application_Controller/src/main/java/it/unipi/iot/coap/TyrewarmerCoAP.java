@@ -38,7 +38,7 @@ public class TyrewarmerCoAP extends CoapServer
 //    Farne piu di una se la natura della richiesta e' diversa (Get, Put, Post...)
 
     public static String getStatRequest(String TARGET){
-        CoapClient client = new CoapClient(TARGET + "/stat");
+        CoapClient client = new CoapClient(TARGET + "/tyrewarmer");
         String toRet;
 
         try
@@ -46,20 +46,15 @@ public class TyrewarmerCoAP extends CoapServer
             client.setTimeout(2000);
             CoapResponse response = client.get();
             toRet = response.getResponseText();
+            client.delete();
         }
-        catch(NullPointerException ne)
-        {
+        catch(NullPointerException ne) {
             toRet = "OFFLINE";
-            for(Actuator a : actuators){
-                if(a.getAddr().equals(TARGET))
-                {
+            for (Actuator a : actuators) {
+                if (a.getAddr().equals(TARGET)) {
                     a.inactive();
                 }
             }
-        }
-        finally {
-            client.delete();
-
         }
         return toRet;
     }
