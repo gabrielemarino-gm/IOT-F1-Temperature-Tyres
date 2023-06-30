@@ -118,7 +118,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     // Accendere o spegnere la termocoperta
     if (strcmp(topic, sub_topic_warmer) == 0)
     {
-        if (strcmp(chunk, "0") == 0)
+        if (strcmp((const char*)chunk, "0") == 0)
             warmer_on = 0;
         warmer_on = 1;
     }
