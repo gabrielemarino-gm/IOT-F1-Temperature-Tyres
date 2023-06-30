@@ -145,14 +145,15 @@ static void simulate_temperature ()
 static void handler_incoming_msg(const char *topic, const uint8_t *chunk) 
 {
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
-    LOG_INFO("DBG: %d\n", msg_ptr->payload_chunk);
-    // Cambiare l'intervallo di cambionamento
-    int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
-    state_machine_timer = timer_value;
 
-// ( ATTENZIONE, VA BENE FARLO QUI ??????
-        etimer_set(&periodic_state_timer, state_machine_timer);
-// )
+    int val = 0;
+    for (int i = 0; i < msg_ptr->payload_length; i++) {
+        val = val * 10 + (chunk[i] - '0');
+    }
+    // Cambiare l'intervallo di cambionamento
+    state_machine_timer = (CLOCK_SECOND * val);
+
+    etimer_set(&periodic_state_timer, state_machine_timer);
 }
 /*------------------------------------*/
 /*         CHECK CONNECTIVITY         */
@@ -206,6 +207,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             msg_ptr = data;
             // print("DBG:     DATA %s\n", (char*)data);
             handler_incoming_msg(msg_ptr->topic, msg_ptr->payload_chunk);
+            
             state = STATE_SUBSCRIBED;
             /*-------------------------*/
             break;
