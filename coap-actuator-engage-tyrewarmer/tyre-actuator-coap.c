@@ -32,7 +32,7 @@ static struct etimer periodic_state_timer;
 
 static int isRegistered = 0;
 static char client_id[40];
-static char toSend[70];
+static char toSend[100];
 
 static bool have_conn(void)
 {
@@ -83,8 +83,6 @@ PROCESS_THREAD(coap_server, ev, data)
             
             res_tyrewarmer_toggle.trigger();
         }
-
-        // Timer di stato 
         else if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
         {
             // Registra
@@ -102,14 +100,11 @@ PROCESS_THREAD(coap_server, ev, data)
                         global_addr->ipaddr.u8[10], global_addr->ipaddr.u8[11],
                         global_addr->ipaddr.u8[12], global_addr->ipaddr.u8[13],
                         global_addr->ipaddr.u8[14], global_addr->ipaddr.u8[15]);
-
-                    int leng = sprintf(toSend,"type=REG&tyre=%d&addr=%s", TYRE, client_id);
-
-                    LOG_DBG("[%d] - %s\n", leng, toSend);
+                    
+                    int leng = sprintf(toSend,"type=REG&tyre_position=%d&addr=%s", TYRE, client_id);
 
                     coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
                     coap_set_header_uri_path(request, "registrator");
-                    
                     coap_set_payload(request, toSend, leng);
 
                     printf("Sending registration request...\n");
