@@ -21,7 +21,7 @@ public class Controller
     private static String PUBTOPIC = "TyrewarmerConf";
     private static String COMMANDS = "quit -> Close Controller\n" +
                                      "publish <target> <message> -> Publish a message for the target Topic\n" +
-                                     "command <target> <command> -> Send a CoAP request to target\n" +
+                                     "command <target> <type> <args> -> Send a CoAP request to target\n" +
                                      "getTemp -> Get last reported temperature for all sensors\n" +
                                      "getStatus -> Get status of all Tyrewarmers\n";
 
@@ -67,7 +67,7 @@ public class Controller
             {
                 try
                 {
-                    TyrewarmerMQTT.Publisher.Publish(BROKERIP, PUBCLIENTID, PUBTOPIC, "PUBTOPIC");
+                    TyrewarmerMQTT.Publisher.Publish(BROKERIP, PUBCLIENTID, PUBTOPIC, "PubMessageTest");
                 }
                 catch (InterruptedException ie)
                 {
@@ -81,20 +81,6 @@ public class Controller
             else if(tokens[0].equals("command"))   //SEND COAP REQUEST
             {
 //                Manda una richiesta CoAP ad uno specifico attuatore
-                if(tokens.length < 3)
-                {
-                    System.out.println("Command error");
-                }
-                Actuator act = TyrewarmerCoAP.getTyre(Integer.parseInt(tokens[1]));
-                if(act == null)
-                {
-                    System.out.println("There is no actuator for given tyre");
-                }
-                else
-                {
-                    System.out.println("Sending command");
-                    TyrewarmerCoAP.sendCommand(act.getAddr(), tokens[2]);
-                }
             }
             else if(tokens[0].equals("getTemp"))     //GET LAST REGISTERED TEMP
             {
@@ -123,7 +109,7 @@ public class Controller
             {
                 for(Actuator a : TyrewarmerCoAP.getActuators()){
                     String ret = TyrewarmerCoAP.getStatRequest(a.getAddr());
-                    System.out.println(String.format("Tyrewarmer [%d] -> %s", a.getTyre_position(), ret));
+                    System.out.println("STATUS TYREWARMER[" + a.getTyre_position() + "] -> " + ret);
                 }
             }
             else        //UNKNOWN COMMAND

@@ -5,7 +5,6 @@ package it.unipi.iot.coap.resource;
 import it.unipi.iot.coap.TyrewarmerCoAP;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
-import org.eclipse.californium.core.coap.Response;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 
 public class CoAPRegister extends CoapResource
@@ -32,17 +31,15 @@ public class CoAPRegister extends CoapResource
 
 //        Un ATTUATORE CoAP si sta registrando
         if(command.equals("REG")){
-
-            Response response = new Response(CoAP.ResponseCode.CONTENT);
-            if(TyrewarmerCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", val2)))
+            if(TyrewarmerCoAP.registerActuator(Integer.parseInt(val1), val2))
             {
-                response.setPayload("OK");
+                exchange.respond(CoAP.ResponseCode.CREATED);
             }
             else
             {
-                response.setPayload("ERROR");
+
+                exchange.respond(CoAP.ResponseCode.NOT_IMPLEMENTED);
             }
-            exchange.respond(response);
         }
 
     }

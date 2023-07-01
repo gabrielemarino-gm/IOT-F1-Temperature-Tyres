@@ -57,12 +57,10 @@ public class TyrewarmerMQTT
 //            se serve
             String payload = new String(message.getPayload());
 
-            String[] args = payload.split("&");
-
             Temperature temp = new Temperature();
             temp.setTimestamp(new Date(System.currentTimeMillis()));
-            temp.setTyrePosition(Integer.parseInt(args[0].split("=")[1]));
-            temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1])/10);
+            temp.setTyrePosition(1);
+            temp.setTemperatureValue(Double.parseDouble(payload)/10);
 
 //            Registra temperatura
             try
@@ -90,7 +88,7 @@ public class TyrewarmerMQTT
         public static void Publish(String BROKER, String CLIENTID, String TOPIC, String MESSAGE)
         throws MqttException, InterruptedException
         {
-            MqttClient client = new MqttClient(BROKER, CLIENTID);
+            MqttClient client = new MqttClient(BROKER, CLIENTID+"Pub");
             client.connect();
             MqttMessage message = new MqttMessage(MESSAGE.getBytes());
             client.publish(TOPIC, message);
