@@ -67,7 +67,7 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
     PROCESS_BEGIN();
 
     static coap_endpoint_t server_ep;
-    static coap_message_t request[1];
+    //static coap_message_t request[1];
 
     coap_activate_resource(&res_wheel_led, "Wheel Led");
 
