@@ -20,7 +20,7 @@ public abstract class BaseMySQLDAO
 
     public static Connection getConnection() throws SQLException
     {
-        if(ds == null || ds.isClosed()){
+        if(ds == null || ds.isClosed() || ds.getConnection() == null){
             initPool();
         }
 
@@ -39,8 +39,6 @@ public abstract class BaseMySQLDAO
         ds.addConnectionProperty("zeroDateTimeBehavior", "CONVERT_TO_NULL");
         ds.addConnectionProperty("serverTimeZone", "CET");
         ds.setMaxIdle(10);  // Maximum number of idle connections in the pool
-        ds.setMinEvictableIdleTimeMillis(30000);
-        ds.setTimeBetweenEvictionRunsMillis(6000);
     }
 
     public static void closePool()

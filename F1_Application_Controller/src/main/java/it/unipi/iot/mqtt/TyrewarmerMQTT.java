@@ -5,7 +5,6 @@ import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
 import it.unipi.iot.model.Actuator;
 import it.unipi.iot.model.Temperature;
-import org.apache.commons.dbcp2.DelegatingResultSet;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Date;
@@ -79,17 +78,41 @@ public class TyrewarmerMQTT
 
             Actuator act = TyrewarmerCoAP.getTyre(temp.getTyrePosition());
 //            Fai altre cose qui (AZIONA ATTUATORE CORRETTO)
-            if(temp.getTemperatureValue() > 70)
+            if(temp.getTemperatureValue() > 70 && act.isOn())
             {
+                act.toggle();
                 TyrewarmerCoAP.sendCommand(act.getAddr(),"HIGHTEMP");
                 System.out.println(String.format("Tyrewarmer [%d] -> DISENGAGED", act.getTyre_position()));
+
+//                Abbassare temperatura simulazione
+                try
+                {
+                    TyrewarmerMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "0");
+                }
+                catch(InterruptedException ie)
+                {
+                    ie.printStackTrace();
+                }
+                catch(MqttException me)
+                {
+                    me.printStackTrace();
+                }
             }
-            else if (temp.getTemperatureValue() < 65)
-            {
-                TyrewarmerCoAP.sendCommand(act.getAddr(),"LOWTEMP");
+            else if (temp.getTemperatureValue() < 65 && !act.isOn()) {
+                act.toggle();
+                TyrewarmerCoAP.sendCommand(act.getAddr(), "LOWTEMP");
                 System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));
 
+//                Alzare temperatura simulazione
+                try {
+                    TyrewarmerMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "1");
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                } catch (MqttException me) {
+                    me.printStackTrace();
+                }
             }
+
 //            ------------------
         }
 

@@ -28,11 +28,16 @@ public class TemperatureDAO extends BaseMySQLDAO
             preparedStatement.setInt(3, temperature.getTyrePosition());
            
             preparedStatement.executeUpdate();
+            connection.close();
 
         }
         catch(Exception ex)
         {
             throw new DAOException(ex);
+        }
+        finally {
+
+            closePool();
         }
     }
 
@@ -65,10 +70,15 @@ public class TemperatureDAO extends BaseMySQLDAO
                 newT.setTyrePosition(rs.getInt("tyre_position"));
                 toRet.add(newT);
             }
+
+            connection.close();
         }
         catch(Exception ex)
         {
             throw new DAOException(ex);
+        }
+        finally {
+            closePool();
         }
 
         return toRet;

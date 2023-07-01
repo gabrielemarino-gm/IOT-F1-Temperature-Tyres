@@ -20,4 +20,14 @@ public class Temperature
     public double getTemperatureValue () {return temperatureValue;}
     public Date getTimestamp () {return timestamp;}
     public int getTyrePosition () {return tyrePosition;}
+
+    @Override
+    public String toString() {
+        return "Temperature{" +
+                "id=" + id +
+                ", temperatureValue=" + temperatureValue +
+                ", timestamp=" + timestamp +
+                ", tyrePosition=" + tyrePosition +
+                '}';
+    }
 }
