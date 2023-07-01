@@ -40,9 +40,6 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 
 // Buffer for topic publication
-#define sub_topic_warmer        "warmer_on"
-#define sub_topic_threshold     "set_threshold"
-#define pub_topic               "tyre_temp"
 #define SUB_TOPIC_WARMER        "warmer_on"
 #define SUB_TOPIC_THRESHOLD     "TyrewarmerConf"
 #define PUB_TOPIC               "TyrewarmerTemp"
