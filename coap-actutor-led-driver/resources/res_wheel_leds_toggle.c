@@ -57,16 +57,18 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
         
         // Gomma calda
         LOG_DBG("OVER? %d\n", strncmp(command, "OVER", len));
+        LOG_DBG("UNDER? %d\n", strncmp(command, "UNDER", len));
+        LOG_DBG("GREAT? %d\n", strncmp(command, "GREAT", len));
         if (strncmp(command, "OVER", len) == 0)
             led = LEDS_RED;
 
         // Gomma fredda
-        LOG_DBG("UNDER? %d\n", strncmp(command, "UNDER", len));
+       
         else if (strncmp(command, "UNDER", len) == 0)
             led = LEDS_YELLOW;
 
         // Gomma buona
-        LOG_DBG("GREAT? %d\n", strncmp(command, "GREAT", len));
+        
         else if (strncmp(command, "GREAT", len) == 0)
             led = LEDS_GREEN; 
     }
