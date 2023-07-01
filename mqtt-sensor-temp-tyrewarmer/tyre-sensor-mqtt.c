@@ -41,9 +41,9 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 
 // Buffer for topic publication
-#define sub_topic_warmer        "warmer_on"
-#define sub_topic_threshold     "TyrewarmerConf"
-#define pub_topic               "TyrewarmerTemp"
+#define SUB_TOPIC_WARMER        "warmer_on"
+#define SUB_TOPIC_THRESHOLD     "TyrewarmerConf"
+#define PUB_TOPIC               "TyrewarmerTemp"
 static char app_buffer[APP_BUFFER_SIZE];
 
 
@@ -117,7 +117,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
     
     // Accendere o spegnere la termocoperta
-    if (strcmp(topic, sub_topic_warmer) == 0)
+    if (strcmp(topic, SUB_TOPIC_WARMER) == 0)
     {
         LOG_INFO("Warmer action...\n");
 
@@ -135,8 +135,10 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     }
 
     // Cambiare l'intervallo di cambionamento
-    else if (strcmp(topic, sub_topic_threshold) == 0)
+    else if (strcmp(topic, SUB_TOPIC_THRESHOLD) == 0)
     {   
+        LOG_INFO("%d\n", (int)*msg_ptr->payload_chunk);
+
         int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
         state_machine_timer = timer_value;
         etimer_set(&periodic_state_timer, state_machine_timer);
@@ -314,7 +316,16 @@ static void mqtt_state_machine()
             /* Connesso all'MQTT Broker */
             LOG_DBG("Connected\n");
 
-            status = mqtt_subscribe(&conn, NULL, sub_topic_warmer, MQTT_QOS_LEVEL_0);
+            status = mqtt_subscribe(&conn, NULL, SUB_TOPIC_WARMER, MQTT_QOS_LEVEL_0);
+
+            // Errore coda piena
+            if (status == MQTT_STATUS_OUT_QUEUE_FULL)
+            {
+                LOG_ERR("Comand queue was full!\n");
+                // PROCESS_EXIT();
+            }
+
+            status = mqtt_subscribe(&conn, NULL, SUB_TOPIC_THRESHOLD, MQTT_QOS_LEVEL_0);
 
             // Errore coda piena
             if (status == MQTT_STATUS_OUT_QUEUE_FULL)
@@ -336,7 +347,7 @@ static void mqtt_state_machine()
 
             snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", TYRE, temperature);
 
-            mqtt_publish (&conn, NULL, pub_topic, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+            mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
             /*-------------------*/
             break;

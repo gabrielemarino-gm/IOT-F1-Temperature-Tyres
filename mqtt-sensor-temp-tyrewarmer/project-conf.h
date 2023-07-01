@@ -10,7 +10,7 @@
 //#define LOG_CONF_LEVEL_RPL                         LOG_LEVEL_DBG
 //#define LOG_CONF_LEVEL_6LOWPAN                     LOG_LEVEL_DBG
 //#define LOG_CONF_LEVEL_TCPIP                       LOG_LEVEL_DBG
-
+#define MQTT_MAX_TOPIC_QUEUE_SIZE 2
 /*---------------------------------------------------------------------------*/
 #endif /* PROJECT_CONF_H_ */
 /*---------------------------------------------------------------------------*/
