@@ -88,7 +88,7 @@ public class TyrewarmerMQTT
         public static void Publish(String BROKER, String CLIENTID, String TOPIC, String MESSAGE)
         throws MqttException, InterruptedException
         {
-            MqttClient client = new MqttClient(BROKER, CLIENTID+"Pub");
+            MqttClient client = new MqttClient(BROKER, CLIENTID);
             client.connect();
             MqttMessage message = new MqttMessage(MESSAGE.getBytes());
             client.publish(TOPIC, message);
