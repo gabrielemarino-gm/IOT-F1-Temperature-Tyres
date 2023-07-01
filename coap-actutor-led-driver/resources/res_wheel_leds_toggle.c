@@ -54,19 +54,19 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
     if((len = coap_get_query_variable(request, "command", &command)))
     {
         LOG_DBG("Temp Tyres %.*s\n", (int)len, command);
-
-        int command_int = atoi(command);
-        LOG_DBG("Temp Tyres INT %.*d\n", (int)len, command_int);
         
         // Gomma calda
+        LOG_DBG("OVER? %d\n", strncmp(command, "OVER", len))
         if (strncmp(command, "OVER", len) == 0)
             led = LEDS_RED;
 
         // Gomma fredda
+        LOG_DBG("UNDER? %d\n", strncmp(command, "UNDER", len))
         else if (strncmp(command, "UNDER", len) == 0)
             led = LEDS_YELLOW;
 
         // Gomma buona
+        LOG_DBG("GREAT? %d\n", strncmp(command, "GREAT", len))
         else if (strncmp(command, "GREAT", len) == 0)
             led = LEDS_GREEN; 
     }
