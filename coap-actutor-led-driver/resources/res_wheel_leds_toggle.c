@@ -30,13 +30,12 @@ static void res_put_post_handler(
     int32_t *offset);
 
 
-EVENT_RESOURCE(res_wheel_led_toggle,
+EVENT_RESOURCE(res_wheel_led,
         "title=\"Wheel Led Manager\"",
         NULL,
+        res_put_post_handler,
+        res_put_post_handler,
         NULL,
-        res_put_post_handler,
-        res_put_post_handler,
-        NULL
 );
 
 
@@ -47,36 +46,28 @@ EVENT_RESOURCE(res_wheel_led_toggle,
 static void res_put_post_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
     size_t len = 0;
-    const char *temp_tyres = NULL;
+    const char *command = NULL;
     uint8_t led = 0;
     int success = 1;
 
-    if((len = coap_get_query_variable(request, "temp_tyres", &temp_tyres)))
+    if((len = coap_get_query_variable(request, "command", &command)))
     {
-        LOG_DBG("Temp Tyres %.*s\n", (int)len, temp_tyres);
+        LOG_DBG("Temp Tyres %.*s\n", (int)len, command);
 
-        int temp_tyres_int = atoi(temp_tyres);
-        LOG_DBG("Temp Tyres INT %.*d\n", (int)len, temp_tyres_int);
-        // Gomma fredda
-        if(temp_tyres_int < 90)
-        {
-            // led = LEDS_BLUE;
-            led = LEDS_YELLOW;
-        }
-
-        // Gomma Buona
-        else if(temp_tyres_int > 90 && temp_tyres_int < 100)
-        {
-            // led = LEDS_BLUE;
-            led = LEDS_GREEN;
-        }
-
-        // Gomma Buona
-        else if(temp_tyres_int > 100)
-        {
-            // led = LEDS_BLUE;
+        int command_int = atoi(command);
+        LOG_DBG("Temp Tyres INT %.*d\n", (int)len, command_int);
+        
+        // Gomma calda
+        if (strncmp(command, "OVER", len) == 0)
             led = LEDS_RED;
-        }
+        
+        // Gomma fredda
+        else if (strncmp(command, "UNDER", len) == 0)
+            led = LEDS_YELLOW;
+
+        // Gomma buona
+        else if (strncmp(command, "GREAT", len) == 0)
+            led = LEDS_GREEN;    
     }
     else
     {
