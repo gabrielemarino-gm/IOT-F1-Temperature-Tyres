@@ -56,9 +56,6 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
         LOG_DBG("Temp Tyres %.*s\n", (int)len, command);
         
         // Gomma calda
-        LOG_DBG("OVER? %d\n", strncmp(command, "OVER", len));
-        LOG_DBG("UNDER? %d\n", strncmp(command, "UNDER", len));
-        LOG_DBG("GREAT? %d\n", strncmp(command, "GREAT", len));
         if (strncmp(command, "OVER", len) == 0)
             led = LEDS_RED;
 
