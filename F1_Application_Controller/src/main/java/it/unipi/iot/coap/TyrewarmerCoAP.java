@@ -8,6 +8,7 @@ import it.unipi.iot.model.Actuator;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.CoapServer;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 import java.util.ArrayList;
 
@@ -37,8 +38,17 @@ public class TyrewarmerCoAP extends CoapServer
 //    Funzione statica per connettersi a un CoAP Server e inviare una semplice richiesta CoAP
 //    Farne piu di una se la natura della richiesta e' diversa (Get, Put, Post...)
 
+    public static String sendCommand(String TARGET, String COMMAND){
+        CoapClient client = new CoapClient(String.format("%s/tyrewarmer?command=%s",TARGET,COMMAND));
+
+        client.setTimeout(2000);
+        CoapResponse response = client.put("", MediaTypeRegistry.TEXT_PLAIN);
+
+        return response.getCode().toString();
+    }
+
     public static String getStatRequest(String TARGET){
-        CoapClient client = new CoapClient(TARGET + "/stat");
+        CoapClient client = new CoapClient(TARGET + "/tyrewarmer");
         String toRet;
 
         try
@@ -63,6 +73,7 @@ public class TyrewarmerCoAP extends CoapServer
         }
         return toRet;
     }
+
 //      Altre funzioni statiche utili alla gestione degli attuatori CoAP
 //      quali registrazione e cancellazione
 
@@ -96,6 +107,13 @@ public class TyrewarmerCoAP extends CoapServer
     public static ArrayList<Actuator> getActuators()
     {
         return actuators;
+    }
+    public static Actuator getTyre(int i){
+         for(Actuator a : actuators)
+         {
+             if(a.getTyre_position() == i) return a;
+         }
+         return null;
     }
 
 }

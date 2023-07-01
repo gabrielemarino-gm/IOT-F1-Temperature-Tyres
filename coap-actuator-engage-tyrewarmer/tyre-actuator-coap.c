@@ -18,7 +18,7 @@
 
 /* Log configuration */
 #include "sys/log.h"
-#define LOG_MODULE "Tyre Actuator"
+#define LOG_MODULE "Tyrewarmer Actuator"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
 extern coap_resource_t 
@@ -101,7 +101,7 @@ PROCESS_THREAD(coap_server, ev, data)
                         global_addr->ipaddr.u8[12], global_addr->ipaddr.u8[13],
                         global_addr->ipaddr.u8[14], global_addr->ipaddr.u8[15]);
                     
-                    int leng = sprintf(toSend,"type=REG&tyre_position=%d&addr=%s", TYRE, client_id);
+                    int leng = sprintf(toSend,"type=REG&tyre_=%d&addr=%s", TYRE, client_id);
 
                     coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
                     coap_set_header_uri_path(request, "registrator");
