@@ -25,7 +25,7 @@ extern coap_resource_t res_wheel_led;
 static struct etimer periodic_state_timer;
 #define STATE_TIMER (CLOCK_SECOND * 5)
 
-static bool isRegistred = false;
+static bool command = false;
 static char client_id[40];
 static char toSend[100];
 
@@ -80,7 +80,7 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
             // Registra
             if(have_conn())
             {
-                if(isRegistered == 0)
+                if(isRegistred == 0)
                 {
                     uip_ds6_addr_t *global_addr = uip_ds6_get_global(ADDR_PREFERRED);
 
@@ -114,6 +114,8 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
             {
                 LOG_DBG("Connecting to Border Router\n");
             }
+
+            etimer_reset(&periodic_state_timer);
         }
     }
 

@@ -74,7 +74,8 @@ PROCESS_THREAD(coap_server, ev, data)
     etimer_set(&periodic_state_timer, STATE_TIMER);
     coap_endpoint_parse(SERVER_IP, strlen(SERVER_IP), &server_ep);
 
-    while(1){
+    while(1)
+    {
         PROCESS_YIELD();
         // Evento bottone
         if(ev == button_hal_release_event)
@@ -86,7 +87,8 @@ PROCESS_THREAD(coap_server, ev, data)
         else if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
         {
             // Registra
-            if(have_conn()){
+            if(have_conn())
+            {
                 if(isRegistered == 0)
                 {
                     uip_ds6_addr_t *global_addr = uip_ds6_get_global(ADDR_PREFERRED);
@@ -121,6 +123,7 @@ PROCESS_THREAD(coap_server, ev, data)
             {
                 LOG_DBG("Connecting to Border Router\n");
             }
+
             etimer_reset(&periodic_state_timer);
         }
 
