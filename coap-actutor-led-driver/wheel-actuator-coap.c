@@ -48,7 +48,7 @@ void handler (coap_message_t *response)
     {
         int len = coap_get_payload(response, &chunk);
         LOG_INFO ("%.*s\n", len, (char*)chunk);
-        isRegistred = true;
+        isRegistered = true;
     }
     else
     {
@@ -80,7 +80,7 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
             // Registra
             if(have_conn())
             {
-                if(isRegistred == 0)
+                if(isRegistered == 0)
                 {
                     uip_ds6_addr_t *global_addr = uip_ds6_get_global(ADDR_PREFERRED);
 
