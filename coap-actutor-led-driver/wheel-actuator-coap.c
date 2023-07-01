@@ -27,36 +27,36 @@ extern coap_resource_t res_wheel_led;
 static struct etimer periodic_state_timer;
 #define STATE_TIMER (CLOCK_SECOND * 5)
 
-static bool isRegistered = false;
-static char client_id[40];
-static char toSend[100];
+// static bool isRegistered = false;
+// static char client_id[40];
+// static char toSend[100];
 
-static bool have_conn (void)
-{
-    if (uip_ds6_get_global(ADDR_PREFERRED) == NULL || uip_ds6_defrt_choose() == NULL)
-    {
-        return false;
-    }
-
-    return true;
-}
+//static bool have_conn (void)
+//{
+//    if (uip_ds6_get_global(ADDR_PREFERRED) == NULL || uip_ds6_defrt_choose() == NULL)
+//    {
+//        return false;
+//    }
+//
+//    return true;
+//}
 
 // Gestione registrazione al Cloud
-void handler (coap_message_t *response)
-{
-    const uint8_t *chunk;
-
-    if (response != NULL)
-    {
-        int len = coap_get_payload(response, &chunk);
-        LOG_INFO ("%.*s\n", len, (char*)chunk);
-        isRegistered = true;
-    }
-    else
-    {
-        LOG_ERR("ERROR: Actuator not subcrived");
-    }
-}
+//void handler (coap_message_t *response)
+//{
+//    const uint8_t *chunk;
+//
+//    if (response != NULL)
+//    {
+//        int len = coap_get_payload(response, &chunk);
+//        LOG_INFO ("%.*s\n", len, (char*)chunk);
+//        isRegistered = true;
+//    }
+//    else
+//    {
+//        LOG_ERR("ERROR: Actuator not subcrived");
+//    }
+//}
 
 
 PROCESS(coap_server_wheel_leds, "Driver Wheel Led Actuator");
