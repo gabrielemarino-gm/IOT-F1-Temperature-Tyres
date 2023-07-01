@@ -1,8 +1,11 @@
 package it.unipi.iot.mqtt;
 
+import it.unipi.iot.coap.TyrewarmerCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
+import it.unipi.iot.model.Actuator;
 import it.unipi.iot.model.Temperature;
+import org.apache.commons.dbcp2.DelegatingResultSet;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Date;
@@ -74,8 +77,19 @@ public class TyrewarmerMQTT
                 de.printStackTrace();
             }
 
+            Actuator act = TyrewarmerCoAP.getTyre(temp.getTyrePosition());
 //            Fai altre cose qui (AZIONA ATTUATORE CORRETTO)
+            if(temp.getTemperatureValue() > 70)
+            {
+                TyrewarmerCoAP.sendCommand(act.getAddr(),"HIGHTEMP");
+                System.out.println(String.format("Tyrewarmer [%d] -> DISENGAGED", act.getTyre_position()));
+            }
+            else if (temp.getTemperatureValue() < 65)
+            {
+                TyrewarmerCoAP.sendCommand(act.getAddr(),"LOWTEMP");
+                System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));
 
+            }
 //            ------------------
         }
 

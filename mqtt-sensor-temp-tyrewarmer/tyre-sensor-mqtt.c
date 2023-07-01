@@ -30,7 +30,7 @@
 static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Config values
-#define DEFAULT_PUBLISH_INTERVAL (30 * CLOCK_SECOND)
+#define DEFAULT_PUBLISH_INTERVAL (10 * CLOCK_SECOND)
 #define TYRE 1
 
 // Sizes and Lenghts
@@ -75,7 +75,9 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int state_machine_timer = (CLOCK_SECOND * 5);
+#define CONNECTION_FREQUENCE (CLOCK_SECOND * 5)
+#define SAMPLING_FREQUENCE (CLOCK_SECOND * 2)
+
 static struct etimer periodic_state_timer;
 
 // States
@@ -101,12 +103,12 @@ static int temperature = 200;
 static bool warmer_on = true;
 
 
-static void simulate_temperature ()
+static void simulate_temperature()
 {
     if (warmer_on)
-        temperature++;
+        temperature += 5;
     else
-        temperature--;   
+        temperature -= 5;   
 }
 
 /*-------------------------------------------------*/
@@ -140,8 +142,8 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
         LOG_INFO("%d\n", (int)*msg_ptr->payload_chunk);
 
         int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
-        state_machine_timer = timer_value;
-        etimer_set(&periodic_state_timer, state_machine_timer);
+
+        etimer_set(&periodic_state_timer, timer_value);
     }
 }
 /*------------------------------------*/
@@ -214,6 +216,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             #else
                 LOG_INFO("Application is subscribed to topic successfully\n");
             #endif
+
             /*-------------------------*/
             break;
 
@@ -245,7 +248,8 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
 /*------------------------------------*/
 static void client_init(void)
 {
-    etimer_set(&periodic_state_timer, state_machine_timer);
+    etimer_set(&periodic_state_timer, CONNECTION_FREQUENCE);
+
     int len = snprintf(client_id, BUFFER_SIZE, "%02x%02x%02x%02x%02x%02x",
             linkaddr_node_addr.u8[0], linkaddr_node_addr.u8[1],
             linkaddr_node_addr.u8[2], linkaddr_node_addr.u8[5],
@@ -325,14 +329,14 @@ static void mqtt_state_machine()
                 // PROCESS_EXIT();
             }
 
-            status = mqtt_subscribe(&conn, NULL, SUB_TOPIC_THRESHOLD, MQTT_QOS_LEVEL_0);
+            // status = mqtt_subscribe(&conn, NULL, SUB_TOPIC_THRESHOLD, MQTT_QOS_LEVEL_0);
 
-            // Errore coda piena
-            if (status == MQTT_STATUS_OUT_QUEUE_FULL)
-            {
-                LOG_ERR("Comand queue was full!\n");
-                // PROCESS_EXIT();
-            }
+            // // Errore coda piena
+            // if (status == MQTT_STATUS_OUT_QUEUE_FULL)
+            // {
+            //     LOG_ERR("Comand queue was full!\n");
+            //     // PROCESS_EXIT();
+            // }
 
             state = STATE_SUBSCRIBED;
             /*-------------------*/
@@ -347,7 +351,7 @@ static void mqtt_state_machine()
 
             snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", TYRE, temperature);
 
-            mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+            mqtt_publish(&conn, NULL, PUB_TOPIC, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
             /*-------------------*/
             break;
@@ -372,6 +376,7 @@ static void mqtt_state_machine()
 
     // Resetto il timer della state machine
     etimer_reset(&periodic_state_timer);
+    if(state == STATE_SUBSCRIBED) etimer_set(&periodic_state_timer, SAMPLING_FREQUENCE);
 }
 
 /*------------------------------------*/
@@ -387,7 +392,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
     {
         PROCESS_YIELD();
 
-        // La state machine va avviata ogni STATE_MACHINE_TIMER
+        // La state machine va avviata ogni CONNECTION_FREQUENCE
         if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
         {
             mqtt_state_machine();
