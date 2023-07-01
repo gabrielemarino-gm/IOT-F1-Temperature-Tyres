@@ -80,6 +80,7 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
         if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
         {
             // Registra
+            /*
             if(have_conn())
             {
                 if(isRegistered == 0)
@@ -116,7 +117,9 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
             {
                 LOG_DBG("Connecting to Border Router\n");
             }
+            */
 
+            LOG_DBG("Connecting to Border Router\n");
             etimer_reset(&periodic_state_timer);
         }
     }
