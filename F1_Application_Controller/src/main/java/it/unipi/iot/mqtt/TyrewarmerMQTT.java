@@ -87,7 +87,7 @@ public class TyrewarmerMQTT
 //                Abbassare temperatura simulazione
                 try
                 {
-                    TyrewarmerMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "0");
+                    TyrewarmerMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "-1");
                 }
                 catch(InterruptedException ie)
                 {
@@ -98,7 +98,7 @@ public class TyrewarmerMQTT
                     me.printStackTrace();
                 }
             }
-            else if (temp.getTemperatureValue() < 65 && !act.isOn()) {
+            else if (temp.getTemperatureValue() < 67 && !act.isOn()) {
                 act.toggle();
                 TyrewarmerCoAP.sendCommand(act.getAddr(), "LOWTEMP");
                 System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));

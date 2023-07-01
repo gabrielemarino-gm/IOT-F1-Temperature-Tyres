@@ -15,9 +15,14 @@ public class CoAPRegister extends CoapResource
         setObservable(false);
     }
 
+    public void handleGET(CoapExchange exchange)
+    {
+        Response response = new Response(CoAP.ResponseCode.CONTENT);
+        response.setPayload("PING");
+        exchange.respond(response);
+    }
     public void handlePOST(CoapExchange exchange)
     {
-//        TODO
 //        Quando arriva una richiesta di registrazione di un ATTUATORE CoAP
 
 
@@ -44,7 +49,6 @@ public class CoAPRegister extends CoapResource
             }
             exchange.respond(response);
         }
-
     }
 
 }

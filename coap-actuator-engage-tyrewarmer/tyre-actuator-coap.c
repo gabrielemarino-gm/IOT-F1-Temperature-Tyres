@@ -58,6 +58,19 @@ handler(coap_message_t *response){
     }
 }
 
+static bool check = false;
+
+void 
+checker(coap_message_t *response){
+
+    if(response != NULL){
+        check = true;
+    }
+    else{
+        check = false;
+    }
+}
+
 PROCESS(coap_server, "Tyrewarmer actuator");
 AUTOSTART_PROCESSES(&coap_server);
 
@@ -116,7 +129,11 @@ PROCESS_THREAD(coap_server, ev, data)
                 // Check if still registered
                 else
                 {
-
+                    coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);
+                    coap_set_header_uri_path(request, "registrator");
+                    COAP_BLOCKING_REQUEST(&server_ep, request, checker);
+                    
+                    if(!check) isRegistered = 0;
                 }
             }
             else

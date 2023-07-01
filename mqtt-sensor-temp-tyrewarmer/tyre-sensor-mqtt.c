@@ -99,15 +99,15 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 /*        GESTIONE TEMPERATURA        */
 /*------------------------------------*/
 
-static int temperature = 200;
-static bool warmer_on = true;
+static int temperature = 250;
+static int warmer_on = 0;
 
 
 static void simulate_temperature()
 {
-    if (warmer_on)
-        temperature += 5;
-    else
+    if (warmer_on == 1)
+        temperature += 15;
+    else if (warmer_on == -1)
         temperature -= 5;   
 }
 
@@ -123,16 +123,22 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     {
         LOG_INFO("Warmer action...\n");
 
-        if (strcmp((char*)chunk, "0") == 0)
+        if (strcmp((char*)chunk, "-1") == 0)
         {
-            warmer_on = false;
+            warmer_on = -1;
             LOG_INFO("Warmer OFF\n");
     
         }    
+        else if (strcmp((char*)chunk, "1") == 0)
+        {
+            warmer_on = 1;
+            LOG_INFO("Warmer ON\n");
+        }
         else
         {
-            warmer_on = true;
-            LOG_INFO("Warmer ON\n");
+            warmer_on = 0;
+            temperature = 250;
+            LOG_INFO("Warmer RESET\n");
         }
     }
 
@@ -348,10 +354,9 @@ static void mqtt_state_machine()
             /* Sottoscritto a un topic */
 
             simulate_temperature();
-
             snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", TYRE, temperature);
-
-            mqtt_publish(&conn, NULL, PUB_TOPIC, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+            if(warmer_on != 0)
+                mqtt_publish(&conn, NULL, PUB_TOPIC, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
             /*-------------------*/
             break;
