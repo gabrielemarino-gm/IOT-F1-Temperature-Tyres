@@ -19,6 +19,8 @@
 #define LOG_MODULE "Wheel Actuator"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
+#define SERVER_IP "coap://[fd00::1]"
+#define TYRE 1
 
 extern coap_resource_t res_wheel_led;
 
