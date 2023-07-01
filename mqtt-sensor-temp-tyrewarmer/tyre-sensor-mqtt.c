@@ -18,7 +18,7 @@
 #include <strings.h>
 #include <stdarg.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "Tyrewarmer Sensor"
+#define LOG_MODULE "mqtt-client"
 #define LOG_LEVEL LOG_LEVEL_DBG
 /*------------------------------------*/
 /*             INIT PHASE             */
@@ -31,7 +31,6 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Config values
 #define DEFAULT_PUBLISH_INTERVAL (30 * CLOCK_SECOND)
-#define TYRE 1
 
 // Sizes and Lenghts
 #define MAX_TCP_SEGMENT_SIZE 32
@@ -42,8 +41,8 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Buffer for topic publication
 #define sub_topic_warmer        "warmer_on"
-#define sub_topic_threshold     "TyrewarmerConf"
-#define pub_topic               "TyrewarmerTemp"
+#define sub_topic_threshold     "set_threshold"
+#define pub_topic               "tyre_temp"
 static char app_buffer[APP_BUFFER_SIZE];
 
 
@@ -75,7 +74,7 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int state_machine_timer = (CLOCK_SECOND * 5);
+int state_machine_timer = (CLOCK_SECOND >> 1);
 static struct etimer periodic_state_timer;
 
 // States
@@ -97,7 +96,7 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 /*        GESTIONE TEMPERATURA        */
 /*------------------------------------*/
 
-static int temperature = 200;
+static int temperature = 20;
 static bool warmer_on = true;
 
 
@@ -334,7 +333,7 @@ static void mqtt_state_machine()
 
             simulate_temperature();
 
-            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", TYRE, temperature);
+            snprintf(app_buffer, sizeof(app_buffer), "%d", temperature);
 
             mqtt_publish (&conn, NULL, pub_topic, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
