@@ -42,9 +42,9 @@ public class TyrewarmerCoAP extends CoapServer
         CoapClient client = new CoapClient(String.format("%s/tyrewarmer?command=%s",TARGET,COMMAND));
 
         client.setTimeout(2000);
-        CoapResponse response = client.put(String.format("command=%s", COMMAND), MediaTypeRegistry.TEXT_PLAIN);
+        CoapResponse response = client.put("", MediaTypeRegistry.TEXT_PLAIN);
 
-        return response.getResponseText();
+        return response.getCode().toString();
     }
 
     public static String getStatRequest(String TARGET){

@@ -123,7 +123,7 @@ public class Controller
             {
                 for(Actuator a : TyrewarmerCoAP.getActuators()){
                     String ret = TyrewarmerCoAP.getStatRequest(a.getAddr());
-                    System.out.println("STATUS TYREWARMER[" + a.getTyre_position() + "] -> " + ret);
+                    System.out.println(String.format("Tyrewarmer [%d] -> %s", a.getTyre_position(), ret));
                 }
             }
             else        //UNKNOWN COMMAND

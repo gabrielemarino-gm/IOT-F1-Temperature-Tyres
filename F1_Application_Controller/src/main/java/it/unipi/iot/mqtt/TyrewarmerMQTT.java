@@ -57,10 +57,12 @@ public class TyrewarmerMQTT
 //            se serve
             String payload = new String(message.getPayload());
 
+            String[] args = payload.split("&");
+
             Temperature temp = new Temperature();
             temp.setTimestamp(new Date(System.currentTimeMillis()));
-            temp.setTyrePosition(1);
-            temp.setTemperatureValue(Double.parseDouble(payload)/10);
+            temp.setTyrePosition(Integer.parseInt(args[0].split("=")[1]));
+            temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1])/10);
 
 //            Registra temperatura
             try

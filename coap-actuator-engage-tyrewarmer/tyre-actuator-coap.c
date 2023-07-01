@@ -18,7 +18,7 @@
 
 /* Log configuration */
 #include "sys/log.h"
-#define LOG_MODULE "Tyre Actuator"
+#define LOG_MODULE "Tyrewarmer Actuator"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
 extern coap_resource_t 
