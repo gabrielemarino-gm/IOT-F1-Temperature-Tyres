@@ -1,8 +1,6 @@
 package it.unipi.iot.model;
 
-import javax.xml.crypto.Data;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 public class Temperature
 {

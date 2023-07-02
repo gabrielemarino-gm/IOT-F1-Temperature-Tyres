@@ -1,10 +1,11 @@
 package it.unipi.iot.model;
 
+// Questa classe rappresenta un attuatore
 public class Actuator {
     private int tyre_position;
     private String addr;
-    private boolean isActive;
-    private boolean isOn;
+    private boolean isActive; // Se e' attivo (non Offline)
+    private boolean isOn; // Se e' acceso o spento (solo se Online)
 
     public Actuator(int pos, String addr){
         tyre_position = pos;

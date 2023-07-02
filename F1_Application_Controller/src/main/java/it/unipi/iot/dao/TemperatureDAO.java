@@ -1,4 +1,5 @@
 package it.unipi.iot.dao;
+
 import  it.unipi.iot.dao.exception.DAOException;
 import  it.unipi.iot.model.Temperature;
 import  it.unipi.iot.dao.base.BaseMySQLDAO;

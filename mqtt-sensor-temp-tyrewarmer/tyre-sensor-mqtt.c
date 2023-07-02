@@ -142,7 +142,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
         }
     }
 
-    // Cambiare l'intervallo di cambionamento
+    // Cambiare l'intervallo di cambionamento (Non implementata)
     else if (strcmp(topic, SUB_TOPIC_THRESHOLD) == 0)
     {   
         LOG_INFO("%d\n", (int)*msg_ptr->payload_chunk);

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class TyrewarmerCoAP extends CoapServer
 {
-//    Semplicemente avvia un server CoAP con la risorsa registrator
+//    Semplicemente avvia un server CoAP con la risorsa "registrator"
 //    Per far registrare gli ATTUATORI
     private static TyrewarmerCoAP server = null;
     private static ArrayList<Actuator> actuators = new ArrayList<>();

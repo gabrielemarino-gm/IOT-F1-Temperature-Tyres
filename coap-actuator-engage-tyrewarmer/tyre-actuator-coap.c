@@ -31,7 +31,6 @@ static struct etimer periodic_state_timer;
 #define TYRE 1
 
 static int isRegistered = 0;
-static char client_id[40];
 static char toSend[100];
 
 static bool have_conn(void)
@@ -104,19 +103,8 @@ PROCESS_THREAD(coap_server, ev, data)
             {
                 if(isRegistered == 0)
                 {
-                    uip_ds6_addr_t *global_addr = uip_ds6_get_global(ADDR_PREFERRED);
-
-                    sprintf(client_id, "%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x",
-                        global_addr->ipaddr.u8[0], global_addr->ipaddr.u8[1],
-                        global_addr->ipaddr.u8[2], global_addr->ipaddr.u8[3],
-                        global_addr->ipaddr.u8[4], global_addr->ipaddr.u8[5],
-                        global_addr->ipaddr.u8[6], global_addr->ipaddr.u8[7],
-                        global_addr->ipaddr.u8[8], global_addr->ipaddr.u8[9],
-                        global_addr->ipaddr.u8[10], global_addr->ipaddr.u8[11],
-                        global_addr->ipaddr.u8[12], global_addr->ipaddr.u8[13],
-                        global_addr->ipaddr.u8[14], global_addr->ipaddr.u8[15]);
                     
-                    int leng = sprintf(toSend,"type=REG&tyre=%d&addr=%s", TYRE, client_id);
+                    int leng = sprintf(toSend,"type=REG&tyre=%d", TYRE);
 
                     coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
                     coap_set_header_uri_path(request, "registrator");
