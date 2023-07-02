@@ -28,7 +28,6 @@ static struct etimer periodic_state_timer;
 #define STATE_TIMER (CLOCK_SECOND * 5)
 
 static bool isRegistered = false;
-static char client_id[40];
 static char toSend[100];
 
 static bool have_conn (void)
