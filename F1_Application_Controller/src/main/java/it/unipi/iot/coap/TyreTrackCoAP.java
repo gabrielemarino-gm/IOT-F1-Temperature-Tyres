@@ -22,7 +22,7 @@ public class TyreTrackCoAP extends CoapServer
             server = new TyreTrackCoAP();
         }
 
-        server.add(new CoAPRegister("registrator"));
+        server.add(new CoAPRegister("registratorTrack"));
         server.start();
     }
 
