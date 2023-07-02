@@ -19,7 +19,8 @@ public class Controller
     private static String SUBTOPIC = "TyrewarmerTemp";
     private static String PUBCLIENTID = "Controller_Tyrewarmer_Pub";
     private static String PUBTOPIC = "TyrewarmerConf";
-    private static String COMMANDS = "quit -> Close Controller\n" +
+    private static String COMMANDS = "help -> Show All Commands\n" +
+                                     "quit -> Close Controller\n" +
                                      "publish <target> <message> -> Publish a message for the target Topic\n" +
                                      "command <target> <command> -> Send a CoAP request to target\n" +
                                      "getTemp -> Get last reported temperature for all sensors\n" +
@@ -56,7 +57,11 @@ public class Controller
                 continue;
             }
 
-            if(tokens[0].equals("quit"))   //QUIT
+            if(tokens[0].equals("help"))   //QUIT
+            {
+                System.out.println(COMMANDS);
+            }
+            else if(tokens[0].equals("quit"))   //QUIT
             {
                 System.out.println("Quitting");
                 TyrewarmerCoAP.kill();

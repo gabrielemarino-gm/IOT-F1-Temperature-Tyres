@@ -83,7 +83,7 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
             
             if(have_conn())
             {
-                if(isRegistered == 0)
+                if(!isRegistered)
                 {
                     uip_ds6_addr_t *global_addr = uip_ds6_get_global(ADDR_PREFERRED);
 
@@ -103,7 +103,7 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
                     coap_set_header_uri_path(request, "registrator");
                     coap_set_payload(request, toSend, leng);
 
-                    printf("Sending registration request...\n");
+                    LOG_INFO("Sending registration request...\n");
                     COAP_BLOCKING_REQUEST(&server_ep, request, handler);
     
                 }
@@ -115,11 +115,10 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
             }
             else
             {
-                LOG_DBG("Connecting to Border Router\n");
+                LOG_INFO("Connecting to Border Router\n");
             }
             
 
-            // LOG_DBG("Connecting to Border Router\n");
             etimer_reset(&periodic_state_timer);
         }
     }

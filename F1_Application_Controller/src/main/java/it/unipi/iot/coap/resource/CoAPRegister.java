@@ -10,7 +10,8 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 
 public class CoAPRegister extends CoapResource
 {
-    public CoAPRegister(String name){
+    public CoAPRegister(String name)
+    {
         super(name);
         setObservable(false);
     }
@@ -39,7 +40,7 @@ public class CoAPRegister extends CoapResource
         String command = fields[0].split("=")[1];
         String val1 = fields[1].split("=")[1];
 
-//        Un ATTUATORE CoAP si sta registrando
+//      Un ATTUATORE CoAP si sta registrando
         if(command.equals("REG")){
 
             Response response = new Response(CoAP.ResponseCode.CONTENT);
