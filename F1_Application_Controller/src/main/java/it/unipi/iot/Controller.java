@@ -52,8 +52,7 @@ public class Controller
         {
             c = input.nextLine();
             tokens = c.split(" ");
-            System.out.println(("DBG:       tokens:" + tokens.toString()));
-            
+
             if(tokens == null | tokens.length < 1)
             {
                 System.out.println("Input error");
