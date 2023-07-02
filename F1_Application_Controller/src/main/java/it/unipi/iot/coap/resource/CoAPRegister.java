@@ -44,9 +44,10 @@ public class CoAPRegister extends CoapResource
         System.out.println("DBG:        command: " + command);
         System.out.println("DBG:        val1: " + val1);
 //      Un ATTUATORE CoAP si sta registrando: REG1 = Tyre Warmer, REG2 = Tyre Track
+
+        Response response = new Response(CoAP.ResponseCode.CONTENT);
         if(command.equals("REG1"))
         {
-            Response response = new Response(CoAP.ResponseCode.CONTENT);
             if(TyreActuatorCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "tyrewarmer"))
             {
                 response.setPayload("OK");
@@ -59,7 +60,6 @@ public class CoAPRegister extends CoapResource
         }
         else if(command.equals("REG2"))
         {
-            Response response = new Response(CoAP.ResponseCode.CONTENT);
             if(TyreActuatorCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "res_wheel_led"))
             {
                 response.setPayload("OK");

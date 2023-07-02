@@ -26,7 +26,7 @@ public class TyreActuatorCoAP extends CoapServer
              server = new TyreActuatorCoAP();
          }
 
-         server.add(new CoAPRegister("registratorWarmer"));
+         server.add(new CoAPRegister("registrator"));
          server.start();
      }
 
