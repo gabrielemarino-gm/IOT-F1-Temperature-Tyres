@@ -48,7 +48,7 @@ void handler (coap_message_t *response)
     if (response != NULL)
     {
         int len = coap_get_payload(response, &chunk);
-        LOG_INFO ("%.*s\n", len, (char*)chunk);
+        LOG_INFO ("APPLICATION RESPONSE: %.*s\n", len, (char*)chunk);
         isRegistered = true;
     }
     else
