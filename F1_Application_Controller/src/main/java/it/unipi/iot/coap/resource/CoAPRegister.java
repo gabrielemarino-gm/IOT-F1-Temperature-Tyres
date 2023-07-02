@@ -36,10 +36,13 @@ public class CoAPRegister extends CoapResource
         String payload = exchange.getRequestText();
         
         String[] fields = payload.split("&");
+        System.out.println("DBG:        " + fields.toString());
 
         String command = fields[0].split("=")[1];
         String val1 = fields[1].split("=")[1];
 
+        System.out.println("DBG:        command: " + command);
+        System.out.println("DBG:        val1: " + val1);
 //      Un ATTUATORE CoAP si sta registrando: REG1 = Tyre Warmer, REG2 = Tyre Track
         if(command.equals("REG1"))
         {
