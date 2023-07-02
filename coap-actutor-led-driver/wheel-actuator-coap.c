@@ -104,7 +104,7 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
                     coap_set_header_uri_path(request, "registrator");
                     coap_set_payload(request, toSend, leng);
 
-                    printf("Sending registration request...\n");
+                    LOG_INFO("Sending registration request...\n");
                     COAP_BLOCKING_REQUEST(&server_ep, request, handler);
     
                 }
