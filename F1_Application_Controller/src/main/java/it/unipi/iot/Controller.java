@@ -52,7 +52,8 @@ public class Controller
         {
             c = input.nextLine();
             tokens = c.split(" ");
-
+            System.out.println(("DBG:       tokens:" + tokens.toString()));
+            
             if(tokens == null | tokens.length < 1)
             {
                 System.out.println("Input error");
@@ -94,11 +95,12 @@ public class Controller
             // SEND COAP REQUEST
             else if (tokens[0].equals("command"))
             {
-//              Manda una richiesta CoAP ad uno specifico attuatore
+//              Manda una richiesta CoAP a uno specifico attuatore
                 if(tokens.length < 3)
                 {
                     System.out.println("Command error");
                 }
+
                 Actuator act = TyreActuatorCoAP.getTyre(Integer.parseInt(tokens[1]));
                 if(act == null)
                 {
@@ -107,10 +109,7 @@ public class Controller
                 else
                 {
                     System.out.println("Sending command");
-                    System.out.println("DBG:        tokens[0]: "+ tokens[0]);
-                    System.out.println("DBG:        tokens[1]: "+ tokens[1]);
-                    System.out.println("DBG:        tokens[2]: "+ tokens[2]);
-                    TyreActuatorCoAP.sendCommand(act.getAddr(), tokens[1], tokens[2]);
+                    TyreActuatorCoAP.sendCommand(act.getAddr(), tokens[2], tokens[3]);
                 }
             }
 
