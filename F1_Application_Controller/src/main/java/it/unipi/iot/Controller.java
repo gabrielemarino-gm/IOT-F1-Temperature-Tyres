@@ -1,7 +1,6 @@
 package it.unipi.iot;
 
-import it.unipi.iot.coap.TyreTrackCoAP;
-import it.unipi.iot.coap.TyrewarmerCoAP;
+import it.unipi.iot.coap.TyreActuatorCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
 import it.unipi.iot.model.Actuator;
@@ -23,9 +22,9 @@ public class Controller
     private static String COMMANDS = "help -> Show All Commands\n" +
                                      "quit -> Close Controller\n" +
                                      "publish <target> <message> -> Publish a message for the target Topic\n" +
-                                     "command <target> <command> -> Send a CoAP request to target\n" +
+                                     "command <target> <resource> <command> -> Send a CoAP request to target\n" +
                                      "getTemp -> Get last reported temperature for all sensors\n" +
-                                     "getStatus -> Get status of all Tyrewarmers\n";
+                                     "getStatus -> Get status of all TyreActuator\n";
 
     public static void main( String[] args )
     {
@@ -33,7 +32,7 @@ public class Controller
         String c;
         String[] tokens;
         Scanner input = new Scanner(System.in);
-//        Start MQTT service
+//       Start MQTT service
         try
         {
             TyrewarmerMQTT.Subscriber subscriber = new TyrewarmerMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC);
@@ -44,16 +43,16 @@ public class Controller
         }
 
 //      Start CoAP service
-        TyrewarmerCoAP.startServer();
-        TyreTrackCoAP.startServer();
+        TyreActuatorCoAP.startServer();
 
 
-//        Input loop
+//       Input loop
         System.out.println(COMMANDS);
         while(!exit)
         {
             c = input.nextLine();
             tokens = c.split(" ");
+
             if(tokens == null | tokens.length < 1)
             {
                 System.out.println("Input error");
@@ -70,8 +69,7 @@ public class Controller
             else if (tokens[0].equals("quit"))
             {
                 System.out.println("Quitting");
-                TyrewarmerCoAP.kill();
-                TyreTrackCoAP.kill();
+                TyreActuatorCoAP.kill();
                 TemperatureDAO.closePool();
                 System.exit(0);
             }
@@ -101,7 +99,7 @@ public class Controller
                 {
                     System.out.println("Command error");
                 }
-                Actuator act = TyrewarmerCoAP.getTyre(Integer.parseInt(tokens[1]));
+                Actuator act = TyreActuatorCoAP.getTyre(Integer.parseInt(tokens[1]));
                 if(act == null)
                 {
                     System.out.println("There is no actuator for given tyre");
@@ -109,7 +107,10 @@ public class Controller
                 else
                 {
                     System.out.println("Sending command");
-                    TyrewarmerCoAP.sendCommand(act.getAddr(), tokens[2]);
+                    System.out.println("DBG:        tokens[0]: "+ tokens[0]);
+                    System.out.println("DBG:        tokens[1]: "+ tokens[1]);
+                    System.out.println("DBG:        tokens[2]: "+ tokens[2]);
+                    TyreActuatorCoAP.sendCommand(act.getAddr(), tokens[1], tokens[2]);
                 }
             }
 
@@ -141,16 +142,11 @@ public class Controller
             // GET TYREWARMER STATUS
             else if (tokens[0].equals("getStatus"))
             {
-                for(Actuator a : TyrewarmerCoAP.getActuators())
+                for(Actuator a : TyreActuatorCoAP.getActuators())
                 {
-                    String ret = TyrewarmerCoAP.getStatRequest(a.getAddr());
-                    System.out.println(String.format("Tyrewarmer [%d] -> %s", a.getTyre_position(), ret));
-                }
-
-                for(Actuator a : TyreTrackCoAP.getActuators())
-                {
-                    String ret = TyreTrackCoAP.getStatRequest(a.getAddr());
-                    System.out.println(String.format("TyreTrack [%d] -> %s", a.getTyre_position(), ret));
+                    String ret = TyreActuatorCoAP.getStatRequest(a.getAddr(), a.getResource());
+                    // TODO Sistemare le due risorse
+                    System.out.println(String.format("TyreActuator [%d] -> %s", a.getTyre_position(), ret));
                 }
             }
 

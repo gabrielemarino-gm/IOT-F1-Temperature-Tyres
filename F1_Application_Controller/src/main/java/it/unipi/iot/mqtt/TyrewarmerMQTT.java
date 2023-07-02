@@ -1,6 +1,6 @@
 package it.unipi.iot.mqtt;
 
-import it.unipi.iot.coap.TyrewarmerCoAP;
+import it.unipi.iot.coap.TyreActuatorCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
 import it.unipi.iot.model.Actuator;
@@ -77,12 +77,12 @@ public class TyrewarmerMQTT
                 de.printStackTrace();
             }
 
-            Actuator act = TyrewarmerCoAP.getTyre(temp.getTyrePosition());
+            Actuator act = TyreActuatorCoAP.getTyre(temp.getTyrePosition());
 //            Fai altre cose qui (AZIONA ATTUATORE CORRETTO)
             if(temp.getTemperatureValue() > 70 && act.isOn())
             {
                 act.toggle();
-                TyrewarmerCoAP.sendCommand(act.getAddr(),"HIGHTEMP");
+                TyreActuatorCoAP.sendCommand(act.getAddr(),"HIGHTEMP");
                 System.out.println(String.format("Tyrewarmer [%d] -> DISENGAGED", act.getTyre_position()));
 
 //                Abbassare temperatura simulazione
@@ -101,7 +101,7 @@ public class TyrewarmerMQTT
             }
             else if (temp.getTemperatureValue() < 67 && !act.isOn()) {
                 act.toggle();
-                TyrewarmerCoAP.sendCommand(act.getAddr(), "LOWTEMP");
+                TyreActuatorCoAP.sendCommand(act.getAddr(), "LOWTEMP");
                 System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));
 
 //                Alzare temperatura simulazione

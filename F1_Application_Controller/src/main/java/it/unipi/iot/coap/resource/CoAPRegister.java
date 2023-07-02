@@ -2,8 +2,7 @@ package it.unipi.iot.coap.resource;
 
 //  Risorsa del Server CoAP per registrare gli ATTUATORI
 
-import it.unipi.iot.coap.TyreTrackCoAP;
-import it.unipi.iot.coap.TyrewarmerCoAP;
+import it.unipi.iot.coap.TyreActuatorCoAP;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Response;
@@ -45,7 +44,7 @@ public class CoAPRegister extends CoapResource
         if(command.equals("REG1"))
         {
             Response response = new Response(CoAP.ResponseCode.CONTENT);
-            if(TyrewarmerCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName())))
+            if(TyreActuatorCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "tyrewarmer"))
             {
                 response.setPayload("OK");
             }
@@ -58,7 +57,7 @@ public class CoAPRegister extends CoapResource
         else if(command.equals("REG2"))
         {
             Response response = new Response(CoAP.ResponseCode.CONTENT);
-            if(TyreTrackCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName())))
+            if(TyreActuatorCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "res_wheel_led"))
             {
                 response.setPayload("OK");
             }

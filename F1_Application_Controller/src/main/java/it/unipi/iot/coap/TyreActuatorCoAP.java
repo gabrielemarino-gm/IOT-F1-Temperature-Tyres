@@ -12,18 +12,18 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 import java.util.ArrayList;
 
-public class TyrewarmerCoAP extends CoapServer
+public class TyreActuatorCoAP extends CoapServer
 {
 //    Semplicemente avvia un server CoAP con la risorsa "registrator"
 //    Per far registrare gli ATTUATORI
-    private static TyrewarmerCoAP server = null;
+    private static TyreActuatorCoAP server = null;
     private static ArrayList<Actuator> actuators = new ArrayList<>();
 
      public static void startServer()
      {
          if(server == null)
          {
-             server = new TyrewarmerCoAP();
+             server = new TyreActuatorCoAP();
          }
 
          server.add(new CoAPRegister("registratorWarmer"));
@@ -39,8 +39,9 @@ public class TyrewarmerCoAP extends CoapServer
 //    Funzione statica per connettersi a un CoAP Server e inviare una semplice richiesta CoAP
 //    Farne piu di una se la natura della richiesta e' diversa (Get, Put, Post...)
 
-    public static String sendCommand(String TARGET, String COMMAND){
-        CoapClient client = new CoapClient(String.format("%s/tyrewarmer?command=%s",TARGET,COMMAND));
+    public static String sendCommand(String TARGET, String RESOURCE, String COMMAND)
+    {
+        CoapClient client = new CoapClient(String.format("%s/%s?command=%s", TARGET, RESOURCE, COMMAND));
 
         client.setTimeout(2000);
         CoapResponse response = client.put("", MediaTypeRegistry.TEXT_PLAIN);
@@ -48,9 +49,9 @@ public class TyrewarmerCoAP extends CoapServer
         return response.getCode().toString();
     }
 
-    public static String getStatRequest(String TARGET)
+    public static String getStatRequest(String TARGET, String RESOURCE)
     {
-        CoapClient client = new CoapClient(TARGET + "/tyrewarmer");
+        CoapClient client = new CoapClient(TARGET + "/" + RESOURCE);
         String toRet;
 
         try
@@ -77,16 +78,16 @@ public class TyrewarmerCoAP extends CoapServer
         return toRet;
     }
 
-//      Altre funzioni statiche utili alla gestione degli attuatori CoAP
-//      quali registrazione e cancellazione
+//  Altre funzioni statiche utili alla gestione degli attuatori CoAP
+//  quali registrazione e cancellazione
+    public static boolean registerActuator(int pos, String addr, String res)
+    {
+         Actuator toReg = new Actuator(pos, addr, res);
 
-    public static boolean registerActuator(int pos, String addr){
-         Actuator toReg = new Actuator(pos,addr);
-
-//         Controllo se è presente un attuatore con la stessa ruota e attivo
+//       Controllo se è presente un attuatore con la stessa ruota e attivo
          for(Actuator a : actuators)
          {
-//             Se esiste ed è attivo ritorno falso altrimenti lo elimino e torno true
+//          Se esiste ed è attivo ritorno falso altrimenti lo elimino e torno true
             if((a.getTyre_position() == pos))
             {
                 if(a.isActive())
@@ -102,7 +103,6 @@ public class TyrewarmerCoAP extends CoapServer
          }
 
          actuators.add(toReg);
-
          return true;
     }
 
