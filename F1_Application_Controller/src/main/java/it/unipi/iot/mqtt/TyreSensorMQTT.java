@@ -10,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import java.sql.Date;
 import java.util.Objects;
 
-public class TyrewarmerMQTT
+public class TyreSensorMQTT
 {
     private static String SUBTOPIC_WARMER = "TyrewarmerTemp";
     private static String SUBTOPIC_TRACK = "tyre_temp";
@@ -43,7 +43,7 @@ public class TyrewarmerMQTT
                 }
                 catch (MqttException me)
                 {
-//                    Try to reconnect in 5 seconds
+//                  Try to reconnect in 5 seconds
                     try
                     {
                         System.out.println("MQTT Retry in 5 seconds");
@@ -96,7 +96,7 @@ public class TyrewarmerMQTT
 //                  Abbassare temperatura simulazione
                     try
                     {
-                        TyrewarmerMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "-1");
+                        TyreSensorMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "-1");
                     }
                     catch(InterruptedException ie)
                     {
@@ -116,7 +116,7 @@ public class TyrewarmerMQTT
 //                  Alzare temperatura simulazione
                     try
                     {
-                        TyrewarmerMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "1");
+                        TyreSensorMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "1");
                     }
                     catch (InterruptedException | MqttException ie)
                     {

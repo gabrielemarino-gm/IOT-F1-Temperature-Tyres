@@ -5,7 +5,7 @@ import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
 import it.unipi.iot.model.Actuator;
 import it.unipi.iot.model.Temperature;
-import it.unipi.iot.mqtt.TyrewarmerMQTT;
+import it.unipi.iot.mqtt.TyreSensorMQTT;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 import java.util.ArrayList;
@@ -38,8 +38,8 @@ public class Controller
 //      Start MQTT service
         try
         {
-            TyrewarmerMQTT.Subscriber subscriberTyreWarmer = new TyrewarmerMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_WARMER);
-            TyrewarmerMQTT.Subscriber subscriberTyreTrack = new TyrewarmerMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_TRACK);
+            TyreSensorMQTT.Subscriber subscriberTyreWarmer = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_WARMER);
+            TyreSensorMQTT.Subscriber subscriberTyreTrack = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_TRACK);
         }
         catch (MqttException e)
         {
@@ -83,7 +83,7 @@ public class Controller
             {
                 try
                 {
-                    TyrewarmerMQTT.Publisher.Publish(BROKERIP, PUBCLIENTID, PUBTOPIC, "PUBTOPIC");
+                    TyreSensorMQTT.Publisher.Publish(BROKERIP, PUBCLIENTID, PUBTOPIC, "PUBTOPIC");
                 }
                 catch (InterruptedException ie)
                 {
