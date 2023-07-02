@@ -1,1 +1,1 @@
-make TARGET=zoul connect-router
+make TARGET=zoul connect-router-cooja
