@@ -16,7 +16,9 @@ public class Controller
     // Applicazione
     private static String BROKERIP = "tcp://[::1]:1883";
     private static String SUBCLIENTID = "Controller_Tyrewarmer_Sub";
-    private static String SUBTOPIC = "TyrewarmerTemp";
+    private static String SUBTOPIC_WARMER = "TyrewarmerTemp";
+    private static String SUBTOPIC_TRACK = "tyre_temp";
+
     private static String PUBCLIENTID = "Controller_Tyrewarmer_Pub";
     private static String PUBTOPIC = "TyrewarmerConf";
     private static String COMMANDS = "help -> Show All Commands\n" +
@@ -32,10 +34,12 @@ public class Controller
         String c;
         String[] tokens;
         Scanner input = new Scanner(System.in);
-//       Start MQTT service
+        
+//      Start MQTT service
         try
         {
-            TyrewarmerMQTT.Subscriber subscriber = new TyrewarmerMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC);
+            TyrewarmerMQTT.Subscriber subscriberTyreWarmer = new TyrewarmerMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_WARMER);
+            TyrewarmerMQTT.Subscriber subscriberTyreTrack = new TyrewarmerMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_TRACK);
         }
         catch (MqttException e)
         {
@@ -46,7 +50,7 @@ public class Controller
         TyreActuatorCoAP.startServer();
 
 
-//       Input loop
+//      Input loop
         System.out.println(COMMANDS);
         while(!exit)
         {
@@ -100,7 +104,7 @@ public class Controller
                     System.out.println("Command error");
                 }
 
-                Actuator act = TyreActuatorCoAP.getTyre(Integer.parseInt(tokens[1]));
+                Actuator act = TyreActuatorCoAP.getTyre(Integer.parseInt(tokens[1]), tokens[2]);
                 if(act == null)
                 {
                     System.out.println("There is no actuator for given tyre");

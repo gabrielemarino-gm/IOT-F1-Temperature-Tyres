@@ -11,6 +11,7 @@ import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class TyreActuatorCoAP extends CoapServer
 {
@@ -110,11 +111,12 @@ public class TyreActuatorCoAP extends CoapServer
     {
         return actuators;
     }
-    public static Actuator getTyre(int i)
+    public static Actuator getTyre(int i, String res)
     {
          for(Actuator a : actuators)
          {
-             if(a.getTyre_position() == i) return a;
+             if(a.getTyre_position() == i && Objects.equals(a.getResource(), res))
+                 return a;
          }
 
          return null;
