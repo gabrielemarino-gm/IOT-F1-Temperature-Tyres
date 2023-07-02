@@ -114,7 +114,10 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
         
         // Aggiorna stato
         else if (strncmp(command, "UPDATE", len) == 0)
+        {
             status = (status == 0)? 1:0;
+            LOG_INFO ("Status updated: %s\n", (status == 0)?"CAR OFF TRACK":"CAR ON TRACK");
+        }
     }
     else
     {
