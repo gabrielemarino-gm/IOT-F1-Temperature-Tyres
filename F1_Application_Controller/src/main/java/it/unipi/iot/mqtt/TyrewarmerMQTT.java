@@ -82,7 +82,7 @@ public class TyrewarmerMQTT
             if(temp.getTemperatureValue() > 70 && act.isOn())
             {
                 act.toggle();
-                TyreActuatorCoAP.sendCommand(act.getAddr(),"HIGHTEMP");
+                TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "HIGHTEMP");
                 System.out.println(String.format("Tyrewarmer [%d] -> DISENGAGED", act.getTyre_position()));
 
 //                Abbassare temperatura simulazione
@@ -101,7 +101,7 @@ public class TyrewarmerMQTT
             }
             else if (temp.getTemperatureValue() < 67 && !act.isOn()) {
                 act.toggle();
-                TyreActuatorCoAP.sendCommand(act.getAddr(), "LOWTEMP");
+                TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "LOWTEMP");
                 System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));
 
 //                Alzare temperatura simulazione
