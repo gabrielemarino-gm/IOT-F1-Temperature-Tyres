@@ -59,6 +59,19 @@ void handler (coap_message_t *response)
 }
 
 
+static bool check = false;
+void checker(coap_message_t *response)
+{
+    if(response != NULL)
+    {
+        check = true;
+    }
+    else
+    {
+        check = false;
+    }
+}
+
 PROCESS(coap_server_wheel_leds, "Driver Wheel Led Actuator");
 AUTOSTART_PROCESSES(&coap_server_wheel_leds);
 
@@ -85,32 +98,25 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
             {
                 if(!isRegistered)
                 {
-                    uip_ds6_addr_t *global_addr = uip_ds6_get_global(ADDR_PREFERRED);
-
-                    sprintf(client_id, "%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x",
-                        global_addr->ipaddr.u8[0], global_addr->ipaddr.u8[1],
-                        global_addr->ipaddr.u8[2], global_addr->ipaddr.u8[3],
-                        global_addr->ipaddr.u8[4], global_addr->ipaddr.u8[5],
-                        global_addr->ipaddr.u8[6], global_addr->ipaddr.u8[7],
-                        global_addr->ipaddr.u8[8], global_addr->ipaddr.u8[9],
-                        global_addr->ipaddr.u8[10], global_addr->ipaddr.u8[11],
-                        global_addr->ipaddr.u8[12], global_addr->ipaddr.u8[13],
-                        global_addr->ipaddr.u8[14], global_addr->ipaddr.u8[15]);
                     
-                    int leng = sprintf(toSend,"type=REG&tyre_position=%d&addr=%s", TYRE, client_id);
+                    int leng = sprintf(toSend,"type=REG&tyre=%d", TYRE);
 
                     coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
                     coap_set_header_uri_path(request, "registrator");
                     coap_set_payload(request, toSend, leng);
 
-                    LOG_INFO("Sending registration request...\n");
+                    printf("Sending registration request...\n");
                     COAP_BLOCKING_REQUEST(&server_ep, request, handler);
     
                 }
                 // Check if still registered
                 else
                 {
-                    // TO DO
+                    coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);
+                    coap_set_header_uri_path(request, "registrator");
+                    COAP_BLOCKING_REQUEST(&server_ep, request, checker);
+                    
+                    if(!check) isRegistered = false;
                 }
             }
             else

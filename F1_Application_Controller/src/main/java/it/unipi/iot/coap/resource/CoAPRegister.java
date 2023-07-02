@@ -41,8 +41,8 @@ public class CoAPRegister extends CoapResource
         String val1 = fields[1].split("=")[1];
 
 //      Un ATTUATORE CoAP si sta registrando
-        if(command.equals("REG")){
-
+        if(command.equals("REG"))
+        {
             Response response = new Response(CoAP.ResponseCode.CONTENT);
             if(TyrewarmerCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName())))
             {
