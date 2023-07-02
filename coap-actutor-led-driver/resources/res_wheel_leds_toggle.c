@@ -37,6 +37,7 @@ static void res_put_post_handler(
     uint16_t preferred_size, 
     int32_t *offset);
 
+static int status = 0;
 
 EVENT_RESOURCE(res_wheel_led,
         "title=\"Wheel Led Manager\"",
@@ -104,14 +105,16 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
             led = LEDS_RED;
 
         // Gomma fredda
-       
         else if (strncmp(command, "UNDER", len) == 0)
             led = LEDS_YELLOW;
 
         // Gomma buona
-        
         else if (strncmp(command, "GREAT", len) == 0)
             led = LEDS_GREEN; 
+        
+        // Aggiorna stato
+        else if (strncmp(command, "UPDATE", len) == 0)
+            status = (status == 0)? 1:0;
     }
     else
     {
