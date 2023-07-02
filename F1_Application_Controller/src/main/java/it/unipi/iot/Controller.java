@@ -1,5 +1,6 @@
 package it.unipi.iot;
 
+import it.unipi.iot.coap.TyreTrackCoAP;
 import it.unipi.iot.coap.TyrewarmerCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
@@ -42,8 +43,10 @@ public class Controller
             e.printStackTrace();
         }
 
-//        Start CoAP service
+//      Start CoAP service
         TyrewarmerCoAP.startServer();
+        TyreTrackCoAP.startServer();
+
 
 //        Input loop
         System.out.println(COMMANDS);
@@ -57,18 +60,24 @@ public class Controller
                 continue;
             }
 
-            if(tokens[0].equals("help"))   //QUIT
+            // HELP
+            if (tokens[0].equals("help"))
             {
                 System.out.println(COMMANDS);
             }
-            else if(tokens[0].equals("quit"))   //QUIT
+
+            // QUIT
+            else if (tokens[0].equals("quit"))
             {
                 System.out.println("Quitting");
                 TyrewarmerCoAP.kill();
+                TyreTrackCoAP.kill();
                 TemperatureDAO.closePool();
                 System.exit(0);
             }
-            else if(tokens[0].equals("publish"))   //PUBLISH SOMETHING
+
+            // PUBLISH SOMETHING
+            else if (tokens[0].equals("publish"))
             {
                 try
                 {
@@ -83,9 +92,11 @@ public class Controller
                     me.printStackTrace();
                 }
             }
-            else if(tokens[0].equals("command"))   //SEND COAP REQUEST
+
+            // SEND COAP REQUEST
+            else if (tokens[0].equals("command"))
             {
-//                Manda una richiesta CoAP ad uno specifico attuatore
+//              Manda una richiesta CoAP ad uno specifico attuatore
                 if(tokens.length < 3)
                 {
                     System.out.println("Command error");
@@ -101,7 +112,9 @@ public class Controller
                     TyrewarmerCoAP.sendCommand(act.getAddr(), tokens[2]);
                 }
             }
-            else if(tokens[0].equals("getTemp"))     //GET LAST REGISTERED TEMP
+
+            // GET LAST REGISTERED TEMP
+            else if (tokens[0].equals("getTemp"))
             {
                 try
                 {
@@ -124,15 +137,27 @@ public class Controller
                     de.printStackTrace();
                 }
             }
-            else if(tokens[0].equals("getStatus"))       //GET TYREWARMER STATUS
+
+            // GET TYREWARMER STATUS
+            else if (tokens[0].equals("getStatus"))
             {
-                for(Actuator a : TyrewarmerCoAP.getActuators()){
+                for(Actuator a : TyrewarmerCoAP.getActuators())
+                {
                     String ret = TyrewarmerCoAP.getStatRequest(a.getAddr());
                     System.out.println(String.format("Tyrewarmer [%d] -> %s", a.getTyre_position(), ret));
                 }
+
+                for(Actuator a : TyreTrackCoAP.getActuators())
+                {
+                    String ret = TyreTrackCoAP.getStatRequest(a.getAddr());
+                    System.out.println(String.format("TyreTrack [%d] -> %s", a.getTyre_position(), ret));
+                }
             }
-            else        //UNKNOWN COMMAND
+
+            // UNKNOWN COMMAND
+            else
             {
+                System.out.println("COMMAND NOT SUPPORTED. TRY THE FOLLOWIG:");
                 System.out.println(COMMANDS);
             }
             System.out.println("-----------------------------");

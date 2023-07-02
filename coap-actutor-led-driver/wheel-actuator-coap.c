@@ -98,7 +98,7 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
                 if(!isRegistered)
                 {
                     
-                    int leng = sprintf(toSend,"type=REG&tyre=%d", TYRE);
+                    int leng = sprintf(toSend,"type=REG2&tyre=%d", TYRE);
 
                     coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
                     coap_set_header_uri_path(request, "registrator");
@@ -106,7 +106,6 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
 
                     LOG_INFO("Sending registration request...\n");
                     COAP_BLOCKING_REQUEST(&server_ep, request, handler);
-    
                 }
                 // Check if still registered
                 else
@@ -123,7 +122,6 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
                 LOG_INFO("Connecting to Border Router\n");
             }
             
-
             etimer_reset(&periodic_state_timer);
         }
     }

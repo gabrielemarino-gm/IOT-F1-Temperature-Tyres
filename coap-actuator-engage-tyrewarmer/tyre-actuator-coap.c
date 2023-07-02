@@ -104,7 +104,7 @@ PROCESS_THREAD(coap_server, ev, data)
                 if(isRegistered == 0)
                 {
                     
-                    int leng = sprintf(toSend,"type=REG&tyre=%d", TYRE);
+                    int leng = sprintf(toSend,"type=REG1&tyre=%d", TYRE);
 
                     coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
                     coap_set_header_uri_path(request, "registrator");

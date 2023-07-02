@@ -22,6 +22,14 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
+static void res_get_handler(
+    coap_message_t *request, 
+    coap_message_t *response, 
+    uint8_t *buffer, 
+    uint16_t preferred_size, 
+    int32_t *offset);
+
+
 static void res_put_post_handler(
     coap_message_t *request, 
     coap_message_t *response, 
@@ -32,12 +40,48 @@ static void res_put_post_handler(
 
 EVENT_RESOURCE(res_wheel_led,
         "title=\"Wheel Led Manager\"",
-        NULL,
+        res_get_handler,
         res_put_post_handler,
         res_put_post_handler,
         NULL,
         NULL
 );
+
+
+static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
+{
+    int length = 0;
+    const char* message;
+
+    switch (status)
+    {
+        case 0:
+        length = 13;
+        message = "CAR OFF TRACK";
+        break;
+        
+        case 1:
+        length = 12;
+        message = "CAR ON TRACK";
+        break;
+
+        default:
+        break;
+    }
+
+    if(length < 0) 
+        length = 0;
+    
+
+    if(length > REST_MAX_CHUNK_SIZE) 
+        length = REST_MAX_CHUNK_SIZE;
+
+    memcpy(buffer, message, length);
+
+    coap_set_header_content_format(response, TEXT_PLAIN); /* text/plain is the default, hence this option could be omitted. */
+    coap_set_header_etag(response, (uint8_t *)&length, 1);
+    coap_set_payload(response, buffer, length);
+}
 
 
 // Red led -> Tyres are overhiting

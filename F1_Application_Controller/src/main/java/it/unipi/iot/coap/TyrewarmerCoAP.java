@@ -47,7 +47,8 @@ public class TyrewarmerCoAP extends CoapServer
         return response.getCode().toString();
     }
 
-    public static String getStatRequest(String TARGET){
+    public static String getStatRequest(String TARGET)
+    {
         CoapClient client = new CoapClient(TARGET + "/tyrewarmer");
         String toRet;
 
@@ -60,16 +61,17 @@ public class TyrewarmerCoAP extends CoapServer
         catch(NullPointerException ne)
         {
             toRet = "OFFLINE";
-            for(Actuator a : actuators){
+            for(Actuator a : actuators)
+            {
                 if(a.getAddr().equals(TARGET))
                 {
                     a.inactive();
                 }
             }
         }
-        finally {
+        finally
+        {
             client.delete();
-
         }
         return toRet;
     }
@@ -80,10 +82,10 @@ public class TyrewarmerCoAP extends CoapServer
     public static boolean registerActuator(int pos, String addr){
          Actuator toReg = new Actuator(pos,addr);
 
-//         Controllo se e' presente un attuatore con la stessa ruota e attivo
+//         Controllo se è presente un attuatore con la stessa ruota e attivo
          for(Actuator a : actuators)
          {
-//             Se esiste ed e' attivo ritorno falso altrimenti lo elimino e torno true
+//             Se esiste ed è attivo ritorno falso altrimenti lo elimino e torno true
             if((a.getTyre_position() == pos))
             {
                 if(a.isActive())
@@ -101,14 +103,14 @@ public class TyrewarmerCoAP extends CoapServer
          actuators.add(toReg);
 
          return true;
-
     }
 
     public static ArrayList<Actuator> getActuators()
     {
         return actuators;
     }
-    public static Actuator getTyre(int i){
+    public static Actuator getTyre(int i)
+    {
          for(Actuator a : actuators)
          {
              if(a.getTyre_position() == i) return a;
