@@ -27,7 +27,7 @@ public class TyrewarmerMQTT
         @Override
         public void connectionLost(Throwable throwable) {
 //            TODO
-            System.out.println("MQTT Disconnected");
+            //System.out.println("MQTT Disconnected");
             while(!client.isConnected()){
                 try
                 {
@@ -47,7 +47,7 @@ public class TyrewarmerMQTT
                         ie.printStackTrace();
                     }
                 }
-                System.out.println("MQTT Reconnected");
+                //System.out.println("MQTT Reconnected");
             }
 
         }
