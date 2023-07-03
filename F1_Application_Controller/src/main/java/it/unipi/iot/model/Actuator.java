@@ -11,7 +11,7 @@ public class Actuator
     private boolean isActive; // Se è attivo (non Offline)
     private boolean isOn; // Se è acceso o spento (solo se Online)
 
-    private String status;
+    private OnTrackStatus status;
     public Actuator(int pos, String addr, String r)
     {
         this.tyre_position = pos;
@@ -19,13 +19,13 @@ public class Actuator
         this.resource = r;
         this.isActive = true;
         this.isOn = false;
-        this.status = "UNDEFINED";
+        this.status = OnTrackStatus.UNDEFINED;
     }
 
     public int getTyre_position() {return tyre_position;}
     public String getAddr() {return addr;}
     public String getResource() {return resource;}
-    public String getStatus() {return status;}
+    public OnTrackStatus getStatus() {return status;}
     public boolean isActive() {return isActive;}
     public boolean isOn() {return isOn;}
 
@@ -33,7 +33,7 @@ public class Actuator
     public void setResource(String r) {this.resource = r;}
 
     public void setTyre_position(int tyre_position) {this.tyre_position = tyre_position;}
-    public void setStatus(String s) {status = s;}
+    public void setStatus(OnTrackStatus s) {status = s;}
     public void inactive(){isActive = false;}
     public void toggle(){isOn = !isOn;}
 }
