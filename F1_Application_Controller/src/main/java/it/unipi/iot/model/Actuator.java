@@ -36,4 +36,16 @@ public class Actuator
     public void setStatus(OnTrackStatus s) {status = s;}
     public void inactive(){isActive = false;}
     public void toggle(){isOn = !isOn;}
+
+    @Override
+    public String toString() {
+        return "Actuator{" +
+                "tyre_position=" + tyre_position +
+                ", addr='" + addr + '\'' +
+                ", resource='" + resource + '\'' +
+                ", isActive=" + isActive +
+                ", isOn=" + isOn +
+                ", status=" + status +
+                '}';
+    }
 }
