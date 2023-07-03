@@ -78,8 +78,16 @@ public class TyreSensorMQTT
                 // act.setStatus("UNDEFINED");
                 System.out.println(String.format("DBG   Temperature = %s", "" + temp.getTemperatureValue()));
 
-                String statusDBG = (act.getStatus() == null) ? "NULL" : act.getStatus().toString();
-                System.out.println("DBG         STATUS: " + statusDBG);
+                try
+                {
+                    System.out.println("DBG         STATUS: " + act.getStatus());
+                }
+                catch (Exception e)
+                {
+                    if (act.getStatus() == null)
+                        System.err.println("STATUS NULL");
+                    e.printStackTrace();
+                }
 
                 if (topic.equals(SUBTOPIC_WARMER)) {
                     //              Registra temperatura nel DB
