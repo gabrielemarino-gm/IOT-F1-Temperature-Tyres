@@ -8,4 +8,4 @@ ToDO:
 5) Formattare il nome dei topic
 6) Fixare la simulazione delle temperature rilevate
 7) Rivedere i comandi da terminale
-8) 
+8) Timestamp nei sensori
