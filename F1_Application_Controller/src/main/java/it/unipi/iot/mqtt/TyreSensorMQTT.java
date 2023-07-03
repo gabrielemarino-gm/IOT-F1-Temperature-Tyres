@@ -39,16 +39,17 @@ public class TyreSensorMQTT
             {
                 try
                 {
+//                  Try to reconnect in 5 seconds
                     Thread.sleep(timeout);
                     System.out.println("MQTT Reconnecting");
                     client.connect();
+                    // TODO: Sistemare il topic di iscrizione a seconda della connessione persa.
                     client.subscribe("tyre_temp");
                     System.out.println("MQTT Connection Restored");
                 }
                 catch (MqttException me)
                 {
                     me.printStackTrace();
-//                  Try to reconnect in 5 seconds
                 }
                 catch (InterruptedException e)
                 {
