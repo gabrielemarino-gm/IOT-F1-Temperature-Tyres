@@ -75,7 +75,7 @@ public class TyreSensorMQTT
                 temp.setTyrePosition(Integer.parseInt(args[0].split("=")[1]));
                 temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1]) / 10);
                 Actuator act = TemperatureDAO.getActuator(temp.getTyrePosition(), topic);
-                // act.setStatus("UNDEFINED");
+                act.setStatus("UNDEFINED");
                 System.out.println(String.format("DBG   Temperature = %s", "" + temp.getTemperatureValue()));
 
                 try
