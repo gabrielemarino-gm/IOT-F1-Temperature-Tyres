@@ -3,6 +3,7 @@ package it.unipi.iot.mqtt;
 import it.unipi.iot.coap.TyreActuatorCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
+import it.unipi.iot.enumActuatorStatus.OnTrackStatus;
 import it.unipi.iot.model.Actuator;
 import it.unipi.iot.model.Temperature;
 import org.eclipse.paho.client.mqttv3.*;
@@ -137,21 +138,21 @@ public class TyreSensorMQTT
                     de.printStackTrace();
                 }
 
-                if(temperature < 90 && act.isOn())
+                if (temperature < 90 && act.getStatus() != OnTrackStatus.UNDER)
                 {
-                    act.toggle();
+                    act.setStatus(OnTrackStatus.UNDER);
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "UNDER");
                     System.out.println(String.format("TyreTrack [%d] -> COLD", act.getTyre_position()));
                 }
-                else if (temperature > 90 && temperature < 100 && !act.isOn())
+                else if (temperature > 90 && temperature < 100 && act.getStatus() != OnTrackStatus.GREAT)
                 {
-                    // act.toggle();
+                    act.setStatus(OnTrackStatus.GREAT);
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "GREAT");
                     System.out.println(String.format("TyreTrack [%d] -> GREAT", act.getTyre_position()));
                 }
-                else if (temperature > 100 && !act.isOn())
+                else if (temperature > 100 && act.getStatus() != OnTrackStatus.OVER)
                 {
-                    // act.toggle();
+                    act.setStatus(OnTrackStatus.OVER);
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "OVER");
                     System.out.println(String.format("TyreTrack [%d] -> OVERHEATING", act.getTyre_position()));
                 }
