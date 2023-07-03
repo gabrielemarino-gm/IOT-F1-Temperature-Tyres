@@ -73,6 +73,8 @@ public class TyreSensorMQTT
             temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1])/10);
             Actuator act = TyreActuatorCoAP.getTyre(temp.getTyrePosition(), topic);
             double temperature = temp.getTemperatureValue();
+            System.out.println(String.format("Temperature = %s", ""+temperature));
+
 
             if (topic.equals(SUBTOPIC_WARMER))
             {
