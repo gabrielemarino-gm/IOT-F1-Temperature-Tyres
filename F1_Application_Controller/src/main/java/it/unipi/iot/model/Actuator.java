@@ -13,12 +13,12 @@ public class Actuator {
     private OnTrackStatus status;
     public Actuator(int pos, String addr, String r)
     {
-        tyre_position = pos;
+        this.tyre_position = pos;
         this.addr = addr;
         this.resource = r;
-        isActive = true;
-        isOn = false;
-        status = OnTrackStatus.UNDEFINED;
+        this.isActive = true;
+        this.isOn = false;
+        this.status = OnTrackStatus.UNDEFINED;
     }
 
     public int getTyre_position() {return tyre_position;}
