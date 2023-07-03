@@ -29,7 +29,7 @@ static struct etimer periodic_state_timer;
 #define STATE_TIMER (CLOCK_SECOND * 10)
 
 #define SERVER_IP "coap://[fd00::1]"
-#define TYRE 1
+#define ID_PAIR 1
 
 static bool isRegistered = false;
 static bool check = false;
@@ -78,6 +78,7 @@ checker(coap_message_t *response){
     else
     {
         check = false;
+        isRegistered = false;
         LOG_DBG("Connection lost\n");
     }
 }
@@ -118,7 +119,7 @@ PROCESS_THREAD(coap_server, ev, data)
                 // Invia una richiesta di registrazione BLOCCANTE
                 if(!isRegistered)
                 {
-                    int leng = sprintf(toSend,"type=REG1&tyre=%d", TYRE);
+                    int leng = sprintf(toSend,"type=REG1&tyre=%d", ID_PAIR);
 
                     coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
                     coap_set_header_uri_path(request, "registrator");

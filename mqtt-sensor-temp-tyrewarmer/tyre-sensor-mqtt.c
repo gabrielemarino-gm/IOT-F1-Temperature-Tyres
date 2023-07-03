@@ -31,7 +31,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Config values
 #define DEFAULT_PUBLISH_INTERVAL (10 * CLOCK_SECOND)
-#define TYRE 1
+#define ID_PAIR 1
 
 // Sizes and Lenghts
 #define MAX_TCP_SEGMENT_SIZE 32
@@ -92,7 +92,7 @@ static uint8_t state;
 #define STATE_ERROR             6
 
 // Process
-PROCESS(mqtt_client_process, "MQTT client");
+PROCESS(mqtt_client_process, "Tyrewarmer Sensor");
 AUTOSTART_PROCESSES(&mqtt_client_process);
 
 /*------------------------------------*/
@@ -354,7 +354,7 @@ static void mqtt_state_machine()
             /* Sottoscritto a un topic */
 
             simulate_temperature();
-            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", TYRE, temperature);
+            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", ID_PAIR, temperature);
             if(warmer_on != 0)
                 mqtt_publish(&conn, NULL, PUB_TOPIC, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 

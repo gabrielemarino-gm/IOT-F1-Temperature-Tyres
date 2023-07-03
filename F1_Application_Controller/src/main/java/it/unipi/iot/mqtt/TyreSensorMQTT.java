@@ -8,7 +8,6 @@ import it.unipi.iot.model.Temperature;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Date;
-import java.util.Objects;
 
 public class TyreSensorMQTT
 {
@@ -74,7 +73,7 @@ public class TyreSensorMQTT
             Actuator act = TyreActuatorCoAP.getTyre(temp.getTyrePosition(), topic);
             double temperature = temp.getTemperatureValue();
 
-            if (Objects.equals(topic, SUBTOPIC_WARMER))
+            if (topic.equals(SUBTOPIC_WARMER))
             {
 //              Registra temperatura nel DB
                 try
@@ -126,7 +125,7 @@ public class TyreSensorMQTT
             }
 //          ------------------
 
-            if (Objects.equals(topic, SUBTOPIC_TRACK))
+            else if (topic.equals(SUBTOPIC_TRACK))
             {
 //              Registra temperatura nel DB
                 try
@@ -154,7 +153,7 @@ public class TyreSensorMQTT
                 {
                     act.toggle();
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "OVER");
-                    System.out.println(String.format("TyreTrack [%d] -> OVERHITING", act.getTyre_position()));
+                    System.out.println(String.format("TyreTrack [%d] -> OVERHEATING", act.getTyre_position()));
                 }
             }
         }
