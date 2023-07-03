@@ -27,6 +27,6 @@ CREATE TABLE `actuators` (
   `type` CHAR(10) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `tyre_position` INT NOT NULL,
-  `ipv6_addr` CHAR(50) NOT NULL, 
+  `ipv6_addr` CHAR(50) NOT NULL,
   PRIMARY KEY (`id_actuators`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
