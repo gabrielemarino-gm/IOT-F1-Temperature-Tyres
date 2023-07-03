@@ -74,7 +74,7 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int state_machine_timer = (CLOCK_SECOND >> 1);
+int state_machine_timer = CLOCK_SECOND * 2;
 static struct etimer periodic_state_timer;
 
 // States
@@ -89,14 +89,14 @@ static uint8_t state;
 #define STATE_ERROR             6
 
 // Process
-PROCESS(mqtt_client_process, "MQTT client");
+PROCESS(mqtt_client_process, "MQTT Track");
 AUTOSTART_PROCESSES(&mqtt_client_process);
 
 /*------------------------------------*/
 /*        GESTIONE TEMPERATURA        */
 /*------------------------------------*/
 
-static int temperature = 0;
+static int temperature = 700;
 enum trend
 {
     PUSH,
@@ -104,18 +104,18 @@ enum trend
     SLOW
 };
 
-static int driver_mode = 0;
+static int driver_mode = NORMAL;
 static int time_driver_mod_change = 0;
 
 static void simulate_temperature ()
 {
-    if (time_driver_mod_change == 10 && driver_mode == PUSH)
+    if (time_driver_mod_change == 100 && driver_mode == PUSH)
     {
         driver_mode = SLOW;
         time_driver_mod_change = 0;
     }
 
-    if (time_driver_mod_change == 10 && driver_mode == SLOW)
+    if (time_driver_mod_change == 100 && driver_mode == SLOW)
     {
         driver_mode = PUSH;
         time_driver_mod_change = 0;
@@ -123,15 +123,15 @@ static void simulate_temperature ()
     
     if (driver_mode == PUSH)
     {
-        temperature += 5;
+        temperature += 50;
     }
     else if (driver_mode == NORMAL)
     {
-        temperature += 1;
+        temperature += 10;
     }
     else if (driver_mode == SLOW)
     {
-        temperature -= 5;
+        temperature -= 50;
     }
 }
 
