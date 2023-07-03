@@ -63,6 +63,7 @@ res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buff
       break;
 
     default:
+    message = "ERROR";
       break;
   }
 

@@ -25,13 +25,16 @@ extern coap_resource_t
     res_tyrewarmer_toggle;
 
 static struct etimer periodic_state_timer;
-#define STATE_TIMER (CLOCK_SECOND * 5)
+
+#define STATE_TIMER (CLOCK_SECOND * 10)
 
 #define SERVER_IP "coap://[fd00::1]"
 #define TYRE 1
 
-static int isRegistered = 0;
-static char toSend[100];
+static bool isRegistered = false;
+static bool check = false;
+
+static char toSend[40];
 
 static bool have_conn(void)
 {
@@ -49,24 +52,33 @@ handler(coap_message_t *response){
 
     if(response != NULL){
         int len = coap_get_payload(response, &chunk);
-        printf("%.*s\n", len, (char*)chunk);
-        isRegistered = 1;
+        LOG_DBG("%.*s\n", len, (char*)chunk);
+        if(strcmp((char*)chunk, "OK") == 0)
+        {
+            isRegistered = true;
+            check = true;
+        }
+        else
+        {
+            LOG_DBG("Tyre already in use\n");
+        }
     }
     else{
-        printf("Error\n");
+        LOG_DBG("Error\n");
     }
 }
 
-static bool check = false;
-
+// Se mi risponde prima che scada il timer resetto
 void 
 checker(coap_message_t *response){
-
     if(response != NULL){
         check = true;
+        LOG_DBG("Still connected\n");
     }
-    else{
+    else
+    {
         check = false;
+        LOG_DBG("Connection lost\n");
     }
 }
 
@@ -92,18 +104,20 @@ PROCESS_THREAD(coap_server, ev, data)
         // Evento bottone
         if(ev == button_hal_release_event)
         {
-            LOG_DBG("*******BUTTON*******\n");
-            
-            res_tyrewarmer_toggle.trigger();
+            if(isRegistered == 1)
+            {
+                LOG_DBG("Tyrewarmer toggled\n");
+                res_tyrewarmer_toggle.trigger();
+            }
         }
         else if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
         {
             // Registra
             if(have_conn())
             {
-                if(isRegistered == 0)
+                // Invia una richiesta di registrazione BLOCCANTE
+                if(!isRegistered)
                 {
-                    
                     int leng = sprintf(toSend,"type=REG1&tyre=%d", TYRE);
 
                     coap_init_message(request, COAP_TYPE_CON, COAP_POST, 0);
@@ -112,16 +126,19 @@ PROCESS_THREAD(coap_server, ev, data)
 
                     printf("Sending registration request...\n");
                     COAP_BLOCKING_REQUEST(&server_ep, request, handler);
-    
                 }
-                // Check if still registered
+                // Controllo se sono registrato
                 else
                 {
-                    coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);
-                    coap_set_header_uri_path(request, "registrator");
-                    COAP_BLOCKING_REQUEST(&server_ep, request, checker);
-                    
-                    if(!check) isRegistered = 0;
+                    // Avvio il check solo se non ce ne sta uno in corso
+                    if(check)
+                    {
+                        check = false;
+                        LOG_DBG("Checking if still connected\n");
+                        coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);
+                        coap_set_header_uri_path(request, "registrator");
+                        COAP_BLOCKING_REQUEST(&server_ep, request, checker);
+                    }
                 }
             }
             else
@@ -129,9 +146,9 @@ PROCESS_THREAD(coap_server, ev, data)
                 LOG_DBG("Connecting to Border Router\n");
             }
 
-            etimer_reset(&periodic_state_timer);
         }
 
+        etimer_reset(&periodic_state_timer);
     }
 
     PROCESS_END();
