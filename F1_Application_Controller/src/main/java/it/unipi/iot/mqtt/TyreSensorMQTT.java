@@ -89,9 +89,7 @@ public class TyreSensorMQTT
                 return;
             }
 
-
-            System.out.println("DBG         STATUS: " + act.getStatus());
-
+            
             if (topic.equals(SUBTOPIC_WARMER))
             {
 //              Registra temperatura nel DB
