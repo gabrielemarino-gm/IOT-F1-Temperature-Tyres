@@ -31,6 +31,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Config values
 #define DEFAULT_PUBLISH_INTERVAL (30 * CLOCK_SECOND)
+#define ID_PAIR 1
 
 // Sizes and Lenghts
 #define MAX_TCP_SEGMENT_SIZE 32
@@ -339,7 +340,7 @@ static void mqtt_state_machine()
 
             simulate_temperature();
 
-            snprintf(app_buffer, sizeof(app_buffer), "%d", temperature);
+            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", ID_PAIR, temperature);
 
             mqtt_publish (&conn, NULL, pub_topic, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
