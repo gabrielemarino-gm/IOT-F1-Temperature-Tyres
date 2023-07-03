@@ -23,9 +23,11 @@ public class CoAPRegister extends CoapResource
 
     public void handleGET(CoapExchange exchange)
     {
-
         Response response = new Response(CoAP.ResponseCode.CONTENT);
         response.setPayload("PING");
+
+        TemperatureDAO.updateStatus(String.format("coap://[%s]", exchange.getSourceAddress().getHostName()));
+
         exchange.respond(response);
     }
 
@@ -46,10 +48,10 @@ public class CoAPRegister extends CoapResource
 
         Response response = new Response(CoAP.ResponseCode.CONTENT);
 
-        Actuator act = new Actuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "tyrewarmer");
-
         if(command.equals("REG1"))
         {
+            Actuator act = new Actuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "tyrewarmer");
+
             if(TemperatureDAO.registerActuator(act))
             {
                 response.setPayload("OK");
@@ -62,6 +64,7 @@ public class CoAPRegister extends CoapResource
         }
         else if(command.equals("REG2"))
         {
+            Actuator act = new Actuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "res_wheel_led");
             if(TemperatureDAO.registerActuator(act))
             {
                 response.setPayload("OK");

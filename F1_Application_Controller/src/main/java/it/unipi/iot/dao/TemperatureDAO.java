@@ -86,15 +86,16 @@ public class TemperatureDAO extends BaseMySQLDAO
         return toRet;
     }
 
-    public static Actuator getActuator(int i)
+//    Funziona
+    public static ArrayList<Actuator> getActiveActuators()
     {
-        Actuator toRet = null;
+        ArrayList<Actuator> toRet = new ArrayList<>();
 
         StringBuilder getActuator  = new StringBuilder();
-        getActuator.append("select tyre_position, ipaddr, timestamp, type " +
+        getActuator.append("select tyre_position, ipv6_addr, type " +
                 "from actuators " +
-                "where tyre_position = ? and timestamp < now() - interval 5 minute " +
-                "order by timestamp desc limit 1\n");
+                "where timestamp >= now() - interval 5 minute " +
+                "order by timestamp desc\n");
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -103,14 +104,54 @@ public class TemperatureDAO extends BaseMySQLDAO
         {
             connection = getConnection();
             preparedStatement = connection.prepareStatement(getActuator.toString(), Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setInt(1, i);
 
             ResultSet rs = preparedStatement.executeQuery();
 
             if(rs.next()){
-                toRet.setTyre_position(rs.getInt("tyre_position"));
-                toRet.setResource(rs.getString("type"));
-                toRet.setAddr(rs.getString("ipv6_addr"));
+                Actuator toSet = new Actuator(rs.getInt("tyre_position"), rs.getString("ipv6_addr"), rs.getString("type"));
+                toRet.add(toSet);
+            }
+
+            connection.close();
+        }
+        catch(Exception ex)
+        {
+//            throw new DAOException(ex);
+        }
+        finally {
+            closePool();
+        }
+
+        return toRet;
+    }
+
+    public static Actuator getActuator(int i, String s)
+    {
+        Actuator toRet = null;
+
+        StringBuilder getActuator  = new StringBuilder();
+        getActuator.append("select tyre_position, ipv6_addr, type " +
+                            "from actuators " +
+                            "where tyre_position=? and type=? and timestamp >= (now() - interval 5 minute) " +
+                            "order by timestamp desc " +
+                            "limit 1\n");
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(getActuator.toString(), Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setInt(1, i);
+            preparedStatement.setString(2, s);
+
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if(rs.next()){
+                toRet = new Actuator(rs.getInt("tyre_position"), rs.getString("ipv6_addr"), rs.getString("type"));
             }
 
             connection.close();
@@ -129,10 +170,10 @@ public class TemperatureDAO extends BaseMySQLDAO
     public static boolean registerActuator(Actuator act)
     {
 //        First, check presence
-        Actuator presence = getActuator(act.getTyre_position());
+        Actuator presence = getActuator(act.getTyre_position(), act.getResource());
 
 //        Gia presente un attuatore
-        if(presence != null)
+        if(presence != null && presence.getTyre_position() == act.getTyre_position())
         {
             return false;
         }
@@ -165,5 +206,36 @@ public class TemperatureDAO extends BaseMySQLDAO
         }
 
         return true;
+    }
+
+    public static void updateStatus(String ip){
+
+        StringBuilder insertTemperature = new StringBuilder();
+        insertTemperature.append("update actuators set timestamp = now() " +
+                            "where ipv6_addr=? and timestamp >= now() - interval 5 minute\n");
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(insertTemperature.toString(), Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, ip);
+
+            int x = preparedStatement.executeUpdate();
+
+            connection.close();
+
+        }
+        catch(Exception ex)
+        {
+//            throw new DAOException(ex);
+        }
+        finally {
+
+            closePool();
+        }
     }
 }

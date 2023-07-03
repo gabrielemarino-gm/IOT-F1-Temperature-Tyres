@@ -18,7 +18,6 @@ public class TyreActuatorCoAP extends CoapServer
 //    Semplicemente avvia un server CoAP con la risorsa "registrator"
 //    Per far registrare gli ATTUATORI
     private static TyreActuatorCoAP server = null;
-    private static ArrayList<Actuator> actuators = new ArrayList<>();
 
      public static void startServer()
      {
@@ -55,71 +54,11 @@ public class TyreActuatorCoAP extends CoapServer
         CoapClient client = new CoapClient(TARGET + "/" + RESOURCE);
         String toRet;
 
-        try
-        {
-            client.setTimeout(2000);
-            CoapResponse response = client.get();
-            toRet = response.getResponseText();
-        }
-        catch(NullPointerException ne)
-        {
-            toRet = "OFFLINE";
-            for(Actuator a : actuators)
-            {
-                if(a.getAddr().equals(TARGET))
-                {
-                    a.inactive();
-                }
-            }
-        }
-        finally
-        {
-            client.delete();
-        }
+        client.setTimeout(2000);
+        CoapResponse response = client.get();
+        toRet = response.getResponseText();
+
         return toRet;
-    }
-
-//  Altre funzioni statiche utili alla gestione degli attuatori CoAP
-//  quali registrazione e cancellazione
-    public static boolean registerActuator(int pos, String addr, String res)
-    {
-         Actuator toReg = new Actuator(pos, addr, res);
-
-//       Controllo se è presente un attuatore con la stessa ruota e attivo
-         for(Actuator a : actuators)
-         {
-//          Se esiste ed è attivo ritorno falso altrimenti lo elimino e torno true
-            if((a.getTyre_position() == pos))
-            {
-                if(a.isActive())
-                {
-                    return false;
-                }
-                else
-                {
-                    actuators.remove(a);
-                    break;
-                }
-            }
-         }
-
-         actuators.add(toReg);
-         return true;
-    }
-
-    public static ArrayList<Actuator> getActuators()
-    {
-        return actuators;
-    }
-    public static Actuator getTyre(int i, String res)
-    {
-         for(Actuator a : actuators)
-         {
-             if(a.getTyre_position() == i && Objects.equals(a.getResource(), res))
-                 return a;
-         }
-
-         return null;
     }
 
 }

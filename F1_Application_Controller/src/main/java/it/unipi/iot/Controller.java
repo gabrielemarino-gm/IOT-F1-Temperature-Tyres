@@ -100,13 +100,16 @@ public class Controller
             // SEND COAP REQUEST
             else if (tokens[0].equals("command"))
             {
+
 //              Manda una richiesta CoAP a uno specifico attuatore
                 if(tokens.length < 3)
                 {
                     System.out.println("Command error");
+                    break;
                 }
 
-                Actuator act = TyreActuatorCoAP.getTyre(Integer.parseInt(tokens[1]), tokens[2]);
+                Actuator act = TemperatureDAO.getActuator(Integer.parseInt(tokens[1]), tokens[2]);
+
                 if(act == null)
                 {
                     System.out.println("There is no actuator for given tyre");
@@ -114,7 +117,7 @@ public class Controller
                 else
                 {
                     System.out.println("Sending command");
-                    TyreActuatorCoAP.sendCommand(act.getAddr(), tokens[2], tokens[3]);
+                    TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), tokens[3]);
                 }
             }
 
@@ -147,11 +150,11 @@ public class Controller
             // GET TYREWARMER STATUS
             else if (tokens[0].equals("getStatus"))
             {
-                for(Actuator a : TyreActuatorCoAP.getActuators())
+                for(Actuator a : TemperatureDAO.getActiveActuators())
                 {
                     String ret = TyreActuatorCoAP.getStatRequest(a.getAddr(), a.getResource());
-                    // TODO Sistemare le due risorse
-                    System.out.println(String.format("TyreActuator [%d] -> %s", a.getTyre_position(), ret));
+
+                    System.out.println(String.format("Actuator [%s - %d] -> %s", a.getResource() ,a.getTyre_position(), ret));
                 }
             }
 
