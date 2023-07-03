@@ -107,7 +107,8 @@ public class TemperatureDAO extends BaseMySQLDAO
 
             ResultSet rs = preparedStatement.executeQuery();
 
-            if(rs.next()){
+            if(rs.next())
+            {
                 Actuator toSet = new Actuator(rs.getInt("tyre_position"), rs.getString("ipv6_addr"), rs.getString("type"));
                 toRet.add(toSet);
             }
@@ -116,9 +117,11 @@ public class TemperatureDAO extends BaseMySQLDAO
         }
         catch(Exception ex)
         {
-//            throw new DAOException(ex);
+//          throw new DAOException(ex);
+            System.err.println("ERROR: There is no actuator in the DB. Wait for registration!");
         }
-        finally {
+        finally
+        {
             closePool();
         }
 
