@@ -15,7 +15,7 @@ public class TyreSensorMQTT
     private static String SUBTOPIC_TRACK = "tyre_temp";
     public static class Subscriber implements MqttCallback
     {
-        MqttClient client = null;
+        static MqttClient client = null;
         public Subscriber(String BROKER, String CLIENTID, String TOPIC) throws MqttException
         {
             if(client == null)
