@@ -79,11 +79,13 @@ public class TyreSensorMQTT
             try
             {
                 act = TemperatureDAO.getActuator(temp.getTyrePosition(), topic);
-                act.setStatus(OnTrackStatus.UNDEFINED);
+                if (act.getAddr().equals("0") && act.getTyre_position() == 0 && act.getResource().equals("0"))
+                    System.out.println("WARNING: There is no actuator in the DB. Wait for registration!");
             }
             catch (Exception e)
             {
                 System.err.println("ERROR");
+                e.printStackTrace();
                 return;
             }
 

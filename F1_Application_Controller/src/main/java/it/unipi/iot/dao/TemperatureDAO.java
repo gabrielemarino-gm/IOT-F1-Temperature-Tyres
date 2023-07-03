@@ -118,12 +118,16 @@ public class TemperatureDAO extends BaseMySQLDAO
         catch(Exception ex)
         {
 //          throw new DAOException(ex);
-            System.err.println("ERROR: There is no actuator in the DB. Wait for registration!");
+            ex.printStackTrace();
         }
         finally
         {
             closePool();
         }
+
+//      Se il DB non ha nessun attuatore registrato il metodo ritorna una lista con un solo attuatore con indirizzo ZERO.
+        if (toRet.isEmpty())
+            toRet.add(new Actuator(0, "0", "0"));
 
         return toRet;
     }
