@@ -1,0 +1,10 @@
+- Attuatore Warmer CoAP: FINITO
+
+ToDO:
+1) Formattare in JSON per tutto. Definire il formato.
+2) Iscrizione dell'attuatori in MySQL
+3) Cambiare i colori dei led
+4) Led nei sensori MQTT, attivo o  dsattivo.
+5) Formattare il nome dei topic
+6) Fixare la simulazione delle temperature rilevate
+7) 

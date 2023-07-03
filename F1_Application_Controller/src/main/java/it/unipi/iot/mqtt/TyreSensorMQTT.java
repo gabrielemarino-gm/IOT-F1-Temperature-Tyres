@@ -145,13 +145,13 @@ public class TyreSensorMQTT
                 }
                 else if (temperature > 90 && temperature < 100 && !act.isOn())
                 {
-                    act.toggle();
+                    // act.toggle();
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "GREAT");
                     System.out.println(String.format("TyreTrack [%d] -> GREAT", act.getTyre_position()));
                 }
                 else if (temperature > 100 && !act.isOn())
                 {
-                    act.toggle();
+                    // act.toggle();
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "OVER");
                     System.out.println(String.format("TyreTrack [%d] -> OVERHEATING", act.getTyre_position()));
                 }
