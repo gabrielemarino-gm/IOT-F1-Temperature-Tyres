@@ -43,6 +43,7 @@ public class TyreSensorMQTT
                 }
                 catch (MqttException me)
                 {
+                    me.printStackTrace();
 //                  Try to reconnect in 5 seconds
                     try
                     {
