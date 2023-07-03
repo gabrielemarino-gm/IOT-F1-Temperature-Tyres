@@ -33,26 +33,27 @@ public class TyreSensorMQTT
         public void connectionLost(Throwable throwable)
         {
 //          TODO
-            //System.out.println("MQTT Disconnected");
+            System.out.println("MQTT Disconnected, cause: " + throwable.getCause());
+            int timeout = 5000;
             while(!client.isConnected())
             {
                 try
                 {
+//                  Try to reconnect in 5 seconds
+                    Thread.sleep(timeout);
                     System.out.println("MQTT Reconnecting");
-                    client.reconnect();
+                    client.connect();
+                    // TODO: Sistemare il topic di iscrizione a seconda della connessione persa.
+                    client.subscribe("tyre_temp");
+                    System.out.println("MQTT Connection Restored");
                 }
                 catch (MqttException me)
                 {
-//                  Try to reconnect in 5 seconds
-                    try
-                    {
-                        System.out.println("MQTT Retry in 5 seconds");
-                        Thread.sleep(5000);
-                    }
-                    catch(InterruptedException ie)
-                    {
-                        ie.printStackTrace();
-                    }
+                    me.printStackTrace();
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
                 }
                 //System.out.println("MQTT Reconnected");
             }
@@ -73,6 +74,8 @@ public class TyreSensorMQTT
             temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1])/10);
             Actuator act = TemperatureDAO.getActuator(temp.getTyrePosition(), topic);
             double temperature = temp.getTemperatureValue();
+            System.out.println(String.format("Temperature = %s", ""+temperature));
+
 
             if (topic.equals(SUBTOPIC_WARMER))
             {

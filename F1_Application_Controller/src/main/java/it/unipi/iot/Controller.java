@@ -39,7 +39,7 @@ public class Controller
 //      Start MQTT service
         try
         {
-            TyreSensorMQTT.Subscriber subscriberTyreWarmer = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID_WARMER, SUBTOPIC_WARMER);
+            //TyreSensorMQTT.Subscriber subscriberTyreWarmer = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID_WARMER, SUBTOPIC_WARMER);
             TyreSensorMQTT.Subscriber subscriberTyreTrack = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID_TRACK, SUBTOPIC_TRACK);
 
         }

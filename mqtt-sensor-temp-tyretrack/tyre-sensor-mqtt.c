@@ -31,6 +31,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Config values
 #define DEFAULT_PUBLISH_INTERVAL (30 * CLOCK_SECOND)
+#define ID_PAIR 1
 
 // Sizes and Lenghts
 #define MAX_TCP_SEGMENT_SIZE 32
@@ -73,7 +74,7 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int state_machine_timer = (CLOCK_SECOND >> 1);
+int state_machine_timer = CLOCK_SECOND * 2;
 static struct etimer periodic_state_timer;
 
 // States
@@ -88,14 +89,14 @@ static uint8_t state;
 #define STATE_ERROR             6
 
 // Process
-PROCESS(mqtt_client_process, "MQTT client");
+PROCESS(mqtt_client_process, "MQTT Track");
 AUTOSTART_PROCESSES(&mqtt_client_process);
 
 /*------------------------------------*/
 /*        GESTIONE TEMPERATURA        */
 /*------------------------------------*/
 
-static int temperature = 0;
+static int temperature = 700;
 enum trend
 {
     PUSH,
@@ -103,18 +104,18 @@ enum trend
     SLOW
 };
 
-static int driver_mode = 0;
+static int driver_mode = NORMAL;
 static int time_driver_mod_change = 0;
 
 static void simulate_temperature ()
 {
-    if (time_driver_mod_change == 10 && driver_mode == PUSH)
+    if (time_driver_mod_change == 100 && driver_mode == PUSH)
     {
         driver_mode = SLOW;
         time_driver_mod_change = 0;
     }
 
-    if (time_driver_mod_change == 10 && driver_mode == SLOW)
+    if (time_driver_mod_change == 100 && driver_mode == SLOW)
     {
         driver_mode = PUSH;
         time_driver_mod_change = 0;
@@ -122,15 +123,15 @@ static void simulate_temperature ()
     
     if (driver_mode == PUSH)
     {
-        temperature += 5;
+        temperature += 50;
     }
     else if (driver_mode == NORMAL)
     {
-        temperature += 1;
+        temperature += 10;
     }
     else if (driver_mode == SLOW)
     {
-        temperature -= 5;
+        temperature -= 50;
     }
 }
 
@@ -339,7 +340,7 @@ static void mqtt_state_machine()
 
             simulate_temperature();
 
-            snprintf(app_buffer, sizeof(app_buffer), "%d", temperature);
+            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", ID_PAIR, temperature);
 
             mqtt_publish (&conn, NULL, pub_topic, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
