@@ -1,6 +1,7 @@
 package it.unipi.iot.dao;
 
 import  it.unipi.iot.dao.exception.DAOException;
+import it.unipi.iot.model.Actuator;
 import  it.unipi.iot.model.Temperature;
 import  it.unipi.iot.dao.base.BaseMySQLDAO;
 
@@ -83,5 +84,86 @@ public class TemperatureDAO extends BaseMySQLDAO
         }
 
         return toRet;
+    }
+
+    public static Actuator getActuator(int i)
+    {
+        Actuator toRet = null;
+
+        StringBuilder getActuator  = new StringBuilder();
+        getActuator.append("select tyre_position, ipaddr, timestamp, type " +
+                "from actuators " +
+                "where tyre_position = ? and timestamp < now() - interval 5 minute " +
+                "order by timestamp desc limit 1\n");
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(getActuator.toString(), Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, i);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if(rs.next()){
+                toRet.setTyre_position(rs.getInt("tyre_position"));
+                toRet.setResource(rs.getString("type"));
+                toRet.setAddr(rs.getString("ipv6_addr"));
+            }
+
+            connection.close();
+        }
+        catch(Exception ex)
+        {
+//            throw new DAOException(ex);
+        }
+        finally {
+            closePool();
+        }
+
+        return toRet;
+    }
+
+    public static boolean registerActuator(Actuator act)
+    {
+//        First, check presence
+        Actuator presence = getActuator(act.getTyre_position());
+
+//        Gia presente un attuatore
+        if(presence != null)
+        {
+            return false;
+        }
+
+        StringBuilder setActuator  = new StringBuilder();
+        setActuator.append("insert into actuators (type, tyre_position, ipv6_addr) values");
+        setActuator.append("(?,?,?)");
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try
+        {
+            connection = getConnection();
+            preparedStatement = connection.prepareStatement(setActuator.toString(), Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, act.getResource());
+            preparedStatement.setInt(2, act.getTyre_position());
+            preparedStatement.setString(3, act.getAddr());
+
+            preparedStatement.executeUpdate();
+            connection.close();
+        }
+        catch(Exception ex)
+        {
+//            throw new DAOException(ex);
+        }
+        finally {
+            closePool();
+        }
+
+        return true;
     }
 }

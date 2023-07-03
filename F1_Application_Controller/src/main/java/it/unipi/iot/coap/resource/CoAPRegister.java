@@ -3,6 +3,8 @@ package it.unipi.iot.coap.resource;
 //  Risorsa del Server CoAP per registrare gli ATTUATORI
 
 import it.unipi.iot.coap.TyreActuatorCoAP;
+import it.unipi.iot.dao.TemperatureDAO;
+import it.unipi.iot.model.Actuator;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.Response;
@@ -43,9 +45,12 @@ public class CoAPRegister extends CoapResource
 //      Un ATTUATORE CoAP si sta registrando: REG1 = Tyre Warmer, REG2 = Tyre Track
 
         Response response = new Response(CoAP.ResponseCode.CONTENT);
+
+        Actuator act = new Actuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "tyrewarmer");
+
         if(command.equals("REG1"))
         {
-            if(TyreActuatorCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "tyrewarmer"))
+            if(TemperatureDAO.registerActuator(act))
             {
                 response.setPayload("OK");
             }
@@ -57,7 +62,7 @@ public class CoAPRegister extends CoapResource
         }
         else if(command.equals("REG2"))
         {
-            if(TyreActuatorCoAP.registerActuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "res_wheel_led"))
+            if(TemperatureDAO.registerActuator(act))
             {
                 response.setPayload("OK");
             }
