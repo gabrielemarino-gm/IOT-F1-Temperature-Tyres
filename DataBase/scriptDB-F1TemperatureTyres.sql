@@ -24,7 +24,7 @@ CREATE TABLE `temperature_on_warmer` (
 DROP TABLE IF EXISTS `actuators`;
 CREATE TABLE `actuators` (
   `id_actuators` int(11) NOT NULL AUTO_INCREMENT,    
-  `type` CHAR(10) NOT NULL,
+  `type` CHAR(20) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `tyre_position` INT NOT NULL,
   `ipv6_addr` CHAR(50) NOT NULL,

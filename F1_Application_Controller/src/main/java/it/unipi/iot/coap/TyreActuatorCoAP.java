@@ -41,12 +41,20 @@ public class TyreActuatorCoAP extends CoapServer
 
     public static String sendCommand(String TARGET, String RESOURCE, String COMMAND)
     {
-        CoapClient client = new CoapClient(String.format("%s/%s?command=%s", TARGET, RESOURCE, COMMAND));
+        try
+        {
+            CoapClient client = new CoapClient(String.format("%s/%s?command=%s", TARGET, RESOURCE, COMMAND));
 
-        client.setTimeout(2000);
-        CoapResponse response = client.put("", MediaTypeRegistry.TEXT_PLAIN);
+            client.setTimeout(2000);
+            CoapResponse response = client.put("", MediaTypeRegistry.TEXT_PLAIN);
 
-        return response.getCode().toString();
+            return response.getCode().toString();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Target unreachable");
+        }
+        return "Error";
     }
 
     public static String getStatRequest(String TARGET, String RESOURCE)
