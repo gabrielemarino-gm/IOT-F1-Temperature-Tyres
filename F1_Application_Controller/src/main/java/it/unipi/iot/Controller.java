@@ -15,8 +15,7 @@ public class Controller
 {
     // Applicazione
     private static String BROKERIP = "tcp://[::1]:1883";
-    private static String SUBCLIENTID_WARMER = "Controller_Tyrewarmer_Sub";
-    private static String SUBCLIENTID_TRACK = "Controller_Track_Sub";
+    private static String SUBCLIENTID = "Controller_Sub";
     private static String SUBTOPIC_WARMER = "TyrewarmerTemp";
     private static String SUBTOPIC_TRACK = "tyre_temp";
 
@@ -39,8 +38,8 @@ public class Controller
 //      Start MQTT service
         try
         {
-            //TyreSensorMQTT.Subscriber subscriberTyreWarmer = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID_WARMER, SUBTOPIC_WARMER);
-            TyreSensorMQTT.Subscriber subscriberTyreTrack = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID_TRACK, SUBTOPIC_TRACK);
+
+            TyreSensorMQTT.Subscriber subscriberTyreTrack = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_TRACK, SUBTOPIC_WARMER);
 
         }
         catch (MqttException e)

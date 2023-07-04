@@ -14,10 +14,11 @@ public class TyreSensorMQTT
 {
     private static String SUBTOPIC_WARMER = "TyrewarmerTemp";
     private static String SUBTOPIC_TRACK = "tyre_temp";
+
     public static class Subscriber implements MqttCallback
     {
         static MqttClient client = null;
-        public Subscriber(String BROKER, String CLIENTID, String TOPIC) throws MqttException
+        public Subscriber(String BROKER, String CLIENTID, String... args) throws MqttException
         {
             if(client == null)
             {
@@ -25,8 +26,10 @@ public class TyreSensorMQTT
                 client.setCallback(this);
                 client.connect();
             }
-
-            client.subscribe(TOPIC);
+            for(String s : args)
+            {
+                client.subscribe(s);
+            }
         }
 
         @Override
