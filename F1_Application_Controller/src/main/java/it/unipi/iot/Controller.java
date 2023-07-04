@@ -39,7 +39,7 @@ public class Controller
         try
         {
 
-            TyreSensorMQTT.Subscriber subscriberTyreTrack = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_TRACK, SUBTOPIC_WARMER);
+            TyreSensorMQTT.Subscriber subscriber = new TyreSensorMQTT.Subscriber(BROKERIP, SUBCLIENTID, SUBTOPIC_TRACK, SUBTOPIC_WARMER);
 
         }
         catch (MqttException e)
@@ -125,16 +125,25 @@ public class Controller
             {
                 try
                 {
-                    ArrayList<Temperature> temps = TemperatureDAO.getLastTemperature("temperature_on_warmer");
+                    ArrayList<Temperature> TyrewarmerTemps = TemperatureDAO.getLastTemperature("temperature_on_warmer");
+                    for(Temperature t : TyrewarmerTemps)
+                    {
+                        System.out.println(String.format("Tyrewarmer [%d] -> %s", t.getTyrePosition(), t.getTemperatureValue()));
+                    }
+                    if(TyrewarmerTemps.size() == 0)
+                    {
+                        System.out.println("No recently registrated tyrewarmer temperature");
+                    }
+                        System.out.println("~~");
+                    ArrayList<Temperature> temps = TemperatureDAO.getLastTemperature("temperature_on_track");
                     for(Temperature t : temps)
                     {
                         System.out.println(String.format("Tyre [%d] -> %s", t.getTyrePosition(), t.getTemperatureValue()));
                     }
                     if(temps.size() == 0)
                     {
-                        System.out.println("No recently registrated temperature");
+                        System.out.println("No recently registrated tyre temperature");
                     }
-
                 }
                 catch(DAOException de)
                 {

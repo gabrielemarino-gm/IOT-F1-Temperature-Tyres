@@ -58,14 +58,20 @@ public class TyreActuatorCoAP extends CoapServer
 
     public static String getStatRequest(String TARGET, String RESOURCE)
     {
-        CoapClient client = new CoapClient(TARGET + "/" + RESOURCE);
-        String toRet;
+        try
+        {
+            CoapClient client = new CoapClient(TARGET + "/" + RESOURCE);
+            String toRet;
 
-        client.setTimeout(2000);
-        CoapResponse response = client.get();
-        toRet = response.getResponseText();
+            client.setTimeout(2000);
+            CoapResponse response = client.get();
+            toRet = response.getResponseText();
 
-        return toRet;
+            return toRet;
+        }
+        catch (Exception e){
+            return "ERROR";
+        }
     }
 
 }

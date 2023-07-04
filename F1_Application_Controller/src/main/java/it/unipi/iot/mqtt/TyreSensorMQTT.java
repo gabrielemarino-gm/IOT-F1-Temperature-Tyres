@@ -9,6 +9,9 @@ import it.unipi.iot.model.Temperature;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class TyreSensorMQTT
 {
@@ -74,10 +77,19 @@ public class TyreSensorMQTT
 
 //              Registra una nuova temperatura per la ruota indicata
                 Temperature temp = new Temperature();
-                temp.setTimestamp(new Date(System.currentTimeMillis()));
                 temp.setTyrePosition(Integer.parseInt(args[0].split("=")[1]));
                 temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1]) / 10);
-                System.out.println(String.format("DBG   Temperature = %s,  TyrePos = %d", "" + temp.getTemperatureValue(), temp.getTyrePosition()));
+
+//                Setting the date
+                String pattern = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date date = new Date(dateFormat.parse(args[2].split("=")[1]).getTime());
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                calendar.add(Calendar.HOUR_OF_DAY, 2);
+
+                temp.setTimestamp(new Date(calendar.getTime().getTime()));
 
                 Actuator act = null;
 
@@ -96,11 +108,10 @@ public class TyreSensorMQTT
                     }
 
 //                  Fai altre cose qui (AZIONA ATTUATORE CORRETTO)
-                    if (temp.getTemperatureValue() > 70 && act.isOn())
+                    if (temp.getTemperatureValue() > 70)
                     {
-                        act.toggle();
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "HIGHTEMP");
-                        System.out.println(String.format("Tyrewarmer [%d] -> DISENGAGED", act.getTyre_position()));
+//                        System.out.println(String.format("Tyrewarmer [%d] -> DISENGAGED", act.getTyre_position()));
 
 //                      Abbassare temperatura simulazione
                         try
@@ -112,11 +123,10 @@ public class TyreSensorMQTT
                             ie.printStackTrace();
                         }
                     }
-                    else if (temp.getTemperatureValue() > 67 && !act.isOn())
+                    else if (temp.getTemperatureValue() < 67)
                     {
-                        act.toggle();
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "LOWTEMP");
-                        System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));
+//                        System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));
 
 //                      Alzare temperatura simulazione
                         try
@@ -144,23 +154,20 @@ public class TyreSensorMQTT
                         de.printStackTrace();
                     }
 
-                    if (temp.getTemperatureValue() < 90 && act.getStatus() != OnTrackStatus.UNDER)
+                    if (temp.getTemperatureValue() < 90)
                     {
-                        act.setStatus(OnTrackStatus.UNDER);
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "UNDER");
-                        System.out.println(String.format("TyreTrack [%d] -> COLD", act.getTyre_position()));
+//                        System.out.println(String.format("TyreTrack [%d] -> COLD", act.getTyre_position()));
                     }
-                    else if (temp.getTemperatureValue() > 90 && temp.getTemperatureValue() < 100 && act.getStatus() != OnTrackStatus.GREAT)
+                    else if (temp.getTemperatureValue() > 90 && temp.getTemperatureValue() < 100)
                     {
-                        act.setStatus(OnTrackStatus.GREAT);
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "GREAT");
-                        System.out.println(String.format("TyreTrack [%d] -> GREAT", act.getTyre_position()));
+//                        System.out.println(String.format("TyreTrack [%d] -> GREAT", act.getTyre_position()));
                     }
-                    else if (temp.getTemperatureValue() > 100 && act.getStatus() != OnTrackStatus.OVER)
+                    else if (temp.getTemperatureValue() > 100)
                     {
-                        act.setStatus(OnTrackStatus.OVER);
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "OVER");
-                        System.out.println(String.format("TyreTrack [%d] -> OVERHEATING", act.getTyre_position()));
+//                        System.out.println(String.format("TyreTrack [%d] -> OVERHEATING", act.getTyre_position()));
                     }
                 }
             }

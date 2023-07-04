@@ -19,7 +19,7 @@
 #include <stdarg.h>
 #include <time.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "mqtt-client"
+#define LOG_MODULE "Tyre Sensor"
 #define LOG_LEVEL LOG_LEVEL_DBG
 /*------------------------------------*/
 /*             INIT PHASE             */
@@ -354,9 +354,10 @@ static void mqtt_state_machine()
         case STATE_SUBSCRIBED:
             /* Sottoscritto a un topic */
 
+            setTimeStamp();
             simulate_temperature();
 
-            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", ID_PAIR, temperature);
+            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d&ts=%s", ID_PAIR, temperature,timeStr);
 
             mqtt_publish (&conn, NULL, pub_topic, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 

@@ -20,7 +20,7 @@ public abstract class BaseMySQLDAO
 
     public static Connection getConnection() throws SQLException
     {
-        if(ds == null || ds.isClosed() || ds.getConnection() == null){
+        if(ds == null || ds.isClosed()){
             initPool();
         }
 

@@ -43,8 +43,8 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Buffer for topic publication
 #define SUB_TOPIC_WARMER        "warmer_on"
-#define SUB_TOPIC_THRESHOLD     "TyrewarmerConf"
 #define PUB_TOPIC               "TyrewarmerTemp"
+
 static char app_buffer[APP_BUFFER_SIZE];
 
 
@@ -159,14 +159,14 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     }
 
     // Cambiare l'intervallo di cambionamento (Non implementata)
-    else if (strcmp(topic, SUB_TOPIC_THRESHOLD) == 0)
-    {   
-        LOG_INFO("%d\n", (int)*msg_ptr->payload_chunk);
+    // else if (strcmp(topic, SUB_TOPIC_THRESHOLD) == 0)
+    // {   
+    //     LOG_INFO("%d\n", (int)*msg_ptr->payload_chunk);
 
-        int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
+    //     int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
 
-        etimer_set(&periodic_state_timer, timer_value);
-    }
+    //     etimer_set(&periodic_state_timer, timer_value);
+    // }
 }
 /*------------------------------------*/
 /*         CHECK CONNECTIVITY         */
@@ -368,9 +368,11 @@ static void mqtt_state_machine()
 
         case STATE_SUBSCRIBED:
             /* Sottoscritto a un topic */
-
+            setTimeStamp();
             simulate_temperature();
-            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d", ID_PAIR, temperature);
+
+            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d&ts=%s", ID_PAIR, temperature, timeStr);
+            
             if(warmer_on != 0)
                 mqtt_publish(&conn, NULL, PUB_TOPIC, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
