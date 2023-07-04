@@ -79,8 +79,6 @@ public class TyreSensorMQTT
             try
             {
                 act = TemperatureDAO.getActuator(temp.getTyrePosition(), topic);
-                if (act.getAddr().equals("0") && act.getTyre_position() == 0 && act.getResource().equals("0"))
-                    System.out.println("WARNING: There is no actuator in the DB. Wait for registration!");
             }
             catch (Exception e)
             {
@@ -89,6 +87,7 @@ public class TyreSensorMQTT
                 return;
             }
 
+            System.out.println("DBG:    Actuator = " + act.toString());
             
             if (topic.equals(SUBTOPIC_WARMER))
             {
