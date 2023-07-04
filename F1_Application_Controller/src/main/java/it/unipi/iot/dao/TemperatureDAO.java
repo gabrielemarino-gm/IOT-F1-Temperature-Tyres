@@ -224,7 +224,7 @@ public class TemperatureDAO extends BaseMySQLDAO
 
             preparedStatement.setString(1, ip);
 
-            int x = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
 
             connection.close();
 
