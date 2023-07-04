@@ -76,22 +76,23 @@ public class TyreSensorMQTT
             System.out.println(String.format("DBG   Temperature = %s,  TyrePos = %d", "" + temp.getTemperatureValue(), temp.getTyrePosition()));
 
             Actuator act = null;
-            try
-            {
-                act = TemperatureDAO.getActuator(temp.getTyrePosition(), topic);
-                act.setStatus(OnTrackStatus.UNDEFINED);
-            }
-            catch (Exception e)
-            {
-                System.err.println("ERROR");
-                e.printStackTrace();
-                return;
-            }
+
 
             System.out.println("DBG:    Actuator = " + act.toString());
             
             if (topic.equals(SUBTOPIC_WARMER))
             {
+                try
+                {
+                    act = TemperatureDAO.getActuator(temp.getTyrePosition(), "tyrewarmer");
+                }
+                catch (Exception e)
+                {
+                    System.err.println("ERROR");
+                    e.printStackTrace();
+                    return;
+                }
+
 //              Registra temperatura nel DB
                 try
                 {
@@ -140,6 +141,17 @@ public class TyreSensorMQTT
 
             else if (topic.equals(SUBTOPIC_TRACK))
             {
+                try
+                {
+                    act = TemperatureDAO.getActuator(temp.getTyrePosition(), "res_wheel_led");
+                }
+                catch (Exception e)
+                {
+                    System.err.println("ERROR");
+                    e.printStackTrace();
+                    return;
+                }
+
 //              Registra temperatura nel DB
                 try
                 {
