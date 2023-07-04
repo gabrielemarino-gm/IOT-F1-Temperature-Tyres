@@ -17,6 +17,7 @@
 #include <string.h>
 #include <strings.h>
 #include <stdarg.h>
+#include <time.h>
 /*---------------------------------------------------------------------------*/
 #define LOG_MODULE "mqtt-client"
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -91,6 +92,21 @@ static uint8_t state;
 // Process
 PROCESS(mqtt_client_process, "MQTT Track");
 AUTOSTART_PROCESSES(&mqtt_client_process);
+
+/*------------------------------------*/
+/*             TIMESTAMP              */
+/*------------------------------------*/
+
+static char timeStr[20];
+static void setTimeStamp(void){
+       time_t timestamp;
+       time(&timestamp);
+
+      // Convert timestamp to a formatted string
+       struct tm* timeinfo;
+       timeinfo = localtime(&timestamp);
+      strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", timeinfo);
+}
 
 /*------------------------------------*/
 /*        GESTIONE TEMPERATURA        */
