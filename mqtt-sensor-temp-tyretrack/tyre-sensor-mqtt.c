@@ -150,7 +150,7 @@ static void simulate_temperature ()
         temperature -= 50;
     }
 
-    LOG_DBG("Temperature = %d", temperature);
+    LOG_DBG("Temperature = %d\n", temperature);
 }
 
 /*-------------------------------------------------*/
