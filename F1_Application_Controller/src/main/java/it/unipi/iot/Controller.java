@@ -153,7 +153,6 @@ public class Controller
                 for(Actuator a : TemperatureDAO.getActiveActuators())
                 {
                     String ret = TyreActuatorCoAP.getStatRequest(a.getAddr(), a.getResource());
-
                     System.out.println(String.format("Actuator [%s - %d] -> %s", a.getResource(), a.getTyre_position(), ret));
                 }
             }

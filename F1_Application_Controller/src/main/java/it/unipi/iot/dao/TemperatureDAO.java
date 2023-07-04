@@ -107,7 +107,7 @@ public class TemperatureDAO extends BaseMySQLDAO
 
             ResultSet rs = preparedStatement.executeQuery();
 
-            if(rs.next())
+            while(rs.next())
             {
                 Actuator toSet = new Actuator(rs.getInt("tyre_position"), rs.getString("ipv6_addr"), rs.getString("type"));
                 toRet.add(toSet);
