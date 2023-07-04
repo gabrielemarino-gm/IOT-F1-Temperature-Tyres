@@ -77,7 +77,7 @@ public class TyreSensorMQTT
                 temp.setTimestamp(new Date(System.currentTimeMillis()));
                 temp.setTyrePosition(Integer.parseInt(args[0].split("=")[1]));
                 temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1]) / 10);
-                System.out.println(String.format("DBG   Temperature = %s,  TyrePos = %d", "" + temp.getTemperatureValue(), temp.getTyrePosition()));
+                // System.out.println(String.format("DBG   Temperature = %s,  TyrePos = %d", "" + temp.getTemperatureValue(), temp.getTyrePosition()));
 
                 Actuator act = null;
 
