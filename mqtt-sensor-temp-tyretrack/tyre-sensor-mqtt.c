@@ -120,18 +120,18 @@ enum trend
     SLOW
 };
 
-static int driver_mode = NORMAL;
+static trend driver_mode = NORMAL;
 static int time_driver_mod_change = 0;
 
 static void simulate_temperature ()
 {
-    if (time_driver_mod_change == 100 && driver_mode == PUSH)
+    if (time_driver_mod_change == 10 && driver_mode == PUSH)
     {
         driver_mode = SLOW;
         time_driver_mod_change = 0;
     }
 
-    if (time_driver_mod_change == 100 && driver_mode == SLOW)
+    if (time_driver_mod_change == 10 && driver_mode == SLOW)
     {
         driver_mode = PUSH;
         time_driver_mod_change = 0;
@@ -149,6 +149,8 @@ static void simulate_temperature ()
     {
         temperature -= 50;
     }
+
+    LOG_DBG("Temperature = %d", temperature);
 }
 
 /*-------------------------------------------------*/
