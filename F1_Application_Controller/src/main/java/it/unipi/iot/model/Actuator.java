@@ -3,7 +3,8 @@ package it.unipi.iot.model;
 import it.unipi.iot.enumActuatorStatus.*;
 
 // Questa classe rappresenta un attuatore
-public class Actuator {
+public class Actuator
+{
     private int tyre_position;
     private String addr;
     private String resource;
@@ -13,12 +14,12 @@ public class Actuator {
     private OnTrackStatus status;
     public Actuator(int pos, String addr, String r)
     {
-        tyre_position = pos;
+        this.tyre_position = pos;
         this.addr = addr;
         this.resource = r;
-        isActive = true;
-        isOn = false;
-        status = OnTrackStatus.UNDEFINED;
+        this.isActive = true;
+        this.isOn = false;
+        this.status = OnTrackStatus.UNDEFINED;
     }
 
     public int getTyre_position() {return tyre_position;}
@@ -35,4 +36,16 @@ public class Actuator {
     public void setStatus(OnTrackStatus s) {status = s;}
     public void inactive(){isActive = false;}
     public void toggle(){isOn = !isOn;}
+
+    @Override
+    public String toString() {
+        return "Actuator{" +
+                "tyre_position=" + tyre_position +
+                ", addr='" + addr + '\'' +
+                ", resource='" + resource + '\'' +
+                ", isActive=" + isActive +
+                ", isOn=" + isOn +
+                ", status=" + status +
+                '}';
+    }
 }

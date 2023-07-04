@@ -63,6 +63,7 @@ public class TyreSensorMQTT
         @Override
         public void messageArrived(String topic, MqttMessage message)
         {
+
 //          Ogni volta che arriva un messaggio, lo registro
             String payload = new String(message.getPayload());
             String[] args = payload.split("&");
@@ -71,12 +72,24 @@ public class TyreSensorMQTT
             Temperature temp = new Temperature();
             temp.setTimestamp(new Date(System.currentTimeMillis()));
             temp.setTyrePosition(Integer.parseInt(args[0].split("=")[1]));
-            temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1])/10);
-            Actuator act = TemperatureDAO.getActuator(temp.getTyrePosition(), topic);
-            double temperature = temp.getTemperatureValue();
-            System.out.println(String.format("Temperature = %s", ""+temperature));
+            temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1]) / 10);
+            System.out.println(String.format("DBG   Temperature = %s,  TyrePos = %d", "" + temp.getTemperatureValue(), temp.getTyrePosition()));
 
+            Actuator act = null;
+            try
+            {
+                act = TemperatureDAO.getActuator(temp.getTyrePosition(), topic);
+                if (act.getAddr().equals("0") && act.getTyre_position() == 0 && act.getResource().equals("0"))
+                    System.out.println("WARNING: There is no actuator in the DB. Wait for registration!");
+            }
+            catch (Exception e)
+            {
+                System.err.println("ERROR");
+                e.printStackTrace();
+                return;
+            }
 
+            
             if (topic.equals(SUBTOPIC_WARMER))
             {
 //              Registra temperatura nel DB
@@ -84,13 +97,13 @@ public class TyreSensorMQTT
                 {
                     TemperatureDAO.writeTemperature(temp, "temperature_on_warmer");
                 }
-                catch(DAOException de)
+                catch (DAOException de)
                 {
                     de.printStackTrace();
                 }
 
 //              Fai altre cose qui (AZIONA ATTUATORE CORRETTO)
-                if(temperature > 70 && act.isOn())
+                if (temp.getTemperatureValue() > 70 && act.isOn())
                 {
                     act.toggle();
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "HIGHTEMP");
@@ -101,16 +114,12 @@ public class TyreSensorMQTT
                     {
                         TyreSensorMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "-1");
                     }
-                    catch(InterruptedException ie)
+                    catch (InterruptedException | MqttException ie)
                     {
                         ie.printStackTrace();
                     }
-                    catch(MqttException me)
-                    {
-                        me.printStackTrace();
-                    }
                 }
-                else if (temperature > 67 && !act.isOn())
+                else if (temp.getTemperatureValue() > 67 && !act.isOn())
                 {
                     act.toggle();
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "LOWTEMP");
@@ -127,7 +136,7 @@ public class TyreSensorMQTT
                     }
                 }
             }
-//          ------------------
+            //          ------------------
 
             else if (topic.equals(SUBTOPIC_TRACK))
             {
@@ -136,24 +145,24 @@ public class TyreSensorMQTT
                 {
                     TemperatureDAO.writeTemperature(temp, "temperature_on_track");
                 }
-                catch(DAOException de)
+                catch (DAOException de)
                 {
                     de.printStackTrace();
                 }
 
-                if (temperature < 90 && act.getStatus() != OnTrackStatus.UNDER)
+                if (temp.getTemperatureValue() < 90 && act.getStatus() != OnTrackStatus.UNDER)
                 {
                     act.setStatus(OnTrackStatus.UNDER);
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "UNDER");
                     System.out.println(String.format("TyreTrack [%d] -> COLD", act.getTyre_position()));
                 }
-                else if (temperature > 90 && temperature < 100 && act.getStatus() != OnTrackStatus.GREAT)
+                else if (temp.getTemperatureValue() > 90 && temp.getTemperatureValue() < 100 && act.getStatus() != OnTrackStatus.GREAT)
                 {
                     act.setStatus(OnTrackStatus.GREAT);
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "GREAT");
                     System.out.println(String.format("TyreTrack [%d] -> GREAT", act.getTyre_position()));
                 }
-                else if (temperature > 100 && act.getStatus() != OnTrackStatus.OVER)
+                else if (temp.getTemperatureValue() > 100 && act.getStatus() != OnTrackStatus.OVER)
                 {
                     act.setStatus(OnTrackStatus.OVER);
                     TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "OVER");

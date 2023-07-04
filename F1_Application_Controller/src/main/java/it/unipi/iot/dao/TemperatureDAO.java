@@ -107,7 +107,8 @@ public class TemperatureDAO extends BaseMySQLDAO
 
             ResultSet rs = preparedStatement.executeQuery();
 
-            if(rs.next()){
+            if(rs.next())
+            {
                 Actuator toSet = new Actuator(rs.getInt("tyre_position"), rs.getString("ipv6_addr"), rs.getString("type"));
                 toRet.add(toSet);
             }
@@ -116,12 +117,18 @@ public class TemperatureDAO extends BaseMySQLDAO
         }
         catch(Exception ex)
         {
-//            throw new DAOException(ex);
+//          throw new DAOException(ex);
+            ex.printStackTrace();
         }
-        finally {
+        finally
+        {
             closePool();
         }
 
+//      Se il DB non ha nessun attuatore registrato il metodo ritorna una lista con un solo attuatore con indirizzo ZERO.
+        if (toRet.isEmpty())
+            toRet.add(new Actuator(0, "0", "0"));
+        System.out.println("DGB     DriverDB: " + toRet.toString());
         return toRet;
     }
 
@@ -159,11 +166,18 @@ public class TemperatureDAO extends BaseMySQLDAO
         catch(Exception ex)
         {
 //            throw new DAOException(ex);
+            System.out.println("ERROR: DataBase return:");
+            ex.printStackTrace();
         }
-        finally {
+        finally
+        {
             closePool();
         }
 
+//      Se il DB non ha nessun attuatore registrato il metodo ritorna una lista con un solo attuatore con indirizzo ZERO.
+        if (toRet == null)
+            toRet = new Actuator(0, "0", "0");
+        System.out.println("DGB     DriverDB: " + toRet.toString());
         return toRet;
     }
 
