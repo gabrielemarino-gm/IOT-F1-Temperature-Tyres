@@ -125,15 +125,14 @@ static int time_driver_mod_change = 0;
 
 static void simulate_temperature ()
 {
-    LOG_DBG("time_driver_mod_change = %d    |   ", time_driver_mod_change);
-    LOG_DBG("driver_mode = %d\n", driver_mode);
-    if (time_driver_mod_change == 10 && driver_mode == PUSH)
+    LOG_DBG("time_driver_mod_change = %d    |   driver_mode = %d", time_driver_mod_change, driver_mode);
+    if (time_driver_mod_change > 10 && driver_mode == PUSH)
     {
         driver_mode = SLOW;
         time_driver_mod_change = 0;
     }
 
-    if (time_driver_mod_change == 10 && driver_mode == SLOW)
+    if (time_driver_mod_change > 10 && driver_mode == SLOW)
     {
         driver_mode = PUSH;
         time_driver_mod_change = 0;
@@ -142,14 +141,17 @@ static void simulate_temperature ()
     if (driver_mode == PUSH)
     {
         temperature += 50;
+        time_driver_mod_change++;
     }
     else if (driver_mode == NORMAL)
     {
         temperature += 10;
+        time_driver_mod_change++;
     }
     else if (driver_mode == SLOW)
     {
         temperature -= 50;
+        time_driver_mod_change++;
     }
 
     LOG_DBG("Temperature = %d\n", temperature);
