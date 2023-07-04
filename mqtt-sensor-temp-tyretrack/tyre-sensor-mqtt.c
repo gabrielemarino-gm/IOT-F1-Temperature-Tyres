@@ -126,6 +126,13 @@ static enum trend driver_mode = NORMAL;
 static void simulate_temperature ()
 {
     LOG_DBG("driver_mode = %d\n", driver_mode);
+
+    if (temperature > 900 && driver_mode == NORMAL)
+    {
+        LOG_DBG("Chage mood: PUSH\n");
+        driver_mode = PUSH;
+    }
+
     if (temperature > 1050 && (driver_mode == PUSH || driver_mode == NORMAL))
     {
         LOG_DBG("Chage mood: SLOW\n");

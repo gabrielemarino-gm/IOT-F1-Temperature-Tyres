@@ -157,7 +157,7 @@ public class TyreSensorMQTT
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "UNDER");
 //                        System.out.println(String.format("TyreTrack [%d] -> COLD", act.getTyre_position()));
                     }
-                    else if (temp.getTemperatureValue() > 90 && temp.getTemperatureValue() < 100)
+                    else if (temp.getTemperatureValue() >= 90 && temp.getTemperatureValue() <= 100)
                     {
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "GREAT");
 //                        System.out.println(String.format("TyreTrack [%d] -> GREAT", act.getTyre_position()));
