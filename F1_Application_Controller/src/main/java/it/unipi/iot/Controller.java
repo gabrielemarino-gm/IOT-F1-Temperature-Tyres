@@ -126,20 +126,16 @@ public class Controller
             {
                 try
                 {
-                    ArrayList<Integer> pass = new ArrayList<>();
                     ArrayList<Temperature> temps = TemperatureDAO.getLastTemperature("temperature_on_warmer");
                     for(Temperature t : temps)
                     {
-                        pass.add(t.getTyrePosition());
                         System.out.println(String.format("Tyre [%d] -> %s", t.getTyrePosition(), t.getTemperatureValue()));
                     }
-                    for(int i = 1; i<=4;i++)
+                    if(temps.size() == 0)
                     {
-                        if(!pass.contains(i))
-                        {
-                            System.out.println(String.format("Tyre [%d] -> %s", i, "OUTDATED"));
-                        }
+                        System.out.println("No recently registrated temperature");
                     }
+
                 }
                 catch(DAOException de)
                 {

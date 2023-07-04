@@ -53,21 +53,22 @@ void handler (coap_message_t *response)
     }
     else
     {
-        LOG_ERR("ERROR: Actuator not subcrived");
+        LOG_ERR("ERROR: Actuator not subscribed");
     }
 }
 
-
 static bool check = false;
-void checker(coap_message_t *response)
-{
-    if(response != NULL)
-    {
+
+void 
+checker(coap_message_t *response){
+    if(response != NULL){
         check = true;
     }
     else
     {
         check = false;
+        isRegistered = false;
+        LOG_DBG("Connection lost\n");
     }
 }
 

@@ -52,7 +52,7 @@ handler(coap_message_t *response){
 
     if(response != NULL){
         int len = coap_get_payload(response, &chunk);
-        LOG_DBG("%.*s\n", len, (char*)chunk);
+        LOG_INFO("APPLICATION RESPONSE: %.*s\n", len, (char*)chunk);
         if(strcmp((char*)chunk, "OK") == 0)
         {
             isRegistered = true;
@@ -73,7 +73,6 @@ void
 checker(coap_message_t *response){
     if(response != NULL){
         check = true;
-        LOG_DBG("Still connected\n");
     }
     else
     {
@@ -135,7 +134,7 @@ PROCESS_THREAD(coap_server, ev, data)
                     if(check)
                     {
                         check = false;
-                        LOG_DBG("Checking if still connected\n");
+
                         coap_init_message(request, COAP_TYPE_CON, COAP_GET, 0);
                         coap_set_header_uri_path(request, "registrator");
                         COAP_BLOCKING_REQUEST(&server_ep, request, checker);

@@ -177,10 +177,15 @@ public class TemperatureDAO extends BaseMySQLDAO
 //        First, check presence
         Actuator presence = getActuator(act.getTyre_position(), act.getResource());
 
-//        Gia presente un attuatore
+//        Gia presente un attuatore con quella ruota
         if(presence != null && (presence.getTyre_position() == act.getTyre_position()))
         {
-            return false;
+//            Lo stesso attuatore ha subito una disconnessione
+            if(presence.getAddr().equals(act.getAddr()))
+                return true;
+            else
+//            Un attuatore diverso sta provando a connettersi
+                return false;
         }
 
         StringBuilder setActuator  = new StringBuilder();
