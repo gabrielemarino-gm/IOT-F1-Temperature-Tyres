@@ -3,13 +3,11 @@ package it.unipi.iot.mqtt;
 import it.unipi.iot.coap.TyreActuatorCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
-import it.unipi.iot.enumActuatorStatus.OnTrackStatus;
 import it.unipi.iot.model.Actuator;
 import it.unipi.iot.model.Temperature;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Date;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 

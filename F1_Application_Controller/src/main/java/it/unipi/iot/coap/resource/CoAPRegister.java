@@ -2,7 +2,6 @@ package it.unipi.iot.coap.resource;
 
 //  Risorsa del Server CoAP per registrare gli ATTUATORI
 
-import it.unipi.iot.coap.TyreActuatorCoAP;
 import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.model.Actuator;
 import org.eclipse.californium.core.CoapResource;

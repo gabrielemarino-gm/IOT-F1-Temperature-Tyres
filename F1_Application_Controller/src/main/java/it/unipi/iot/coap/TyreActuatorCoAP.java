@@ -9,8 +9,6 @@ import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.CoapServer;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
 
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class TyreActuatorCoAP extends CoapServer
 {

@@ -37,10 +37,6 @@ public class TemperatureDAO extends BaseMySQLDAO
         {
             throw new DAOException(ex);
         }
-        finally {
-
-            closePool();
-        }
     }
 
     public static ArrayList<Temperature> getLastTemperature(String nameTab) throws DAOException
@@ -79,9 +75,6 @@ public class TemperatureDAO extends BaseMySQLDAO
         {
             throw new DAOException(ex);
         }
-        finally {
-            closePool();
-        }
 
         return toRet;
     }
@@ -119,10 +112,6 @@ public class TemperatureDAO extends BaseMySQLDAO
         {
 //          throw new DAOException(ex);
             ex.printStackTrace();
-        }
-        finally
-        {
-            closePool();
         }
 
         return toRet;
@@ -163,10 +152,6 @@ public class TemperatureDAO extends BaseMySQLDAO
 //            throw new DAOException(ex);
             System.out.println("ERROR: DataBase return:");
             ex.printStackTrace();
-        }
-        finally
-        {
-            closePool();
         }
 
         return toRet;
@@ -211,9 +196,6 @@ public class TemperatureDAO extends BaseMySQLDAO
         {
 //            throw new DAOException(ex);
         }
-        finally {
-            closePool();
-        }
 
         return true;
     }
@@ -244,10 +226,6 @@ public class TemperatureDAO extends BaseMySQLDAO
 //          throw new DAOException(ex);
             System.err.println("ERROR in updateStatus()");
             ex.printStackTrace();
-        }
-        finally
-        {
-            closePool();
         }
     }
 }
