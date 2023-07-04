@@ -64,6 +64,8 @@ public class TyreSensorMQTT
         public void messageArrived(String topic, MqttMessage message)
         {
 
+            System.out.println(topic);
+
 //          Ogni volta che arriva un messaggio, lo registro
             String payload = new String(message.getPayload());
             String[] args = payload.split("&");
@@ -76,23 +78,9 @@ public class TyreSensorMQTT
             System.out.println(String.format("DBG   Temperature = %s,  TyrePos = %d", "" + temp.getTemperatureValue(), temp.getTyrePosition()));
 
             Actuator act = null;
-
-
-            System.out.println("DBG:    Actuator = " + act.toString());
             
             if (topic.equals(SUBTOPIC_WARMER))
             {
-                try
-                {
-                    act = TemperatureDAO.getActuator(temp.getTyrePosition(), "tyrewarmer");
-                }
-                catch (Exception e)
-                {
-                    System.err.println("ERROR");
-                    e.printStackTrace();
-                    return;
-                }
-
 //              Registra temperatura nel DB
                 try
                 {
