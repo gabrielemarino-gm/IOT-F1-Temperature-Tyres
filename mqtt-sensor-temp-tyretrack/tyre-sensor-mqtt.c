@@ -120,7 +120,7 @@ enum trend
     SLOW
 };
 
-static trend driver_mode = NORMAL;
+static enum trend driver_mode = NORMAL;
 static int time_driver_mod_change = 0;
 
 static void simulate_temperature ()
