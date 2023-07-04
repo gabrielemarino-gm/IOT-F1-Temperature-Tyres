@@ -120,7 +120,7 @@ enum trend
     SLOW
 };
 
-static enum trend driver_mode = PUSH;
+static enum trend driver_mode = NORMAL;
 static int time_driver_mod_change = 0;
 
 static void simulate_temperature ()
@@ -128,12 +128,14 @@ static void simulate_temperature ()
     LOG_DBG("time_driver_mod_change = %d    |   driver_mode = %d\n", time_driver_mod_change, driver_mode);
     if (time_driver_mod_change > 20 && (driver_mode == PUSH || driver_mode == NORMAL))
     {
+        LOG_DBG("Chage mood: SLOW\n");
         driver_mode = SLOW;
         time_driver_mod_change = 0;
     }
 
     if (time_driver_mod_change > 30 && driver_mode == SLOW)
     {
+        LOG_DBG("Chage mood: PUSH\n");
         driver_mode = PUSH;
         time_driver_mod_change = 0;
     }
