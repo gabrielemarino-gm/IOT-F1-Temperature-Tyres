@@ -223,8 +223,8 @@ public class TemperatureDAO extends BaseMySQLDAO
         return true;
     }
 
-    public static void updateStatus(String ip){
-
+    public static void updateStatus(String ip)
+    {
         StringBuilder insertTemperature = new StringBuilder();
         insertTemperature.append("update actuators set timestamp = now() " +
                             "where ipv6_addr=? and timestamp >= now() - interval 5 minute\n");
@@ -246,10 +246,12 @@ public class TemperatureDAO extends BaseMySQLDAO
         }
         catch(Exception ex)
         {
-//            throw new DAOException(ex);
+//          throw new DAOException(ex);
+            System.err.println("ERROR in updateStatus()");
+            ex.printStackTrace();
         }
-        finally {
-
+        finally
+        {
             closePool();
         }
     }
