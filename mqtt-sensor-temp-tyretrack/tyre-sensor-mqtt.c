@@ -98,7 +98,8 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 /*------------------------------------*/
 
 static char timeStr[20];
-static void setTimeStamp(void){
+static void setTimeStamp(void)
+{
        time_t timestamp;
        time(&timestamp);
 
@@ -125,13 +126,13 @@ static enum trend driver_mode = NORMAL;
 static void simulate_temperature ()
 {
     LOG_DBG("driver_mode = %d\n", driver_mode);
-    if (temperature > 105 && (driver_mode == PUSH || driver_mode == NORMAL))
+    if (temperature > 1050 && (driver_mode == PUSH || driver_mode == NORMAL))
     {
         LOG_DBG("Chage mood: SLOW\n");
         driver_mode = SLOW;
     }
 
-    if (temperature < 85 && driver_mode == SLOW)
+    if (temperature < 850 && driver_mode == SLOW)
     {
         LOG_DBG("Chage mood: PUSH\n");
         driver_mode = PUSH;
