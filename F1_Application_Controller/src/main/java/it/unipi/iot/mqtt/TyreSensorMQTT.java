@@ -79,6 +79,7 @@ public class TyreSensorMQTT
             try
             {
                 act = TemperatureDAO.getActuator(temp.getTyrePosition(), topic);
+                act.setStatus(OnTrackStatus.UNDEFINED);
             }
             catch (Exception e)
             {
