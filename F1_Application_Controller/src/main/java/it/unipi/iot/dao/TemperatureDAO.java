@@ -125,10 +125,6 @@ public class TemperatureDAO extends BaseMySQLDAO
             closePool();
         }
 
-//      Se il DB non ha nessun attuatore registrato il metodo ritorna una lista con un solo attuatore con indirizzo ZERO.
-        if (toRet.isEmpty())
-            toRet.add(new Actuator(0, "0", "0"));
-
         return toRet;
     }
 

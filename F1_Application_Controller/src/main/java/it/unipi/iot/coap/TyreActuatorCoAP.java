@@ -4,7 +4,6 @@ package it.unipi.iot.coap;
 //  Serve per fare in modo che gli ATTUATORI si registrino
 
 import it.unipi.iot.coap.resource.CoAPRegister;
-import it.unipi.iot.model.Actuator;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.CoapServer;

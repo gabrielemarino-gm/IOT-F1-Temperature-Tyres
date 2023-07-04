@@ -154,14 +154,14 @@ public class Controller
                 {
                     String ret = TyreActuatorCoAP.getStatRequest(a.getAddr(), a.getResource());
 
-                    System.out.println(String.format("Actuator [%s - %d] -> %s", a.getResource() ,a.getTyre_position(), ret));
+                    System.out.println(String.format("Actuator [%s - %d] -> %s", a.getResource(), a.getTyre_position(), ret));
                 }
             }
 
             // UNKNOWN COMMAND
             else
             {
-                System.out.println("COMMAND NOT SUPPORTED. TRY THE FOLLOWIG:");
+                System.out.println("COMMAND NOT SUPPORTED. TRY THE FOLLOWING:");
                 System.out.println(COMMANDS);
             }
             System.out.println("-----------------------------");
