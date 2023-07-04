@@ -128,6 +128,7 @@ public class TemperatureDAO extends BaseMySQLDAO
 //      Se il DB non ha nessun attuatore registrato il metodo ritorna una lista con un solo attuatore con indirizzo ZERO.
         if (toRet.isEmpty())
             toRet.add(new Actuator(0, "0", "0"));
+
         System.out.println("DGB     DriverDB: " + toRet.toString());
         return toRet;
     }
