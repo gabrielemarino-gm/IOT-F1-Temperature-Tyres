@@ -71,7 +71,6 @@ public class TyreSensorMQTT
         {
             try
             {
-
 //              Ogni volta che arriva un messaggio, lo registro
                 String payload = new String(message.getPayload());
 

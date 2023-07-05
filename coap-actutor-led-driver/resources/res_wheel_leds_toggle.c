@@ -51,9 +51,9 @@ EVENT_RESOURCE(res_wheel_led,
 
 static void res_get_handler(coap_message_t *request, coap_message_t *response, uint8_t *buffer, uint16_t preferred_size, int32_t *offset)
 {
-    int length = 0;
+    int length = 5;
     const char* message;
-
+    message = "ERROR";
     switch (status)
     {
         case 0:
