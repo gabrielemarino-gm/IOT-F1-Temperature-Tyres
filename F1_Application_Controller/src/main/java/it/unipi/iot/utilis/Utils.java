@@ -2,10 +2,6 @@ package it.unipi.iot.utilis;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.WebLink;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -22,7 +18,7 @@ public final class Utils
         }
         catch (JsonParseException exception)
         {
-            System.out.println("JSON parsing error.");
+            System.err.println("JSON PARSING ERROR!");
             exception.printStackTrace();
             return null;
         }

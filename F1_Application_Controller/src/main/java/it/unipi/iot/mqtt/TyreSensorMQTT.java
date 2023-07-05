@@ -73,18 +73,21 @@ public class TyreSensorMQTT
             {
 //              Ogni volta che arriva un messaggio, lo registro
                 String payload = new String(message.getPayload());
-
+                System.out.println("DBG:        payload:" + payload);
+                
 //              Faccio il parsin del Json, mettento le info in variabili
                 Map<String, Object> receivedJson = Utils.jsonParser(payload);
 
 //              Ricavo la Temperatura
-                String temperatureString = (String)receivedJson.get("temperature");
+                assert receivedJson != null;
+                System.out.println("DBG:        " + receivedJson.toString());
+                String temperatureString = receivedJson.get("temperature").toString();
                 double temperature = Double.parseDouble(temperatureString);
 //              Ricavo Posizione della ruota
-                String tyrePositiontring = (String)receivedJson.get("tyre");
+                String tyrePositiontring = receivedJson.get("tyre").toString();
                 int tyrePosition = Integer.parseInt(tyrePositiontring);
 //              Ricavo il Timestamp e setto la data
-                String timestampString = (String)receivedJson.get("timestamp");
+                String timestampString = receivedJson.get("timestamp").toString();
                 String pattern = "yyyy-MM-dd HH:mm:ss";
                 SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
                 Date date = new Date(dateFormat.parse(timestampString).getTime());
@@ -182,7 +185,7 @@ public class TyreSensorMQTT
             }
             catch (Exception e)
             {
-                System.err.println("ERROR DURING ");
+                System.err.println("ERROR DURING INCOMING MESSAGE ARRIVED!");
                 e.printStackTrace();
             }
 

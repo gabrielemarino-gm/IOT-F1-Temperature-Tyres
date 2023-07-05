@@ -25,7 +25,7 @@
 #include <stdarg.h>
 #include <time.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "Car Sensor"
+#define LOG_MODULE "Car-Sensor"
 #define LOG_LEVEL LOG_LEVEL_DBG
 /*------------------------------------*/
 /*             INIT PHASE             */
@@ -47,7 +47,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 
 // Buffer for topic publication
-#define SUB_TOPIC "set_threshold"
+#define SUB_TOPIC "SetThreshold"
 #define PUB_TOPIC "TyreTemp"
 
 // status mqtt
@@ -368,8 +368,8 @@ static void mqtt_state_machine()
             setTimeStamp();
             simulate_temperature();
 
-            snprintf(pub_buffer, sizeof(pub_buffer), "{\"tyre\":%d,\"temperature\":%d,\"timestamp\":%s}", ID_PAIR, temperature, timeStr);
-
+            snprintf(pub_buffer, sizeof(pub_buffer), "{\"tyre\":\"%d\",\"temperature\":\"%d\",\"timestamp\":\"%s\"}", ID_PAIR, temperature, timeStr);
+            LOG_DBG("Invio: %s\n", pub_buffer);
             mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
             /*-------------------*/
