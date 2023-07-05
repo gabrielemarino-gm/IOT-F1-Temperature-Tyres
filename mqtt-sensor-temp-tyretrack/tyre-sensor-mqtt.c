@@ -1,6 +1,10 @@
 #include "contiki.h"
 
 #include "net/routing/routing.h"
+
+#include "mqtt.h"
+#include "mqtt-prop.h"
+
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/ipv6/sicslowpan.h"
@@ -12,12 +16,9 @@
 #include "dev/button-hal.h"
 #include "dev/leds.h"
 
-#include "tyre-sensor-mqtt.h"
-
 #include "os/sys/log.h"
 
-#include "mqtt.h"
-#include "mqtt-prop.h"
+#include "tyre-sensor-mqtt.h"
 
 #include <string.h>
 #include <strings.h>
@@ -100,13 +101,15 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 static char timeStr[20];
 static void setTimeStamp(void)
 {
-       time_t timestamp;
-       time(&timestamp);
+    time_t timestamp;
+    time(&timestamp);
 
-      // Convert timestamp to a formatted string
-       struct tm* timeinfo;
-       timeinfo = localtime(&timestamp);
-      strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", timeinfo);
+    // Convert timestamp to a formatted string
+    struct tm* timeinfo;
+    timeinfo = localtime(&timestamp);
+    sprintf(timeStr, "%04d-%02d-%02d %02d:%02d:%02d",
+             timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday,
+             timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 }
 
 /*------------------------------------*/
