@@ -16,7 +16,7 @@ import java.util.Map;
 public class TyreSensorMQTT
 {
     private static String SUBTOPIC_WARMER = "TyrewarmerTemp";
-    private static String SUBTOPIC_TRACK = "tyre_temp";
+    private static String SUBTOPIC_TRACK = "TyreTemp";
 
     public static class Subscriber implements MqttCallback
     {

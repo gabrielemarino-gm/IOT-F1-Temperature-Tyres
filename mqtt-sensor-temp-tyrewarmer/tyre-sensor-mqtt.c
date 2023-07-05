@@ -1,18 +1,24 @@
 #include "contiki.h"
+
 #include "net/routing/routing.h"
-#include "mqtt.h"
-#include "mqtt-prop.h"
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/ipv6/sicslowpan.h"
+
+#include "sys/etimer.h"
 #include "sys/ctimer.h"
+#include "sys/process.h"
+
 #include "lib/sensors.h"
 #include "dev/button-hal.h"
 #include "dev/leds.h"
-#include "os/sys/log.h"
-#include "sys/etimer.h"
+
 #include "tyre-sensor-mqtt.h"
-#include "sys/process.h"
+
+#include "os/sys/log.h"
+
+#include "mqtt.h"
+#include "mqtt-prop.h"
 
 #include <string.h>
 #include <strings.h>
@@ -31,26 +37,20 @@
 static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Config values
-#define DEFAULT_PUBLISH_INTERVAL (10 * CLOCK_SECOND)
 #define ID_PAIR 1
 
 // Sizes and Lenghts
 #define MAX_TCP_SEGMENT_SIZE 32
 #define CONFIG_IP_ADDR_STR_LEN 64
 #define BUFFER_SIZE 64
-#define APP_BUFFER_SIZE 512
-
+#define PUB_BUFFER_SIZE 128
 
 // Buffer for topic publication
-#define SUB_TOPIC_WARMER        "warmer_on"
-#define PUB_TOPIC               "TyrewarmerTemp"
+#define SUB_TOPIC        "warmer_on"
+#define PUB_TOPIC        "TyrewarmerTemp"
 
-static char app_buffer[APP_BUFFER_SIZE];
-
-
-// starus mqtt
+// status mqtt
 mqtt_status_t status;
-
 
 static struct mqtt_connection conn;
 char broker_addr[CONFIG_IP_ADDR_STR_LEN];
@@ -64,11 +64,7 @@ static struct mqtt_message *msg_ptr = 0;
 
 // Buffers
 static char client_id[BUFFER_SIZE];
-// static char pub_topic[BUFFER_SIZE];
-// static char sub_topic[BUFFER_SIZE];
-
-// static char app_buffer[APP_BUFFER_SIZE];
-
+static char pub_buffer[PUB_BUFFER_SIZE];
 
 #define ECHO_REQ_PAYLOAD_LEN   20
 /*------------------------------------*/
@@ -135,7 +131,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
     
     // Accendere o spegnere la termocoperta
-    if (strcmp(topic, SUB_TOPIC_WARMER) == 0)
+    if (strcmp(topic, SUB_TOPIC) == 0)
     {
         LOG_INFO("Warmer action...\n");
 
@@ -342,7 +338,7 @@ static void mqtt_state_machine()
             /* Connesso all'MQTT Broker */
             LOG_DBG("Connected\n");
 
-            status = mqtt_subscribe(&conn, NULL, SUB_TOPIC_WARMER, MQTT_QOS_LEVEL_0);
+            status = mqtt_subscribe(&conn, NULL, SUB_TOPIC, MQTT_QOS_LEVEL_0);
 
             // Errore coda piena
             if (status == MQTT_STATUS_OUT_QUEUE_FULL)
@@ -371,10 +367,10 @@ static void mqtt_state_machine()
             setTimeStamp();
             simulate_temperature();
 
-            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d&ts=%s", ID_PAIR, temperature, timeStr);
+            snprintf(pub_buffer, sizeof(pub_buffer), "{\"tyre\":%d,\"temperature\":%d,\"timestamp\":%s}", ID_PAIR, temperature, timeStr);
             
             if(warmer_on != 0)
-                mqtt_publish(&conn, NULL, PUB_TOPIC, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+                mqtt_publish(&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
             /*-------------------*/
             break;

@@ -1,25 +1,31 @@
 #include "contiki.h"
+
 #include "net/routing/routing.h"
-#include "mqtt.h"
-#include "mqtt-prop.h"
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/ipv6/sicslowpan.h"
+
 #include "sys/etimer.h"
 #include "sys/ctimer.h"
+#include "sys/process.h"
+
 #include "lib/sensors.h"
 #include "dev/button-hal.h"
 #include "dev/leds.h"
-#include "os/sys/log.h"
+
 #include "tyre-sensor-mqtt.h"
-#include "sys/process.h"
+
+#include "os/sys/log.h"
+
+#include "mqtt.h"
+#include "mqtt-prop.h"
 
 #include <string.h>
 #include <strings.h>
 #include <stdarg.h>
 #include <time.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "Car-Sensor"
+#define LOG_MODULE "Car Sensor"
 #define LOG_LEVEL LOG_LEVEL_DBG
 /*------------------------------------*/
 /*             INIT PHASE             */
@@ -31,25 +37,21 @@
 static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 
 // Config values
-#define DEFAULT_PUBLISH_INTERVAL (30 * CLOCK_SECOND)
 #define ID_PAIR 1
 
 // Sizes and Lenghts
 #define MAX_TCP_SEGMENT_SIZE 32
 #define CONFIG_IP_ADDR_STR_LEN 64
 #define BUFFER_SIZE 64
-#define APP_BUFFER_SIZE 512
+#define PUB_BUFFER_SIZE 128
 
 
 // Buffer for topic publication
-#define sub_topic "set_threshold"
-#define pub_topic "tyre_temp"
-static char app_buffer[APP_BUFFER_SIZE];
+#define SUB_TOPIC "set_threshold"
+#define PUB_TOPIC "TyreTemp"
 
-
-// starus mqtt
+// status mqtt
 mqtt_status_t status;
-
 
 static struct mqtt_connection conn;
 char broker_addr[CONFIG_IP_ADDR_STR_LEN];
@@ -63,11 +65,7 @@ static struct mqtt_message *msg_ptr = 0;
 
 // Buffers
 static char client_id[BUFFER_SIZE];
-// static char pub_topic[BUFFER_SIZE];
-// static char sub_topic[BUFFER_SIZE];
-
-// static char app_buffer[APP_BUFFER_SIZE];
-
+static char pub_buffer[PUB_BUFFER_SIZE];
 
 #define ECHO_REQ_PAYLOAD_LEN   20
 /*------------------------------------*/
@@ -75,7 +73,10 @@ static char client_id[BUFFER_SIZE];
 /*------------------------------------*/
 
 // Timer
-int state_machine_timer = CLOCK_SECOND * 2;
+#define CONNECTION_FREQUENCE (CLOCK_SECOND * 5)
+#define SAMPLING_FREQUENCE (CLOCK_SECOND * 2)
+
+int state_machine_timer = SAMPLING_FREQUENCE;
 static struct etimer periodic_state_timer;
 
 // States
@@ -274,7 +275,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
 /*------------------------------------*/
 static void client_init(void)
 {
-    etimer_set(&periodic_state_timer, state_machine_timer);
+    etimer_set(&periodic_state_timer, CONNECTION_FREQUENCE);
     int len = snprintf(client_id, BUFFER_SIZE, "%02x%02x%02x%02x%02x%02x",
             linkaddr_node_addr.u8[0], linkaddr_node_addr.u8[1],
             linkaddr_node_addr.u8[2], linkaddr_node_addr.u8[5],
@@ -346,7 +347,7 @@ static void mqtt_state_machine()
             /* Connesso all'MQTT Broker */
             LOG_INFO("Connected\n");
 
-            status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
+            status = mqtt_subscribe(&conn, NULL, SUB_TOPIC, MQTT_QOS_LEVEL_0);
 
             // Errore coda piena
             if (status == MQTT_STATUS_OUT_QUEUE_FULL)
@@ -367,9 +368,9 @@ static void mqtt_state_machine()
             setTimeStamp();
             simulate_temperature();
 
-            snprintf(app_buffer, sizeof(app_buffer), "tyre=%d&temp=%d&ts=%s", ID_PAIR, temperature,timeStr);
+            snprintf(pub_buffer, sizeof(pub_buffer), "{\"tyre\":%d,\"temperature\":%d,\"timestamp\":%s}", ID_PAIR, temperature, timeStr);
 
-            mqtt_publish (&conn, NULL, pub_topic, (u_int8_t *)app_buffer, strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+            mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
             /*-------------------*/
             break;
@@ -394,6 +395,8 @@ static void mqtt_state_machine()
 
     // Resetto il timer della state machine
     etimer_reset(&periodic_state_timer);
+    if(state == STATE_SUBSCRIBED) etimer_set(&periodic_state_timer, SAMPLING_FREQUENCE);
+
 }
 
 /*------------------------------------*/
