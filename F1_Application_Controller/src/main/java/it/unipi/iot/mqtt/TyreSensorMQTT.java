@@ -5,11 +5,13 @@ import it.unipi.iot.dao.TemperatureDAO;
 import it.unipi.iot.dao.exception.DAOException;
 import it.unipi.iot.model.Actuator;
 import it.unipi.iot.model.Temperature;
+import it.unipi.iot.utilis.Utils;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Map;
 
 public class TyreSensorMQTT
 {
@@ -69,19 +71,29 @@ public class TyreSensorMQTT
         {
             try
             {
+
 //              Ogni volta che arriva un messaggio, lo registro
                 String payload = new String(message.getPayload());
-                String[] args = payload.split("&");
+
+//              Faccio il parsin del Json, mettento le info in variabili
+                Map<String, Object> receivedJson = Utils.jsonParser(payload);
+
+//              Ricavo la Temperatura
+                String temperatureString = (String)receivedJson.get("temperature");
+                double temperature = Double.parseDouble(temperatureString);
+//              Ricavo Posizione della ruota
+                String tyrePositiontring = (String)receivedJson.get("tyre");
+                int tyrePosition = Integer.parseInt(tyrePositiontring);
+//              Ricavo il Timestamp e setto la data
+                String timestampString = (String)receivedJson.get("timestamp");
+                String pattern = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                Date date = new Date(dateFormat.parse(timestampString).getTime());
 
 //              Registra una nuova temperatura per la ruota indicata
                 Temperature temp = new Temperature();
-                temp.setTyrePosition(Integer.parseInt(args[0].split("=")[1]));
-                temp.setTemperatureValue(Double.parseDouble(args[1].split("=")[1]) / 10);
-
-//                Setting the date
-                String pattern = "yyyy-MM-dd HH:mm:ss";
-                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-                Date date = new Date(dateFormat.parse(args[2].split("=")[1]).getTime());
+                temp.setTyrePosition(tyrePosition);
+                temp.setTemperatureValue(temperature/10);
 
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
