@@ -7,7 +7,6 @@
 
 #include "sys/etimer.h"
 #include "sys/ctimer.h"
-#include "sys/process.h"
 
 #include "lib/sensors.h"
 #include "dev/button-hal.h"
@@ -25,7 +24,7 @@
 #include <stdarg.h>
 #include <time.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "Car-Sensor"
+#define LOG_MODULE "Car Sensor"
 #define LOG_LEVEL LOG_LEVEL_DBG
 /*------------------------------------*/
 /*             INIT PHASE             */
@@ -276,7 +275,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
 static void client_init(void)
 {
     etimer_set(&periodic_state_timer, CONNECTION_FREQUENCE);
-    int len = snprintf(client_id, BUFFER_SIZE, "%02x%02x%02x%02x%02x%02x",
+    int len = sprintf(client_id, "%02x%02x%02x%02x%02x%02x",
             linkaddr_node_addr.u8[0], linkaddr_node_addr.u8[1],
             linkaddr_node_addr.u8[2], linkaddr_node_addr.u8[5],
             linkaddr_node_addr.u8[6], linkaddr_node_addr.u8[7]);
@@ -368,7 +367,7 @@ static void mqtt_state_machine()
             setTimeStamp();
             simulate_temperature();
 
-            snprintf(pub_buffer, sizeof(pub_buffer), "{\"tyre\":\"%d\",\"temperature\":\"%d\",\"timestamp\":\"%s\"}", ID_PAIR, temperature, timeStr);
+            sprintf(pub_buffer, "{\"tyre\":\"%d\",\"temperature\":\"%d\",\"timestamp\":\"%s\"}", ID_PAIR, temperature, timeStr);
             LOG_DBG("Invio: %s\n", pub_buffer);
             mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 

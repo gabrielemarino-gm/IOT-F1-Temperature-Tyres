@@ -76,6 +76,7 @@ public class Controller
                 System.out.println("Quitting");
                 TyreActuatorCoAP.kill();
                 TemperatureDAO.closePool();
+                input.close();
                 System.exit(0);
             }
 

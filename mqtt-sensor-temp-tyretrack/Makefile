@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = level_sensor
+CONTIKI_PROJECT = mqtt-sensor-temp-tyretrack
 all: $(CONTIKI_PROJECT)
 
 CONTIKI = ../../..
