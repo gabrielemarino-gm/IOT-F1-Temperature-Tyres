@@ -125,23 +125,23 @@ static enum trend driver_mode = NORMAL;
 
 static void simulate_temperature ()
 {
-    LOG_DBG("driver_mode = %d\n", driver_mode);
+    // LOG_DBG("driver_mode = %d\n", driver_mode);
 
     if (temperature > 900 && driver_mode == NORMAL)
     {
-        LOG_DBG("Chage mood: PUSH\n");
+        LOG_INFO("Chage mood: PUSH\n");
         driver_mode = PUSH;
     }
 
     if (temperature > 1050 && (driver_mode == PUSH || driver_mode == NORMAL))
     {
-        LOG_DBG("Chage mood: SLOW\n");
+        LOG_INFO("Chage mood: SLOW\n");
         driver_mode = SLOW;
     }
 
     if (temperature < 850 && driver_mode == SLOW)
     {
-        LOG_DBG("Chage mood: PUSH\n");
+        LOG_INFO("Chage mood: PUSH\n");
         driver_mode = PUSH;
     }
     
@@ -158,7 +158,7 @@ static void simulate_temperature ()
         temperature -= 5;
     }
 
-    LOG_DBG("Temperature = %d\n", temperature);
+    // LOG_DBG("Temperature = %d\n", temperature);
 }
 
 /*-------------------------------------------------*/
@@ -317,7 +317,7 @@ static void mqtt_state_machine()
     {
         case STATE_INIT:
             /* Inizializzazione */
-            LOG_DBG("Init phase\n");
+            LOG_INFO("Init phase\n");
             mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
             state = STATE_NET_OK;
             /*-------------------*/
@@ -325,7 +325,7 @@ static void mqtt_state_machine()
 
         case STATE_NET_OK:
             /* Connessione al Border Router riuscita */
-            LOG_DBG("Connecting to Border Router\n");
+            LOG_INFO("Connecting to Border Router\n");
             if(have_conn())
             {
                 // Connect to broker
@@ -336,7 +336,7 @@ static void mqtt_state_machine()
 
         case STATE_CONNECTING:
             /* Connettendo all'MQTT Broker */
-            LOG_DBG("Connecting\n");
+            LOG_INFO("Connecting\n");
         
 
             /*-------------------*/
@@ -344,7 +344,7 @@ static void mqtt_state_machine()
 
         case STATE_CONNECTED:
             /* Connesso all'MQTT Broker */
-            LOG_DBG("Connected\n");
+            LOG_INFO("Connected\n");
 
             status = mqtt_subscribe(&conn, NULL, sub_topic, MQTT_QOS_LEVEL_0);
 
@@ -376,7 +376,7 @@ static void mqtt_state_machine()
 
         case STATE_DISCONNECTED:
             /* Disconnesso dal broker */
-            LOG_DBG("Disconnected\n");
+            LOG_INFO("Disconnected\n");
             ping_parent();
             state = STATE_NET_OK;
             /*-------------------*/
@@ -384,7 +384,7 @@ static void mqtt_state_machine()
 
         case STATE_ERROR:
             /* Errore */
-            LOG_DBG("Error\n");
+            LOG_INFO("Error\n");
             /*-------------------*/
             break;
 
@@ -402,7 +402,7 @@ static void mqtt_state_machine()
 PROCESS_THREAD(mqtt_client_process, ev, data)
 {
     PROCESS_BEGIN();
-    LOG_DBG("Starting MQTT Client\n");
+    LOG_INFO("Starting MQTT Client\n");
     client_init();
 
     while(1)
