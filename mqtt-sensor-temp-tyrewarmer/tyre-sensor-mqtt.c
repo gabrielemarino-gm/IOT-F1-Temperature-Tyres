@@ -19,7 +19,7 @@
 #include <stdarg.h>
 #include <time.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "Tyrewarmer Sensor"
+#define LOG_MODULE "Tyrewarmer-Sensor"
 #define LOG_LEVEL LOG_LEVEL_DBG
 /*------------------------------------*/
 /*             INIT PHASE             */
