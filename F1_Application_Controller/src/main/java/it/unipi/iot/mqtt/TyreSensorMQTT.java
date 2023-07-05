@@ -79,13 +79,14 @@ public class TyreSensorMQTT
                 Map<String, Object> receivedJson = Utils.jsonParser(payload);
 
 //              Ricavo la Temperatura
-                String temperatureString = (String)receivedJson.get("temperature");
+                assert receivedJson != null;
+                String temperatureString = receivedJson.get("temperature").toString();
                 double temperature = Double.parseDouble(temperatureString);
 //              Ricavo Posizione della ruota
-                String tyrePositiontring = (String)receivedJson.get("tyre");
+                String tyrePositiontring = receivedJson.get("tyre").toString();
                 int tyrePosition = Integer.parseInt(tyrePositiontring);
 //              Ricavo il Timestamp e setto la data
-                String timestampString = (String)receivedJson.get("timestamp");
+                String timestampString = receivedJson.get("timestamp").toString();
                 String pattern = "yyyy-MM-dd HH:mm:ss";
                 SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
                 Date date = new Date(dateFormat.parse(timestampString).getTime());
