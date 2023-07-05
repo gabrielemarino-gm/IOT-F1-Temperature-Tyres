@@ -71,7 +71,6 @@ public class TyreSensorMQTT
         {
             try
             {
-
 //              Ogni volta che arriva un messaggio, lo registro
                 String payload = new String(message.getPayload());
 
@@ -184,7 +183,7 @@ public class TyreSensorMQTT
             }
             catch (Exception e)
             {
-                System.err.println("ERROR DURING ");
+                System.err.println("ERROR DURING INCOMING MESSAGE ARRIVED!");
                 e.printStackTrace();
             }
 

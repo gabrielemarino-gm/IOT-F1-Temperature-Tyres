@@ -22,7 +22,7 @@ public final class Utils
         }
         catch (JsonParseException exception)
         {
-            System.out.println("JSON parsing error.");
+            System.err.println("JSON PARSING ERROR!");
             exception.printStackTrace();
             return null;
         }
