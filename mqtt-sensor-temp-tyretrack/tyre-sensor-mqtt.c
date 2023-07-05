@@ -368,7 +368,7 @@ static void mqtt_state_machine()
             simulate_temperature();
 
             sprintf(pub_buffer, "{\"tyre\":\"%d\",\"temperature\":\"%d\",\"timestamp\":\"%s\"}", ID_PAIR, temperature, timeStr);
-            LOG_DBG("Invio: %s\n", pub_buffer);
+            // LOG_DBG("Invio: %s\n", pub_buffer);
             mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
             /*-------------------*/
