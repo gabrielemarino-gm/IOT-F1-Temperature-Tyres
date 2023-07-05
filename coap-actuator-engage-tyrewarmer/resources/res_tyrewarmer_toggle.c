@@ -7,7 +7,7 @@
 
 /* Log configuration */
 #include "sys/log.h"
-#define LOG_MODULE "Tyrewarmer Resource"
+#define LOG_MODULE "Tyrewarmer-Resource"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
 static void res_get_handler(

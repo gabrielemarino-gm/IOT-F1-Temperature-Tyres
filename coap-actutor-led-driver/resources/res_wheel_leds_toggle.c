@@ -19,7 +19,7 @@
 
 /* Log configuration */
 #include "sys/log.h"
-#define LOG_MODULE "App"
+#define LOG_MODULE "Tyre-Resource"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
 static void res_get_handler(

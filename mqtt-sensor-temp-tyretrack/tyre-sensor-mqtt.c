@@ -24,7 +24,7 @@
 #include <stdarg.h>
 #include <time.h>
 /*---------------------------------------------------------------------------*/
-#define LOG_MODULE "Car Sensor"
+#define LOG_MODULE "Car-Sensor"
 #define LOG_LEVEL LOG_LEVEL_DBG
 /*------------------------------------*/
 /*             INIT PHASE             */

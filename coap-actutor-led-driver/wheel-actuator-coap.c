@@ -16,7 +16,7 @@
 
 /* Log configuration */
 #include "sys/log.h"
-#define LOG_MODULE "Wheel Actuator"
+#define LOG_MODULE "Wheel-Actuator"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
 #define SERVER_IP "coap://[fd00::1]"
