@@ -17,7 +17,7 @@ public class Controller
     private static String BROKERIP = "tcp://[::1]:1883";
     private static String SUBCLIENTID = "Controller_Sub";
     private static String SUBTOPIC_WARMER = "TyrewarmerTemp";
-    private static String SUBTOPIC_TRACK = "tyre_temp";
+    private static String SUBTOPIC_TRACK = "TyreTemp";
 
     private static String PUBCLIENTID = "Controller_Tyrewarmer_Pub";
     private static String PUBTOPIC = "TyrewarmerConf";
