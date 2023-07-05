@@ -73,7 +73,8 @@ public class TyreSensorMQTT
             {
 //              Ogni volta che arriva un messaggio, lo registro
                 String payload = new String(message.getPayload());
-
+                System.out.println("DBG:        payload:" + payload);
+                
 //              Faccio il parsin del Json, mettento le info in variabili
                 Map<String, Object> receivedJson = Utils.jsonParser(payload);
 
