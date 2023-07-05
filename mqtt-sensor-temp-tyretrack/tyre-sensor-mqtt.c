@@ -368,7 +368,8 @@ static void mqtt_state_machine()
             setTimeStamp();
             simulate_temperature();
 
-            snprintf(pub_buffer, sizeof(pub_buffer), "{\"tyre\":%d,\"temperature\":%d,\"timestamp\":%s}", ID_PAIR, temperature, timeStr);
+            snprintf(pub_buffer, sizeof(pub_buffer), "{\"tyre\":\"%d\",\"temperature\":\"%d\",\"timestamp\":\"%d\"}", ID_PAIR, temperature, timeStr);
+//		    sprintf(app_buffer,                      "{\"current_salinity\":\"%d.%d\", \"sluice_state\": %s}", parteIntera, parteDecimale, sluice_state);
             LOG_DBG("Invio: %s\n", pub_buffer);
             mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
