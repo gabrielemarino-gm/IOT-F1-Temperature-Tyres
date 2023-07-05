@@ -79,6 +79,7 @@ public class TyreSensorMQTT
 
 //              Ricavo la Temperatura
                 assert receivedJson != null;
+                System.out.println("DBG:        " + receivedJson.toString());
                 String temperatureString = receivedJson.get("temperature").toString();
                 double temperature = Double.parseDouble(temperatureString);
 //              Ricavo Posizione della ruota
