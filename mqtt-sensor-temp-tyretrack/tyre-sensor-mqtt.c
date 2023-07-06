@@ -21,7 +21,7 @@
 
 #include <string.h>
 #include <strings.h>
-#include <stdarg.h>
+//#include <stdarg.h>
 #include <time.h>
 /*---------------------------------------------------------------------------*/
 #define LOG_MODULE "Car-Sensor"
@@ -100,13 +100,14 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 static char timeStr[20];
 static void setTimeStamp(void)
 {
-       time_t timestamp;
-       time(&timestamp);
-
-      // Convert timestamp to a formatted string
-       struct tm* timeinfo;
-       timeinfo = localtime(&timestamp);
-      strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", timeinfo);
+    //time_t timestamp;
+    //time(&timestamp);
+    //// Convert timestamp to a formatted string
+    //struct tm* timeinfo;
+    //timeinfo = localtime(&timestamp);
+    LOG_DBG("TIMESTAMP: %ld\n", time(NULL));
+    sprintf(timeStr, "%ld", time(NULL));
+    //strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", timeinfo);
 }
 
 /*------------------------------------*/
@@ -368,7 +369,7 @@ static void mqtt_state_machine()
             simulate_temperature();
 
             sprintf(pub_buffer, "{\"tyre\":\"%d\",\"temperature\":\"%d\",\"timestamp\":\"%s\"}", ID_PAIR, temperature, timeStr);
-            // LOG_DBG("Invio: %s\n", pub_buffer);
+            LOG_DBG("Invio: %s\n", pub_buffer);
             mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
 
             /*-------------------*/
