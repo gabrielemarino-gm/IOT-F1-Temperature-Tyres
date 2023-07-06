@@ -101,14 +101,8 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 static char timeStr[20];
 static void setTimeStamp(void)
 {
-    //time_t timestamp;
-    //time(&timestamp);
-    //// Convert timestamp to a formatted string
-    //struct tm* timeinfo;
-    //timeinfo = localtime(&timestamp);
-    LOG_DBG("TIMESTAMP: %ld\n", time(NULL));
+    // LOG_DBG("TIMESTAMP: %ld\n", time(NULL));
     sprintf(timeStr, "%ld", time(NULL));
-    //strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", timeinfo);
 }
 
 /*------------------------------------*/
