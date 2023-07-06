@@ -101,7 +101,7 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 static char timeStr[20];
 static void setTimeStamp(void)
 {
-    // LOG_DBG("TIMESTAMP: %ld\n", time(NULL));
+    LOG_DBG("TIMESTAMP: %ld\n", time(NULL));
     sprintf(timeStr, "%ld", time(NULL));
 }
 

@@ -15,3 +15,14 @@ ToDO:
 6) Fixare la simulazione delle temperature rilevate         FATTO
 7) Rivedere i comandi da terminale
 8) Timestamp nei sensori                                    FATTO
+
+
+
+1B/1D   ===> BR
+
+3B      ===> COAP Tyre-Warmer
+58      ===> MQTT Tyre-Warmer
+
+F2      ===> COAP Tyre-Track
+71      ===> MQTT Tyre-Track
+
