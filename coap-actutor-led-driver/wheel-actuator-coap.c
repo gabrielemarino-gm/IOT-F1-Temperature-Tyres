@@ -88,7 +88,8 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
 
     etimer_set(&periodic_state_timer, STATE_TIMER);
     coap_endpoint_parse(SERVER_IP, strlen(SERVER_IP), &server_ep);
-
+    leds_on(LEDS_RED);
+    
     while(1)
     {
         PROCESS_WAIT_EVENT();
@@ -126,6 +127,11 @@ PROCESS_THREAD(coap_server_wheel_leds, ev, data)
             }
             
             etimer_reset(&periodic_state_timer);
+        }
+        if(ev == button_hal_release_event)
+        {
+            res_wheel_led.trigger();
+            LOG_INFO("Changed status\n");
         }
     }
 

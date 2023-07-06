@@ -101,8 +101,8 @@ AUTOSTART_PROCESSES(&mqtt_client_process);
 static char timeStr[20];
 static void setTimeStamp(void)
 {
-    LOG_DBG("TIMESTAMP: %ld\n", time(NULL));
-    sprintf(timeStr, "%ld", time(NULL));
+    // LOG_DBG("TIMESTAMP: %ld\n", time(NULL));
+    sprintf(timeStr, "%lld", time(NULL));
 }
 
 /*------------------------------------*/
@@ -117,7 +117,7 @@ enum trend
     SLOW
 };
 
-static enum trend driver_mode = NORMAL;
+static enum trend driver_mode = PUSH;
 
 static void simulate_temperature ()
 {

@@ -38,6 +38,8 @@ static void res_put_post_handler(
     uint16_t preferred_size, 
     int32_t *offset);
 
+static void res_trigger();
+
 static int status = 0;
 
 EVENT_RESOURCE(res_wheel_led,
@@ -46,7 +48,7 @@ EVENT_RESOURCE(res_wheel_led,
         res_put_post_handler,
         res_put_post_handler,
         NULL,
-        NULL
+        res_trigger
 );
 
 
@@ -135,4 +137,13 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
         leds_off(LEDS_ALL);
         leds_on(led);
     }
+}
+
+static void
+res_trigger()
+{
+    if (status == 1)
+        status = 0;
+    else
+        status = 1;
 }

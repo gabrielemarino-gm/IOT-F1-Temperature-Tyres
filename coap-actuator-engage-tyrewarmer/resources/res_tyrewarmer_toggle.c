@@ -154,6 +154,7 @@ res_put_handler(coap_message_t *request, coap_message_t *response, uint8_t *buff
   else
   {
     coap_set_status_code(response, CONTENT_2_05);
+    
     leds_off(LEDS_ALL);
     leds_on(led);
   }

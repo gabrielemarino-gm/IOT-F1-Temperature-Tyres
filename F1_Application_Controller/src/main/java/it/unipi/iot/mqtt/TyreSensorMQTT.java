@@ -189,7 +189,10 @@ public class TyreSensorMQTT
 
 //                        System.out.println(String.format("TyreTrack [%d] -> OVERHEATING", act.getTyre_position()));
                     }
-                    TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), command);
+                    if(act != null)
+                    {
+                        TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), command);
+                    }
                 }
             }
             catch (Exception e)
