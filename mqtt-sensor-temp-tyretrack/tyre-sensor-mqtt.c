@@ -1,6 +1,10 @@
 #include "contiki.h"
 
 #include "net/routing/routing.h"
+
+#include "mqtt.h"
+#include "mqtt-prop.h"
+
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/ipv6/sicslowpan.h"
@@ -12,12 +16,9 @@
 #include "dev/button-hal.h"
 #include "dev/leds.h"
 
-#include "tyre-sensor-mqtt.h"
-
 #include "os/sys/log.h"
 
-#include "mqtt.h"
-#include "mqtt-prop.h"
+#include "tyre-sensor-mqtt.h"
 
 #include <string.h>
 #include <strings.h>

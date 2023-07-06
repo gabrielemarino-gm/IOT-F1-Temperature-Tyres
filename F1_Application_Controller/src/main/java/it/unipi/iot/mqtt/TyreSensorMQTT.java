@@ -82,9 +82,11 @@ public class TyreSensorMQTT
 
                 String temperatureString = receivedJson.get("temperature").toString();
                 double temperature = Double.parseDouble(temperatureString);
+
 //              Ricavo Posizione della ruota
                 String tyrePositiontring = receivedJson.get("tyre").toString();
                 int tyrePosition = Integer.parseInt(tyrePositiontring);
+
 //              Ricavo il Timestamp e setto la data
                 String timestampString = receivedJson.get("timestamp").toString();
                 String pattern = "yyyy-MM-dd HH:mm:ss";
@@ -108,7 +110,7 @@ public class TyreSensorMQTT
                 {
                     act = TemperatureDAO.getActuator(temp.getTyrePosition(), "tyrewarmer");
 
-//                  Registra temperatura nel DB
+//                  Registra temperatura nel DB per le termocoperte
                     try
                     {
                         TemperatureDAO.writeTemperature(temp, "temperature_on_warmer");
@@ -118,44 +120,48 @@ public class TyreSensorMQTT
                         de.printStackTrace();
                     }
 
-//                  Fai altre cose qui (AZIONA ATTUATORE CORRETTO)
+                    String command;
+
+//                  Compiere azioni con attuatore associato al sensore
                     if (temp.getTemperatureValue() > 70)
                     {
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "HIGHTEMP");
 //                        System.out.println(String.format("Tyrewarmer [%d] -> DISENGAGED", act.getTyre_position()));
 
 //                      Abbassare temperatura simulazione
-                        try
-                        {
-                            TyreSensorMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "-1");
-                        }
-                        catch (InterruptedException | MqttException ie)
-                        {
-                            ie.printStackTrace();
-                        }
+                        command = "-1";
+
                     }
-                    else if (temp.getTemperatureValue() < 67)
+                    else //if (temp.getTemperatureValue() < 67)
                     {
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "LOWTEMP");
 //                        System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));
 
 //                      Alzare temperatura simulazione
-                        try
-                        {
-                            TyreSensorMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", "1");
-                        }
-                        catch (InterruptedException | MqttException ie)
-                        {
+                        command = "1";
+
+                    }
+
+//                    Invio comando se attuatore presente
+
+                    if(act != null){
+                        try {
+                            TyreSensorMQTT.Publisher.Publish("tcp://[::1]:1883", "SimManager", "warmer_on", command);
+                        } catch (InterruptedException | MqttException ie) {
                             ie.printStackTrace();
                         }
                     }
+
                 }
+
+
                 //          ------------------
 
                 else if (topic.equals(SUBTOPIC_TRACK))
                 {
                     act = TemperatureDAO.getActuator(temp.getTyrePosition(), "res_wheel_led");
-//                  Registra temperatura nel DB
+
+//                  Registra temperatura nel DB per le ruote
                     try
                     {
                         TemperatureDAO.writeTemperature(temp, "temperature_on_track");
@@ -165,21 +171,27 @@ public class TyreSensorMQTT
                         de.printStackTrace();
                     }
 
+                    String command;
+
                     if (temp.getTemperatureValue() < 90)
                     {
-                        TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "UNDER");
+                        command = "UNDER";
+
 //                        System.out.println(String.format("TyreTrack [%d] -> COLD", act.getTyre_position()));
                     }
                     else if (temp.getTemperatureValue() >= 90 && temp.getTemperatureValue() <= 100)
                     {
-                        TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "GREAT");
+                        command = "GREAT";
+
 //                        System.out.println(String.format("TyreTrack [%d] -> GREAT", act.getTyre_position()));
                     }
-                    else if (temp.getTemperatureValue() > 100)
+                    else //if (temp.getTemperatureValue() > 100)
                     {
-                        TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "OVER");
+                        command = "OVER";
+
 //                        System.out.println(String.format("TyreTrack [%d] -> OVERHEATING", act.getTyre_position()));
                     }
+                    TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), command);
                 }
             }
             catch (Exception e)
