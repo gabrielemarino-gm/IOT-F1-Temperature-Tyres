@@ -118,7 +118,7 @@ public class TyreSensorMQTT
                         de.printStackTrace();
                     }
 
-                    String command;
+                    String command = "1";
 
 //                  Compiere azioni con attuatore associato al sensore
                     if (temp.getTemperatureValue() > 70)
@@ -130,7 +130,7 @@ public class TyreSensorMQTT
                         command = "-1";
 
                     }
-                    else //if (temp.getTemperatureValue() < 67)
+                    else if (temp.getTemperatureValue() < 67)
                     {
                         TyreActuatorCoAP.sendCommand(act.getAddr(), act.getResource(), "LOWTEMP");
 //                        System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));

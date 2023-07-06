@@ -120,7 +120,7 @@ res_put_handler(coap_message_t *request, coap_message_t *response, uint8_t *buff
         success = 0;
       else
       {
-        led = LEDS_YELLOW; 
+        led = LEDS_BLUE; 
         status = 0;
       }
     }

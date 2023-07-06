@@ -196,6 +196,7 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
         case MQTT_EVENT_CONNECTED:
             /* Connessione riuscita */
             LOG_INFO("MQTT connection event\n");
+            
             state = STATE_CONNECTED;
             /*-------------------------*/
             break;
@@ -231,6 +232,8 @@ static void mqtt_event (struct mqtt_connection *m, mqtt_event_t event, void *dat
             #else
                 LOG_INFO("Application is subscribed to topic successfully\n");
             #endif
+
+            
 
             /*-------------------------*/
             break;
@@ -308,6 +311,7 @@ static void mqtt_state_machine()
         case STATE_INIT:
             /* Inizializzazione */
             LOG_DBG("Init phase\n");
+            leds_set(LEDS_RED);
             mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
             state = STATE_NET_OK;
             /*-------------------*/
@@ -318,6 +322,7 @@ static void mqtt_state_machine()
             LOG_DBG("Connecting to Border Router\n");
             if(have_conn())
             {
+                leds_set(LEDS_BLUE);
                 // Connect to broker
                 connect_mqtt();
             }
@@ -361,6 +366,7 @@ static void mqtt_state_machine()
 
         case STATE_SUBSCRIBED:
             /* Sottoscritto a un topic */
+            leds_set(LEDS_GREEN);
             setTimeStamp();
             simulate_temperature();
 

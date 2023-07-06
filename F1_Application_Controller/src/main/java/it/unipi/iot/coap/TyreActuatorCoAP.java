@@ -43,7 +43,7 @@ public class TyreActuatorCoAP extends CoapServer
             CoapClient client = new CoapClient(String.format("%s/%s?command=%s", TARGET, RESOURCE, COMMAND));
 
             client.setTimeout(2000);
-            CoapResponse response = client.put("", MediaTypeRegistry.TEXT_PLAIN);
+            CoapResponse response = client.put("Command", MediaTypeRegistry.TEXT_PLAIN);
 
             return response.getCode().toString();
         }

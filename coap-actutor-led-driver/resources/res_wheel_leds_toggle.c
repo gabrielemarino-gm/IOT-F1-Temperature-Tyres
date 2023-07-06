@@ -19,6 +19,7 @@
 
 /* Log configuration */
 #include "sys/log.h"
+
 #define LOG_MODULE "Tyre-Resource"
 #define LOG_LEVEL LOG_LEVEL_DBG
 
@@ -106,7 +107,7 @@ static void res_put_post_handler(coap_message_t *request, coap_message_t *respon
 
         // Gomma fredda
         else if (strncmp(command, "UNDER", len) == 0)
-            led = LEDS_YELLOW;
+            led = LEDS_BLUE;
 
         // Gomma buona
         else if (strncmp(command, "GREAT", len) == 0)

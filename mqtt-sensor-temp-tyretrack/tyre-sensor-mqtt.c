@@ -314,6 +314,7 @@ static void mqtt_state_machine()
         case STATE_INIT:
             /* Inizializzazione */
             LOG_INFO("Init phase\n");
+            leds_set(LEDS_RED);
             mqtt_register(&conn, &mqtt_client_process, client_id, mqtt_event, MAX_TCP_SEGMENT_SIZE);
             state = STATE_NET_OK;
             /*-------------------*/
@@ -324,6 +325,7 @@ static void mqtt_state_machine()
             LOG_INFO("Connecting to Border Router\n");
             if(have_conn())
             {
+                leds_set(LEDS_BLUE);
                 // Connect to broker
                 connect_mqtt();
             }
@@ -359,7 +361,7 @@ static void mqtt_state_machine()
 
         case STATE_SUBSCRIBED:
             /* Sottoscritto a un topic */
-
+            leds_set(LEDS_GREEN);
             setTimeStamp();
             simulate_temperature();
 
