@@ -99,7 +99,7 @@ public class TyreSensorMQTT
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
 //              Aggiungo due ore per
-                // calendar.add(Calendar.HOUR_OF_DAY, 2);
+                calendar.add(Calendar.HOUR_OF_DAY, 2);
                 temp.setTimestamp(new Date(calendar.getTime().getTime()));
 
                 Actuator act = null;
