@@ -150,7 +150,7 @@ public class TemperatureDAO extends BaseMySQLDAO
         catch(Exception ex)
         {
 //            throw new DAOException(ex);
-            System.out.println("ERROR: DataBase return:");
+            System.out.println("ERROR: DataBase return");
             ex.printStackTrace();
         }
 
