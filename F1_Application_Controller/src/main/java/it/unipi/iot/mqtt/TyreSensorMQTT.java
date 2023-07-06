@@ -89,9 +89,12 @@ public class TyreSensorMQTT
 
 //              Ricavo il Timestamp e setto la data
                 String timestampString = receivedJson.get("timestamp").toString();
-                String pattern = "yyyy-MM-dd HH:mm:ss";
-                SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-                Date date = new Date(dateFormat.parse(timestampString).getTime());
+                //String pattern = "yyyy-MM-dd HH:mm:ss";
+                // SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+                //Date date = new Date(dateFormat.parse(timestampString).getTime());
+                Date date = new Date(Long.parseLong(timestampString) * 1000); // Moltiplica per 1000 per convertire da secondi a millisecondi
+
+                System.out.println("DBG     Date: " + date);
 
 //              Registra una nuova temperatura per la ruota indicata
                 Temperature temp = new Temperature();
