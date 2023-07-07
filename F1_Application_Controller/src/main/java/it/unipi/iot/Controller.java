@@ -1,7 +1,7 @@
 package it.unipi.iot;
 
 import it.unipi.iot.coap.TyreActuatorCoAP;
-import it.unipi.iot.dao.TemperatureDAO;
+import it.unipi.iot.dao.OperationsDAO;
 import it.unipi.iot.dao.exception.DAOException;
 import it.unipi.iot.model.Actuator;
 import it.unipi.iot.model.Temperature;
@@ -75,7 +75,7 @@ public class Controller
             {
                 System.out.println("Quitting");
                 TyreActuatorCoAP.kill();
-                TemperatureDAO.closePool();
+                OperationsDAO.closePool();
                 input.close();
                 System.exit(0);
             }
@@ -114,7 +114,7 @@ public class Controller
                     break;
                 }
 
-                Actuator act = TemperatureDAO.getActuator(Integer.parseInt(tokens[1]), tokens[2]);
+                Actuator act = OperationsDAO.getActuator(Integer.parseInt(tokens[1]), tokens[2]);
 
                 if(act == null)
                 {
@@ -132,7 +132,7 @@ public class Controller
             {
                 try
                 {
-                    ArrayList<Temperature> TyrewarmerTemps = TemperatureDAO.getLastTemperature("temperature_on_warmer");
+                    ArrayList<Temperature> TyrewarmerTemps = OperationsDAO.getLastTemperature("temperature_on_warmer");
                     for(Temperature t : TyrewarmerTemps)
                     {
                         System.out.println(String.format("Tyrewarmer [%d] -> %s", t.getTyrePosition(), t.getTemperatureValue()));
@@ -142,7 +142,7 @@ public class Controller
                         System.out.println("No recently registrated tyrewarmer temperature");
                     }
                         System.out.println("~~");
-                    ArrayList<Temperature> temps = TemperatureDAO.getLastTemperature("temperature_on_track");
+                    ArrayList<Temperature> temps = OperationsDAO.getLastTemperature("temperature_on_track");
                     for(Temperature t : temps)
                     {
                         System.out.println(String.format("Tyre [%d] -> %s", t.getTyrePosition(), t.getTemperatureValue()));
@@ -161,7 +161,7 @@ public class Controller
             // GET TYREWARMER STATUS
             else if (tokens[0].equals("getStatus"))
             {
-                for(Actuator a : TemperatureDAO.getActiveActuators())
+                for(Actuator a : OperationsDAO.getActiveActuators())
                 {
                     String ret = TyreActuatorCoAP.getStatRequest(a.getAddr(), a.getResource());
                     System.out.println(String.format("Actuator [%s - %d] -> %s", a.getResource(), a.getTyre_position(), ret));

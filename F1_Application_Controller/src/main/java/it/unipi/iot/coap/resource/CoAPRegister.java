@@ -2,7 +2,7 @@ package it.unipi.iot.coap.resource;
 
 //  Risorsa del Server CoAP per registrare gli ATTUATORI
 
-import it.unipi.iot.dao.TemperatureDAO;
+import it.unipi.iot.dao.OperationsDAO;
 import it.unipi.iot.model.Actuator;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.CoAP;
@@ -25,7 +25,7 @@ public class CoAPRegister extends CoapResource
         Response response = new Response(CoAP.ResponseCode.CONTENT);
         response.setPayload("PING");
 
-        TemperatureDAO.updateStatus(String.format("coap://[%s]", exchange.getSourceAddress().getHostName()));
+        OperationsDAO.updateStatus(String.format("coap://[%s]", exchange.getSourceAddress().getHostName()));
 
         exchange.respond(response);
     }
@@ -51,7 +51,7 @@ public class CoAPRegister extends CoapResource
         {
             Actuator act = new Actuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "tyrewarmer");
 
-            if(TemperatureDAO.registerActuator(act))
+            if(OperationsDAO.registerActuator(act))
             {
                 response.setPayload("OK");
             }
@@ -64,7 +64,7 @@ public class CoAPRegister extends CoapResource
         else if(command.equals("REG2"))
         {
             Actuator act = new Actuator(Integer.parseInt(val1), String.format("coap://[%s]", exchange.getSourceAddress().getHostName()), "res_wheel_led");
-            if(TemperatureDAO.registerActuator(act))
+            if(OperationsDAO.registerActuator(act))
             {
                 response.setPayload("OK");
             }

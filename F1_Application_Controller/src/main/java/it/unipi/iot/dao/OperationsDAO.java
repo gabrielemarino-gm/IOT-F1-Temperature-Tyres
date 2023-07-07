@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 
-public class TemperatureDAO extends BaseMySQLDAO
+public class OperationsDAO extends BaseMySQLDAO
 {
     public static void writeTemperature(Temperature temperature, String nameTab) throws DAOException
     {
@@ -26,7 +26,6 @@ public class TemperatureDAO extends BaseMySQLDAO
             preparedStatement = connection.prepareStatement(insertTemperature.toString(), Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setDouble(1, temperature.getTemperatureValue());
-            //preparedStatement.setTimestamp(2, new Timestamp(temperature.getTimestamp().getTime()));
             preparedStatement.setInt(2, temperature.getTyrePosition());
            
             preparedStatement.executeUpdate();
@@ -74,6 +73,8 @@ public class TemperatureDAO extends BaseMySQLDAO
         catch(Exception ex)
         {
             throw new DAOException(ex);
+//            System.out.println("ERROR: getLastTemperature()");
+//            ex.printStackTrace();
         }
 
         return toRet;
@@ -111,6 +112,7 @@ public class TemperatureDAO extends BaseMySQLDAO
         catch(Exception ex)
         {
 //          throw new DAOException(ex);
+            System.out.println("ERROR: getActiveActuators()");
             ex.printStackTrace();
         }
 
@@ -150,7 +152,7 @@ public class TemperatureDAO extends BaseMySQLDAO
         catch(Exception ex)
         {
 //            throw new DAOException(ex);
-            System.out.println("ERROR: DataBase return:");
+            System.out.println("ERROR: getActuator()");
             ex.printStackTrace();
         }
 
@@ -195,6 +197,9 @@ public class TemperatureDAO extends BaseMySQLDAO
         catch(Exception ex)
         {
 //            throw new DAOException(ex);
+
+            System.out.println("ERROR: registerActuator()");
+            ex.printStackTrace();
         }
 
         return true;
@@ -224,7 +229,7 @@ public class TemperatureDAO extends BaseMySQLDAO
         catch(Exception ex)
         {
 //          throw new DAOException(ex);
-            System.err.println("ERROR in updateStatus()");
+            System.err.println("ERROR: updateStatus()");
             ex.printStackTrace();
         }
     }
