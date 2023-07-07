@@ -20,7 +20,6 @@ public class Controller
     private static String SUBTOPIC_TRACK = "TyreTemp";
 
     private static String PUBCLIENTID = "Controller_Tyrewarmer_Pub";
-    private static String PUBTOPIC = "TyrewarmerConf";
     private static String COMMANDS = "help -> Show All Commands\n" +
                                      "quit -> Close Controller\n" +
                                      "publishWarmer <1/0> -> Activate/Deactivate Tyrewarmers temperature simulation\n" +

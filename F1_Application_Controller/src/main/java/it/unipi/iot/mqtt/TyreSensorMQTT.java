@@ -110,7 +110,7 @@ public class TyreSensorMQTT
                         de.printStackTrace();
                     }
 
-                    String mqttCommand = "1";
+                    String mqttCommand = "0";
                     String coapCommand = "HIGHTEMP";
 
                     if(act != null)
@@ -122,16 +122,16 @@ public class TyreSensorMQTT
 //                          System.out.println(String.format("Tyrewarmer [%d] -> DISENGAGED", act.getTyre_position()));
 
 //                          Abbassare temperatura simulazione
-                            mqttCommand = "-1";
+                            mqttCommand = String.format("-%d", act.getTyre_position());
                             coapCommand = "HIGHTEMP";
 
                         }
-                        else if (temp.getTemperatureValue() <= 67)
+                        else if (temp.getTemperatureValue() <= 65)
                         {
 //                          System.out.println(String.format("Tyrewarmer [%d] -> ENGAGED", act.getTyre_position()));
 
 //                          Alzare temperatura simulazione
-                            mqttCommand = "1";
+                            mqttCommand = String.format("%d", act.getTyre_position());
                             coapCommand = "LOWTEMP";
                         }
 
