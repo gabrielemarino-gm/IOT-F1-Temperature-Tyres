@@ -159,8 +159,9 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     
     state_machine_timer = (CLOCK_SECOND * atoi((const char *)msg_ptr->payload_chunk));
     //etimer_set(&periodic_state_timer, state_machine_timer);
-    //etimer_reset(&periodic_state_timer);
+    
     etimer_adjust(&periodic_state_timer, state_machine_timer);
+    etimer_reset(&periodic_state_timer);
 }
 /*------------------------------------*/
 /*         CHECK CONNECTIVITY         */
