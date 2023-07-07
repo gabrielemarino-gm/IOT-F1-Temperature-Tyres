@@ -357,7 +357,6 @@ static void mqtt_state_machine()
         case STATE_SUBSCRIBED:
             /* Sottoscritto a un topic */
             leds_set(LEDS_GREEN);
-            setTimeStamp();
             simulate_temperature();
 
             sprintf(pub_buffer, "{\"tyre\":\"%d\",\"temperature\":\"%d\"}", ID_PAIR, temperature);
