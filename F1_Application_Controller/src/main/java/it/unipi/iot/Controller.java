@@ -23,7 +23,8 @@ public class Controller
     private static String PUBTOPIC = "TyrewarmerConf";
     private static String COMMANDS = "help -> Show All Commands\n" +
                                      "quit -> Close Controller\n" +
-                                     "publish <1/0> -> Activate/Deactivate Tyrewarmers temperature simulation\n" +
+                                     "publishWarmer <1/0> -> Activate/Deactivate Tyrewarmers temperature simulation\n" +
+                                     "publishTrack <INT> -> Change the detection rate of the sensor\n" +
                                      "command <target> <resource> <command> -> Send a CoAP request to target\n" +
                                      "getTemp -> Get last reported temperature for all sensors\n" +
                                      "getStatus -> Get status of all TyreActuator\n";
@@ -81,7 +82,25 @@ public class Controller
             }
 
             // PUBLISH SOMETHING
-            else if (tokens[0].equals("publish"))
+            else if (tokens[0].equals("publishTrack"))
+            {
+                if(tokens.length < 2)
+                {
+                    System.out.println("Command error");
+                    break;
+                }
+
+                try
+                {
+                    TyreSensorMQTT.Publisher.Publish(BROKERIP, PUBCLIENTID, "SetThreshold", tokens[1]);
+                }
+                catch (InterruptedException | MqttException ie)
+                {
+                    ie.printStackTrace();
+                }
+            }
+
+            else if (tokens[0].equals("publishWarmer"))
             {
                 if(tokens.length < 2)
                 {
@@ -93,13 +112,9 @@ public class Controller
                 {
                     TyreSensorMQTT.Publisher.Publish(BROKERIP, PUBCLIENTID, "warmer_on", tokens[1]);
                 }
-                catch (InterruptedException ie)
+                catch (InterruptedException | MqttException ie)
                 {
                     ie.printStackTrace();
-                }
-                catch (MqttException me)
-                {
-                    me.printStackTrace();
                 }
             }
 

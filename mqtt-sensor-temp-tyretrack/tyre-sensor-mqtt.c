@@ -154,9 +154,13 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
 
     // Cambiare l'intervallo di cambionamento
-    int timer_value = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
-    state_machine_timer = timer_value;
-    etimer_set(&periodic_state_timer, state_machine_timer);
+    LOG_DBG("(int)*msg_ptr->payload_chunk = %d\n", (int)*msg_ptr->payload_chunk);
+    
+    state_machine_timer = (CLOCK_SECOND * (int)*msg_ptr->payload_chunk);
+    //etimer_set(&periodic_state_timer, state_machine_timer);
+    //etimer_reset(&periodic_state_timer);
+    etimer_adjust(&periodic_state_timer, state_machine_timer);
+)	
 }
 /*------------------------------------*/
 /*         CHECK CONNECTIVITY         */
