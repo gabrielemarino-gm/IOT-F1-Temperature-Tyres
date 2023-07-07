@@ -160,7 +160,6 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
     //etimer_set(&periodic_state_timer, state_machine_timer);
     //etimer_reset(&periodic_state_timer);
     etimer_adjust(&periodic_state_timer, state_machine_timer);
-)	
 }
 /*------------------------------------*/
 /*         CHECK CONNECTIVITY         */
