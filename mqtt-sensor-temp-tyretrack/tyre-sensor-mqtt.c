@@ -406,7 +406,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         else if (ev == button_hal_release_event)
         {
             on_track = !on_track;
-            LOG_DBG("BOTTONE PREMUTO\n");
         }
     }
 
