@@ -76,7 +76,7 @@ static char pub_buffer[PUB_BUFFER_SIZE];
 #define CONNECTION_FREQUENCE (CLOCK_SECOND * 5)
 #define SAMPLING_FREQUENCE (CLOCK_SECOND * 2)
 
-int state_machine_timer = SAMPLING_FREQUENCE;
+static int state_machine_timer = SAMPLING_FREQUENCE;
 static struct etimer periodic_state_timer;
 
 // States
@@ -401,6 +401,8 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
     {
         PROCESS_YIELD();
 
+        LOG_DBG("data = %d\n", data);
+        LOG_DBG("&periodic_state_timer = %d\n", &periodic_state_timer);
         // La state machine va avviata ogni STATE_MACHINE_TIMER
         if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
         {
