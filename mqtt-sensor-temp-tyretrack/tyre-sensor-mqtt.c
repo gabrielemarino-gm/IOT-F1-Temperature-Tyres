@@ -45,6 +45,7 @@ static const char *broker_ip = MQTT_CLIENT_BROKER_IP_ADDR;
 #define BUFFER_SIZE 64
 #define PUB_BUFFER_SIZE 64
 
+static bool on_track = false;
 
 // Buffer for topic publication
 #define SUB_TOPIC "SetThreshold"
@@ -351,10 +352,12 @@ static void mqtt_state_machine()
             leds_set(LEDS_GREEN);
             simulate_temperature();
 
-            sprintf(pub_buffer, "{\"tyre\":\"%d\",\"temperature\":\"%d\"}", ID_PAIR, temperature);
-            LOG_DBG("Invio: %s\n", pub_buffer);
-            mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
-
+            if (on_track)
+            {
+                sprintf(pub_buffer, "{\"tyre\":\"%d\",\"temperature\":\"%d\"}", ID_PAIR, temperature);
+                LOG_DBG("Invio: %s\n", pub_buffer);
+                mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+            }
             /*-------------------*/
             break;
 
@@ -399,6 +402,10 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
         if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
         {
             mqtt_state_machine();
+        }
+        else if (ev == button_hal_release_event)
+        {
+            on_track = !on_track;
         }
     }
 
