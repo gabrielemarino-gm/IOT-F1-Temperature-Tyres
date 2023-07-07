@@ -401,7 +401,7 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
     {
         PROCESS_YIELD();
 
-        LOG_DBG("data = %d\n", (int)data);
+        LOG_DBG("data = %ld\n", (int)data);
         LOG_DBG("&periodic_state_timer = %d\n", &periodic_state_timer);
         // La state machine va avviata ogni STATE_MACHINE_TIMER
         if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
