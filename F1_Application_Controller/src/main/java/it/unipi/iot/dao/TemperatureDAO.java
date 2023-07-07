@@ -14,8 +14,8 @@ public class TemperatureDAO extends BaseMySQLDAO
     public static void writeTemperature(Temperature temperature, String nameTab) throws DAOException
     {
         StringBuilder insertTemperature = new StringBuilder();
-        insertTemperature.append("insert into " + nameTab + " (temperature, timestamp, tyre_position) values");
-        insertTemperature.append("(?,?,?)");
+        insertTemperature.append("insert into " + nameTab + " (temperature, tyre_position) values");
+        insertTemperature.append("(?,?)");
 
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -26,8 +26,8 @@ public class TemperatureDAO extends BaseMySQLDAO
             preparedStatement = connection.prepareStatement(insertTemperature.toString(), Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setDouble(1, temperature.getTemperatureValue());
-            preparedStatement.setTimestamp(2, new Timestamp(temperature.getTimestamp().getTime()));
-            preparedStatement.setInt(3, temperature.getTyrePosition());
+            //preparedStatement.setTimestamp(2, new Timestamp(temperature.getTimestamp().getTime()));
+            preparedStatement.setInt(2, temperature.getTyrePosition());
            
             preparedStatement.executeUpdate();
             connection.close();

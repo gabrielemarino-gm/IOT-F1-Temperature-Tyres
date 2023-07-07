@@ -88,19 +88,19 @@ public class TyreSensorMQTT
                 int tyrePosition = Integer.parseInt(tyrePositiontring);
 
 //              Ricavo il Timestamp e setto la data
-                String timestampString = receivedJson.get("timestamp").toString();
-                Date date = new Date(Long.parseLong(timestampString) * 1000); // Moltiplica per 1000 per convertire da secondi a millisecondi
+                //String timestampString = receivedJson.get("timestamp").toString();
+                //Date date = new Date(Long.parseLong(timestampString) * 1000); // Moltiplica per 1000 per convertire da secondi a millisecondi
 
 //              Registra una nuova temperatura per la ruota indicata
                 Temperature temp = new Temperature();
                 temp.setTyrePosition(tyrePosition);
                 temp.setTemperatureValue(temperature/10);
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
+                //Calendar calendar = Calendar.getInstance();
+                //calendar.setTime(date);
 //              Aggiungo due ore per
-                calendar.add(Calendar.HOUR_OF_DAY, 2);
-                temp.setTimestamp(new Date(calendar.getTime().getTime()));
+                //calendar.add(Calendar.HOUR_OF_DAY, 2);
+                //temp.setTimestamp(new Date(calendar.getTime().getTime()));
 
                 Actuator act = null;
 
