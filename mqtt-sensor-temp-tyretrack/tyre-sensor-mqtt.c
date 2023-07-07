@@ -154,13 +154,7 @@ static void handler_incoming_msg(const char *topic, const uint8_t *chunk)
 	LOG_INFO("Message received at topic '%s': %s\n", topic, chunk);
 
     // Cambiare l'intervallo di cambionamento
-    LOG_DBG("PRIMA: %d\n", state_machine_timer);
     state_machine_timer = (CLOCK_SECOND * atoi((const char *)msg_ptr->payload_chunk));
-    // LOG_DBG("DOPO: %d\n", state_machine_timer);
-    // etimer_stop(&periodic_state_timer);
-    // etimer_set(&periodic_state_timer, state_machine_timer);
-    // //etimer_adjust(&periodic_state_timer, state_machine_timer);
-    // //etimer_reset(&periodic_state_timer);
 }
 /*------------------------------------*/
 /*         CHECK CONNECTIVITY         */
@@ -401,8 +395,6 @@ PROCESS_THREAD(mqtt_client_process, ev, data)
     {
         PROCESS_YIELD();
 
-        LOG_DBG("data = %p\n", data);
-        LOG_DBG("&periodic_state_timer = %p\n", &periodic_state_timer);
         // La state machine va avviata ogni STATE_MACHINE_TIMER
         if(ev == PROCESS_EVENT_TIMER && data == &periodic_state_timer)
         {
