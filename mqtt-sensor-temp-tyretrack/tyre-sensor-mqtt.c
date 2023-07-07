@@ -350,10 +350,10 @@ static void mqtt_state_machine()
         case STATE_SUBSCRIBED:
             /* Sottoscritto a un topic */
             leds_set(LEDS_GREEN);
-            simulate_temperature();
-
+            
             if (on_track)
             {
+                simulate_temperature();
                 sprintf(pub_buffer, "{\"tyre\":\"%d\",\"temperature\":\"%d\"}", ID_PAIR, temperature);
                 LOG_DBG("Invio: %s\n", pub_buffer);
                 mqtt_publish (&conn, NULL, PUB_TOPIC, (u_int8_t *)pub_buffer, strlen(pub_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
