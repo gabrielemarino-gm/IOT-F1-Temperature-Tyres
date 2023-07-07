@@ -20,8 +20,8 @@ ToDO:
 
 1B/1D   ===> BR
 
-3E      ===> COAP Tyre-Warmer
-58      ===> MQTT Tyre-Warmer
+58      ===> COAP Tyre-Warmer
+3E      ===> MQTT Tyre-Warmer
 
 F2      ===> COAP Tyre-Track
 71      ===> MQTT Tyre-Track
