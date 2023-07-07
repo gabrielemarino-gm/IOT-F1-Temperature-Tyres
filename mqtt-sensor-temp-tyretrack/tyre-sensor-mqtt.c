@@ -102,7 +102,7 @@ static char timeStr[20];
 static void setTimeStamp(void)
 {
     // LOG_DBG("TIMESTAMP: %ld\n", time(NULL));
-    sprintf(timeStr, "%lld", time(NULL));
+    sprintf(timeStr, "%ld", time(NULL));
 }
 
 /*------------------------------------*/

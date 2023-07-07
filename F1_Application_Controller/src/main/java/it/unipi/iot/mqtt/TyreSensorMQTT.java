@@ -9,7 +9,6 @@ import it.unipi.iot.utilis.Utils;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 

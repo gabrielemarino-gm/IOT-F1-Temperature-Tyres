@@ -23,7 +23,7 @@ public class Controller
     private static String PUBTOPIC = "TyrewarmerConf";
     private static String COMMANDS = "help -> Show All Commands\n" +
                                      "quit -> Close Controller\n" +
-                                     "publish <target> <message> -> Publish a message for the target Topic\n" +
+                                     "publish <1/0> -> Activate/Deactivate Tyrewarmers temperature simulation\n" +
                                      "command <target> <resource> <command> -> Send a CoAP request to target\n" +
                                      "getTemp -> Get last reported temperature for all sensors\n" +
                                      "getStatus -> Get status of all TyreActuator\n";
@@ -83,9 +83,15 @@ public class Controller
             // PUBLISH SOMETHING
             else if (tokens[0].equals("publish"))
             {
+                if(tokens.length < 2)
+                {
+                    System.out.println("Command error");
+                    break;
+                }
+
                 try
                 {
-                    TyreSensorMQTT.Publisher.Publish(BROKERIP, PUBCLIENTID, PUBTOPIC, "PUBTOPIC");
+                    TyreSensorMQTT.Publisher.Publish(BROKERIP, PUBCLIENTID, "warmer_on", tokens[1]);
                 }
                 catch (InterruptedException ie)
                 {
